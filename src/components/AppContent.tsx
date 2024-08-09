@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import ManagerPage from '@pages/ManagerPage/ManagerPage'
 import Footer from '@components/Footer/Footer'
-import StatusBar from '@components/StatusBar/StatusBar'
+// import StatusBar from '@components/StatusBar/StatusBar'
 import Splash from '@pages/Splash/Splash'
 import MemberType from '@pages/MemberType/MemberType'
 import Signup from '@pages/Signup/Signup'
