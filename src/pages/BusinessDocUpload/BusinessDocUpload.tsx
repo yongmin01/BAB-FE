@@ -1,24 +1,21 @@
 import {
-  StyledBackIcon,
   StyledButton,
   StyledContainer,
   StyledLabel,
-  StyledRow,
   StyledSection,
-  StyledTitle,
   StyledUploadBox,
   StyledUploadImg,
   StyledUploadText,
 } from './BusinessDocUpload.style'
 
 import UploadImg from '@assets/BusinessUploadPage/upload.svg'
-import Back from '@assets/BusinessUploadPage/backIcon.svg'
 import { useNavigate } from 'react-router-dom'
 import useImageUpload from '@hooks/useImageUpload'
 import { useEffect, useState } from 'react'
 import UploadSuccess from '@components/UploadSuccess/UploadSuccess'
 import UploadFail from '@components/UploadFail/UploadFail'
 import Loader from '@components/Loader/Loader'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function BusinessDocUpload() {
   const navigate = useNavigate()
@@ -74,10 +71,11 @@ export default function BusinessDocUpload() {
 
   return (
     <StyledContainer>
-      <StyledRow>
-        <StyledBackIcon onClick={handleBack} src={Back} />
-        <StyledTitle>사업자 등록증 등록</StyledTitle>
-      </StyledRow>
+      <HeaderTitle
+        title="사업자 등록증 등록"
+        icon="back"
+        onClick={handleBack}
+      />
       <StyledSection onClick={openCamera}>
         <StyledLabel>사진으로 등록하기</StyledLabel>
         <StyledUploadBox>

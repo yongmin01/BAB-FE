@@ -1,20 +1,18 @@
 import { deleteStore } from '@apis/Store/deleteStore'
 import {
-  BackButton,
   Checkbox,
   CheckboxLabel,
   CheckboxWrapper,
   Content,
   Description,
-  Header,
   DeleteButton,
   PageContainer,
   SubTitle,
-  Title,
 } from '@pages/StoreInfoDeletePage/StoreInfoDeletePage.style'
 import storeInfoStore from '@stores/storeInfoStore'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function StoreInfoDeletePage() {
   const navigate = useNavigate()
@@ -55,12 +53,11 @@ export default function StoreInfoDeletePage() {
   }
   return (
     <PageContainer>
-      <Header>
-        <BackButton onClick={() => navigate('/storeInfo-edit')}>
-          &lt;
-        </BackButton>
-        <Title>가게 삭제</Title>
-      </Header>
+      <HeaderTitle
+        title="가게 삭제"
+        icon="back"
+        onClick={() => navigate('/storeInfo-edit')}
+      />
       <SubTitle>
         {/* 고서현 사장님 부분은 로그인 정보 받아와서 이름으로 랜더링 해주기 */}
         고서현 사장님! <br />

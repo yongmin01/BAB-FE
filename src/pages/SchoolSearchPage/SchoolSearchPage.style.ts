@@ -17,8 +17,9 @@ export const SchoolSearchPageContainer = styled.div`
 export const PageContent = styled.div`
   width: 100%;
 
-  padding: 54px 24px 0;
+  padding: 0 24px;
   box-sizing: border-box;
+  margin-top: 54px;
 
   font-weight: 700;
   font-size: 24px;

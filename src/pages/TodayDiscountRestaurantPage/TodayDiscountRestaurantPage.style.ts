@@ -7,7 +7,7 @@ export const TodayDiscountRestaurantPageContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   background-color: #f8f8f8;
-  padding: 78px 0;
+  padding: 58px 0 0;
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;

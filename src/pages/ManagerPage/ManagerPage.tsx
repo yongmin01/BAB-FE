@@ -3,8 +3,6 @@ import { ManagerRegisterState } from '@stores/managerRegisterInfoStore'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 import {
   ManagerPageContainer,
-  Title,
-  TitleText,
   Card,
   CardImage,
   CardTitle,
@@ -20,10 +18,10 @@ import { useEffect, useState } from 'react'
 import DiscountModal from '@components/Modal/DiscountModal'
 import ManagerCompletedCard from '@components/ManagerCompletedCard/ManagerCompletedCard'
 import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
-import NotifyIcon from '@components/NotifyIcon'
 import discountEventStore from '@stores/discountEventStore'
 import { generateUniqueId } from '@utils/generateUniqueId'
 import { useNavigate } from 'react-router-dom'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
@@ -105,10 +103,7 @@ export default function ManagerPage() {
   }
   return (
     <ManagerPageContainer>
-      <Title>
-        <TitleText>마이페이지</TitleText>
-        <NotifyIcon />
-      </Title>
+      <HeaderTitle title="마이페이지" icon="notification" />
       {isStoreRegistered ? (
         <ManagerCompletedCard />
       ) : (
