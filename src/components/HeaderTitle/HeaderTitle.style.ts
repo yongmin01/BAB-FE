@@ -15,9 +15,10 @@ export const Container = styled.div<HeaderTitleStyleProps>`
   justify-content: space-between;
   align-items: center;
   padding: 0 24px;
+  box-sizing: border-box;
   background-color: #f8f8f8;
 `
-export const Title = styled.div<HeaderTitleStyleProps>`
+export const Title = styled.h1<HeaderTitleStyleProps>`
   font-style: normal;
   font-weight: 700;
   font-size: 22px;
