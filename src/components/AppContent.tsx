@@ -34,7 +34,7 @@ export default function AppContent() {
     location.pathname === '/map'
   return (
     <>
-      <StatusBar />
+      {/* <StatusBar /> */}
       <Routes>
         <Route path="/" element={<Splash />} />
         <Route path="/memberType" element={<MemberType />} />
