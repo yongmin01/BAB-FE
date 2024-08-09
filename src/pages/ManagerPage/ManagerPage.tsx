@@ -21,6 +21,7 @@ import {
   StyledArrow,
 } from '@components/MyPageCard/MyPageCardTop/MyPageCardTop.style'
 import ArrowImg from '@assets/StudentPage/arrow.svg'
+import { useNavigate } from 'react-router-dom'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
