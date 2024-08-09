@@ -20,6 +20,7 @@ import SecondRegisterStoreInfo from '@pages/SecondRegisterStoreInfo/SecondRegist
 import ThirdRegisterStoreInfo from '@pages/ThirdRegisterStoreInfo/ThirdRegisterStoreInfo'
 import MapRender from '@pages/MapPage/MapRender'
 import SchoolSearchPage from '@pages/SchoolSearchPage/SchoolSearchPage'
+import BusinessDocUpload from '@pages/BusinessDocUpload/BusinessDocUpload'
 
 export default function AppContent() {
   const location = useLocation()
@@ -64,6 +65,7 @@ export default function AppContent() {
           path="/thirdregisterstoreinfo"
           element={<ThirdRegisterStoreInfo />}
         />
+        <Route path="/managerUpload" element={<BusinessDocUpload />} />
       </Routes>
       {showFooter && <Footer />}
     </>
