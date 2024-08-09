@@ -8,25 +8,11 @@ export const ManagerPageContainer = styled.div`
   width: 90%;
   height: 100%;
   background-color: #f8f8f8;
-  padding-top: 20px;
-`
-
-export const Title = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  font-size: 1.5rem;
-  color: #666;
-  margin-top: 20px;
-  margin-bottom: 20px;
-`
-
-export const TitleText = styled.div`
-  flex: 1;
-  margin-left: 25px;
-  text-align: center;
-  font-weight: bold;
+  padding-top: 58px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const Card = styled.div`

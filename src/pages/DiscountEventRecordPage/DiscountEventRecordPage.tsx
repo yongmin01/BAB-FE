@@ -1,9 +1,5 @@
-import React from 'react'
 import {
   PageContainer,
-  Header,
-  Title,
-  BackButton,
   EventList,
   EventItem,
   EventTitle,
@@ -14,6 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
@@ -27,10 +24,11 @@ export default function DiscountEventRecordPage() {
   console.log(discountEvents)
   return (
     <PageContainer>
-      <Header>
-        <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
-        <Title>진행했던 할인행사 보기</Title>
-      </Header>
+      <HeaderTitle
+        title="진행했던 할인행사 보기"
+        icon="back"
+        onClick={() => navigate('/manager')}
+      />
       <EventList>
         {discountEvents.map((event) => (
           <EventItem key={event.id}>
