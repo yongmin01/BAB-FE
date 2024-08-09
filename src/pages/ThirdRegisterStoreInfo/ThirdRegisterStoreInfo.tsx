@@ -25,6 +25,7 @@ import {
 import { useState } from 'react'
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function ThirdRegisterStoreInfo() {
   const [isError, setIsError] = useState<boolean>(false)
@@ -69,10 +70,11 @@ export default function ThirdRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <StyledRow>
+      {/* <StyledRow>
         <StyledBackIcon onClick={handleBack} src={Back} />
         <StyledTitle>가게 정보 등록</StyledTitle>
-      </StyledRow>
+      </StyledRow> */}
+      <HeaderTitle title="가게 정보 등록" icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>

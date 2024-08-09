@@ -1,20 +1,26 @@
 import styled from 'styled-components'
 
 export const StyledContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  max-width: 400px;
+
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 16px;
+  align-items: center;
+  /* margin: 0 auto; */
+  padding: 58px 16px 90px;
   box-sizing: border-box;
-  height: 100vh;
-  position: relative;
-  padding-bottom: 80px;
+  /* position: relative; */
 `
 export const StyledScrollableContent = styled.div`
+  width: 100%;
   flex: 1;
-  overflow-y: auto;
+  /* overflow-y: auto; */
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 export const StyledRow = styled.div`
   display: flex;

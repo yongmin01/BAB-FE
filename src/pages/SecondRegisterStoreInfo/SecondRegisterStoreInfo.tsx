@@ -33,6 +33,7 @@ import {
 } from './SecondRegisterStoreInfo.style'
 import { BreakTime } from '@components/BreakTime/BreakTime'
 import { useErrorInput } from '@hooks/useErrorInput'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 const days = ['월', '화', '수', '목', '금', '토', '일']
 
@@ -120,10 +121,11 @@ export default function SecondRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <StyledRow>
+      {/* <StyledRow>
         <StyledBackIcon onClick={handleBack} src={Back} />
         <StyledTitle>가게 정보 등록</StyledTitle>
-      </StyledRow>
+      </StyledRow> */}
+      <HeaderTitle title="가게 정보 등록" icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>
