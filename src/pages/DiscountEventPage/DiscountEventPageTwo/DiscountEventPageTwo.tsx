@@ -30,7 +30,7 @@ export default function DiscountEventPageTwo() {
   } = discountEventStore()
   const { storeInfos } = storeInfoStore()
   const [selectedMessage, setSelectedMessage] = useState<string>(
-    currentEvent.eventMessage,
+    currentEvent.discountTitle,
   )
 
   const [selectedCheckbox, setSelectedCheckbox] = useState<string | null>(null)

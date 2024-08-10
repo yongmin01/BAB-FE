@@ -14,7 +14,7 @@ export async function handleDiscountRegister() {
       menuId: discount.id,
       discountPrice: discount.discountPrice,
     })),
-    title: currentEvent.eventMessage,
+    title: currentEvent.discountTitle,
     startDate: currentEvent.startDate,
     endDate: currentEvent.endDate,
   }

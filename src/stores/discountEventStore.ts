@@ -8,11 +8,12 @@ interface Discount {
   isChecked: boolean
 }
 
-interface DiscountEvent {
-  id: number
+export interface DiscountEvent {
+  discountId: number
+  storeName: string
   startDate: string
   endDate: string
-  eventMessage: string
+  discountTitle: string
   discounts: Discount[]
 }
 
@@ -39,10 +40,11 @@ interface DiscountEventState {
 
 const discountEventStore = create<DiscountEventState>((set, get) => ({
   currentEvent: {
-    id: 0,
+    discountId: 0,
+    storeName: '',
     startDate: '',
     endDate: '',
-    eventMessage: '',
+    discountTitle: '',
     discounts: [],
   },
   discountEvents: [],
@@ -58,7 +60,7 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
     set((state) => ({
       currentEvent: {
         ...state.currentEvent,
-        eventMessage: message,
+        discountTitle: message,
       },
     })),
   setDiscountChecked: (id, isChecked) =>
@@ -95,15 +97,16 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
     const state = get()
     const newEvent: DiscountEvent = {
       ...state.currentEvent,
-      id: discountId, // 받은 discountId를 사용
+      discountId: discountId, // 받은 discountId를 사용
     }
     set({
       discountEvents: [...state.discountEvents, newEvent],
       currentEvent: {
-        id: 0,
+        discountId: 0,
+        storeName: '',
         startDate: '',
         endDate: '',
-        eventMessage: '',
+        discountTitle: '',
         discounts: [],
       },
     })
@@ -111,7 +114,7 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
   removeDiscountEventById: (eventId) => {
     set((state) => ({
       discountEvents: state.discountEvents.filter(
-        (event) => event.id !== eventId,
+        (event) => event.discountId !== eventId,
       ),
     }))
   },
