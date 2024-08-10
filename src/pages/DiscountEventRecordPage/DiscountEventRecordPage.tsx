@@ -20,13 +20,16 @@ export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
   const { storeInfos } = storeInfoStore()
   const { removeDiscountEventById } = discountEventStore()
-  const discountEvents = discountEventStore((state) => state.discountEvents)
+  const discountEvents = discountEventStore.getState().discountEvents
 
   useEffect(() => {
-    if (storeInfos.length > 0) {
-      fetchDiscountEvents(storeInfos[0].id) // 일단 등록된 가게가 없으니 임의로 1번 가게를 넘겨봄
-      console.log(discountEventStore.getState().discountEvents)
-      //할인정보 업데이트 됐는지 확인차 콘솔 찍어봄
+    if (storeInfos.length > 0 && storeInfos[0].id) {
+      fetchDiscountEvents(storeInfos[0].id).then(() => {
+        console.log(
+          'Fetched Discount Events:',
+          discountEventStore.getState().discountEvents,
+        )
+      })
     }
   }, [storeInfos])
 
