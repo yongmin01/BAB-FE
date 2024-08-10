@@ -1,11 +1,14 @@
 import styled from 'styled-components'
 
-export const FindSchoolContainer = styled.div`
+export const ImgBtnContainer = styled.div<{ gap?: string }>`
   margin: 0 auto;
   padding-right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${(props) => props.gap};
 `
-export const FindSchoolBtn = styled.button`
-  width: 124px;
+export const Btn = styled.button<{ padding: string }>`
   height: 47px;
 
   display: flex;
@@ -13,6 +16,8 @@ export const FindSchoolBtn = styled.button`
   align-items: center;
   gap: 8px;
 
+  padding: 11px ${(props) => props.padding};
+  box-sizing: border-box;
   background: #fdd100;
   border: 0.4px solid #e1ba00;
   box-shadow: 2px 2px 2px rgba(127, 127, 127, 0.07);
