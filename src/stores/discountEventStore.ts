@@ -32,7 +32,8 @@ interface DiscountEventState {
       isDiscounted?: boolean
     }[],
   ) => void
-  addDiscountEvent: () => DiscountEvent
+  addDiscountEventWithId: (discountId: number) => void
+
   removeDiscountEventById: (eventId: number) => void
 }
 
@@ -90,11 +91,11 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
         })),
       },
     })),
-  addDiscountEvent: () => {
+  addDiscountEventWithId: (discountId) => {
     const state = get()
     const newEvent: DiscountEvent = {
       ...state.currentEvent,
-      id: generateUniqueId(), // 고유한 ID 생성 함수 사용
+      id: discountId, // 받은 discountId를 사용
     }
     set({
       discountEvents: [...state.discountEvents, newEvent],
@@ -106,7 +107,6 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
         discounts: [],
       },
     })
-    return newEvent
   },
   removeDiscountEventById: (eventId) => {
     set((state) => ({

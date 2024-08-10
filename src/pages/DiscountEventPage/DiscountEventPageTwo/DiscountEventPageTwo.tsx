@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   PageContainer,
   Header,
@@ -18,11 +18,16 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+import { handleDiscountRegister } from '@apis/Discount/discountRegister.ts'
 
 export default function DiscountEventPageTwo() {
   const navigate = useNavigate()
-  const { currentEvent, setEventMessage, addDiscountEvent } =
-    discountEventStore()
+  const {
+    currentEvent,
+    setEventMessage,
+    addDiscountEventWithId,
+    discountEvents,
+  } = discountEventStore()
   const { storeInfos } = storeInfoStore()
   const [selectedMessage, setSelectedMessage] = useState<string>(
     currentEvent.eventMessage,
@@ -42,14 +47,19 @@ export default function DiscountEventPageTwo() {
     setSelectedCheckbox(null) // 직접 입력시 체크박스 해제
   }
 
-  const handleSubmit = () => {
-    const discountData = addDiscountEvent() //추가되는 하나씩의 데이터
-    const state = discountEventStore.getState() //현재 최신화된 스토어의 상태 가져오기
-    console.log(discountData)
-    console.log('Updated Discount Events:', state.discountEvents) //최신화된 스토어에서 discountEvents 가져옴
-    console.log(currentEvent.discounts) // 할인 정보 보기위해 콘솔 찍어봄
-    console.log(storeInfos[0].menu) // 할인된 가격만큼 가게 스토어에 반영됐는지 확인해봄
-    navigate('/manager')
+  const handleSubmit = async () => {
+    try {
+      const discountId = await handleDiscountRegister() // 할인 이벤트 API 호출
+      if (discountId) {
+        addDiscountEventWithId(discountId) // 할인 이벤트 ID와 함께 이벤트 저장
+      }
+      console.log(discountId)
+      console.log(discountEvents)
+      navigate('/manager') // 성공 시 페이지 이동
+    } catch (error) {
+      console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
+      alert('할인 이벤트 생성에 실패했습니다. 다시 시도해주세요.')
+    }
   }
 
   //나중에 사용할 api호출 함수 미리 작성해둠

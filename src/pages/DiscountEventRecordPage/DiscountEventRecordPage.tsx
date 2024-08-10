@@ -18,7 +18,8 @@ import discountEventStore from '@stores/discountEventStore'
 export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
   const { storeInfos } = storeInfoStore()
-  const { discountEvents, removeDiscountEventById } = discountEventStore()
+  const { removeDiscountEventById } = discountEventStore()
+  const discountEvents = discountEventStore((state) => state.discountEvents)
 
   const handleDeleteClick = (eventId: number) => {
     removeDiscountEventById(eventId)

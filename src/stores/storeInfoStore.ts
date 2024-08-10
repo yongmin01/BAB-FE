@@ -44,7 +44,42 @@ interface StoreInfoState {
 }
 
 const storeInfoStore = create<StoreInfoState>((set) => ({
-  storeInfos: [], // 초기값을 빈 배열로 설정
+  storeInfos: [
+    {
+      id: 1,
+      name: '기본 가게 이름',
+      storeLink: 'http://example.com',
+      image: 'default_image.png',
+      university: '기본 대학',
+      businessHours: [
+        { day: 'Monday', open: '09:00', close: '18:00', isChecked: true },
+        { day: 'Tuesday', open: '09:00', close: '18:00', isChecked: true },
+        // 다른 요일도 추가 가능
+      ],
+      breakTime: [
+        { day: 'Monday', open: '12:00', close: '13:00', isChecked: true },
+        { day: 'Tuesday', open: '12:00', close: '13:00', isChecked: true },
+        // 다른 요일도 추가 가능
+      ],
+      menu: [
+        {
+          id: 1,
+          image: 'menu1.png',
+          name: '메뉴 1',
+          price: 10000,
+          isDiscounted: false,
+        },
+        {
+          id: 2,
+          image: 'menu2.png',
+          name: '메뉴 2',
+          price: 12000,
+          isDiscounted: false,
+        },
+        // 추가 메뉴 항목들
+      ],
+    },
+  ], // 초기값을 설정
   setStoreInfo: (info) =>
     set((state) => ({
       storeInfos: state.storeInfos.map((store) =>
