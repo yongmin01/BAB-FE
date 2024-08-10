@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://43.201.218.182:8080'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 //기본 엔드포인트는 추후 env에다가 설정해두는게 좋을 거 같네요
 export const deleteStore = async (storeId: number) => {
   try {

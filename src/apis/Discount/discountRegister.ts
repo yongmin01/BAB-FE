@@ -2,7 +2,7 @@ import axios from 'axios'
 import discountEventStore from '@stores/discountEventStore'
 import storeInfoStore from '@stores/storeInfoStore'
 
-const API_BASE_URL = 'http://43.201.218.182:8080'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export async function handleDiscountRegister() {
   const { currentEvent } = discountEventStore.getState()
