@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   PageContainer,
   Header,
@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+import { fetchDiscountEvents } from '@apis/Discount/fetchDiscountEvents'
 
 export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
@@ -21,11 +22,18 @@ export default function DiscountEventRecordPage() {
   const { removeDiscountEventById } = discountEventStore()
   const discountEvents = discountEventStore((state) => state.discountEvents)
 
+  useEffect(() => {
+    if (storeInfos.length > 0) {
+      fetchDiscountEvents(storeInfos[0].id) // 일단 등록된 가게가 없으니 임의로 1번 가게를 넘겨봄
+      console.log(discountEventStore.getState().discountEvents)
+      //할인정보 업데이트 됐는지 확인차 콘솔 찍어봄
+    }
+  }, [storeInfos])
+
   const handleDeleteClick = (eventId: number) => {
     removeDiscountEventById(eventId)
-  } //여기 API 코드는 브렌치 새로 파서 진행하겠습니다(본격적인 할인 로직 다룰때)
+  } //여기 API 코드는 할인정보 삭제 브렌치 파서 진행하겠습니다(본격적인 할인 로직 다룰때)
   //현재는 클라이언트 단에서(스토어) 삭제되는거까지만 해놨습니다.
-  console.log(discountEvents)
   return (
     <PageContainer>
       <Header>
@@ -34,13 +42,14 @@ export default function DiscountEventRecordPage() {
       </Header>
       <EventList>
         {discountEvents.map((event) => (
-          <EventItem key={event.id}>
-            <EventTitle>{storeInfos[0].name}</EventTitle>
-            <EventDescription>{event.eventMessage}</EventDescription>
+          <EventItem key={event.discountId}>
+            <EventTitle>{event.storeName}</EventTitle>{' '}
+            {/* storeName을 렌더링 */}
+            <EventDescription>{event.discountTitle}</EventDescription>
             <EventPeriod>
               {event.startDate} ~ {event.endDate}
             </EventPeriod>
-            <DeleteButton onClick={() => handleDeleteClick(event.id)}>
+            <DeleteButton onClick={() => handleDeleteClick(event.discountId)}>
               삭제
             </DeleteButton>
           </EventItem>
