@@ -4,6 +4,7 @@ export const ManagerPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 30px;
   justify-content: flex-start;
   width: 90%;
   height: 100%;

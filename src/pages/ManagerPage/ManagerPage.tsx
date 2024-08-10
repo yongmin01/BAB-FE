@@ -21,6 +21,14 @@ import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
 import { generateUniqueId } from '@utils/generateUniqueId'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import MyPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
+import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
+import {
+  ImgBtnContainer,
+  Btn,
+  StyledArrow,
+} from '@components/MyPageCard/MyPageCardTop/MyPageCardTop.style'
+import ArrowImg from '@assets/StudentPage/arrow.svg'
 
 export default function ManagerPage() {
   const { isRegistered, setIsRegistered, setManagerRegistrationInfo } =
@@ -101,7 +109,41 @@ export default function ManagerPage() {
   return (
     <ManagerPageContainer>
       <HeaderTitle title="마이페이지" icon="notification" />
+
       {isStoreRegistered ? (
+        <ManagerCompletedCard />
+      ) : (
+        <StyledCard paddingTop="35px" paddingBottom="26px">
+          <RegistrationPrompt
+            isRegistered={isRegistered}
+            businessData={businessData ? [businessData] : null}
+          />
+          {isRegistered && businessData ? (
+            <>
+              <ImgBtnContainer gap="12px">
+                <img src={menuIcon} alt="메뉴 아이콘" />
+                <Btn onClick={handleStoreRegisterClick} padding="18px">
+                  가게 등록하러 가기
+                  <StyledArrow src={ArrowImg} />
+                </Btn>
+              </ImgBtnContainer>
+            </>
+          ) : (
+            <>
+              <ImgBtnContainer gap="18px">
+                <img src={icon} alt="등록증 아이콘" />
+                <Btn onClick={handleManagerRegisterClick} padding="18px">
+                  사업자 정보 등록하기
+                  <StyledArrow src={ArrowImg} />
+                </Btn>
+              </ImgBtnContainer>
+            </>
+          )}
+        </StyledCard>
+      )}
+      <MyPageCardAccount />
+      {isStoreRegistered ? <DiscountModal /> : null}
+      {/* {isStoreRegistered ? (
         <ManagerCompletedCard />
       ) : (
         <Card>
@@ -127,9 +169,8 @@ export default function ManagerPage() {
             </>
           )}
         </Card>
-      )}
-
-      <AccountInfo>
+      )} */}
+      {/* <AccountInfo>
         <AccountDetail className="title">계정</AccountDetail>
         <AccountDetail className="subtitle">
           <span>아이디</span>
@@ -139,8 +180,7 @@ export default function ManagerPage() {
         <AccountActions>
           <span>로그아웃</span>
         </AccountActions>
-      </AccountInfo>
-      {isStoreRegistered ? <DiscountModal /> : null}
+      </AccountInfo> */}
     </ManagerPageContainer>
   )
 }
