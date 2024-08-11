@@ -141,6 +141,7 @@ export const StyledButton = styled.button`
   text-align: center;
   position: absolute;
   bottom: 16px;
+  border: none;
 `
 
 export const StyledNavImgWrapper = styled.div`
