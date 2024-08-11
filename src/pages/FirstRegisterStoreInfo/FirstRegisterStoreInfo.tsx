@@ -12,7 +12,6 @@ import {
   StyledNavImgWrapper,
   StyledNavText,
   StyledRow,
-  StyledSearchInput,
   StyledSection,
   StyledTitle,
   StyledUploadBox,
@@ -20,7 +19,6 @@ import {
   StyledUploadText,
   StyledErrorMessage,
   StyledInputContainer,
-  StyledSearchInputContainer,
 } from './FirstRegisterStoreInfo.style'
 import UploadImg from '@assets/RegisterStoreInfo/upload.svg'
 import nav from '@assets/RegisterStoreInfo/firststep.svg'
@@ -29,6 +27,7 @@ import { ChangeEvent, useRef, useState } from 'react'
 import { useErrorInput } from '@hooks/useErrorInput'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
+import StoreUniversitySearch from '@components/StoreUniversitySearch/StoreUniversitySearch'
 
 export default function FirstRegisterStoreInfo() {
   const navigate = useNavigate()
@@ -143,22 +142,7 @@ export default function FirstRegisterStoreInfo() {
               }
             />
           </StyledSection>
-          <StyledSearchInputContainer>
-            <StyledLabel>학교 선택</StyledLabel>
-            {school.error && (
-              <StyledErrorMessage>
-                <img src={errorIcon} alt="Error icon" />
-                {school.error}
-              </StyledErrorMessage>
-            )}
-          </StyledSearchInputContainer>
-          <StyledSearchInput
-            type="text"
-            placeholder="학교 선택"
-            value={school.value}
-            onChange={school.onChange}
-            className={school.error ? 'invalid' : ''}
-          />
+          <StoreUniversitySearch school={school} />
           <StyledButton onClick={handleNext}>다음</StyledButton>
         </StyledFormContainer>
       </StyledScrollableContent>
