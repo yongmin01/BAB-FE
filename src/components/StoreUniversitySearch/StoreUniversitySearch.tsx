@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import {
   StyledSearchInput,
   StyledDropdownList,
@@ -25,10 +25,12 @@ interface UniversitySearchProps {
     error: string | null
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
   }
+  containerRef: React.RefObject<HTMLDivElement>
 }
 
-export default function StoreUniversitySearch({
+export const StoreUniversitySearch = React.memo(function StoreUniversitySearch({
   school,
+  containerRef,
 }: UniversitySearchProps) {
   const [universitySearch, setUniversitySearch] = useState('')
   const [universityResults, setUniversityResults] = useState<University[]>([])
@@ -37,15 +39,17 @@ export default function StoreUniversitySearch({
     if (value) {
       try {
         const results = await getUniversities(value)
-        console.log(results)
         setUniversityResults(results)
+        if (containerRef.current) {
+          containerRef.current.scrollTop = containerRef.current.scrollHeight
+        }
       } catch (error) {
         console.error('대학 검색 컴포넌트 오류', error)
       }
     } else {
       setUniversityResults([])
     }
-  }, 1000)
+  }, 500)
 
   const handleUniversitySearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -96,4 +100,4 @@ export default function StoreUniversitySearch({
       )}
     </>
   )
-}
+})
