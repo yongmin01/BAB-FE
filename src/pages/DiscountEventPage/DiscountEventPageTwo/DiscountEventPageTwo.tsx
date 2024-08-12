@@ -53,13 +53,13 @@ export default function DiscountEventPageTwo() {
       if (discountInfo) {
         addDiscountEventWithId(
           discountInfo.discountId,
-          discountInfo.storeNAme,
+          discountInfo.storeName,
           discountInfo.title,
           discountInfo.startDate,
           discountInfo.endDate,
           discountInfo.createDiscountMenuDataDtoList,
         )
-        //할인 성공적으로 추가 됐으면 성공 여부 따져서 알림 API 호출
+        //할인 성공적으로 추가 됐으면 성공 여부 따져서 알림 API 호출하는 코드 작성
         console.log(discountEvents)
       }
       navigate('/manager')

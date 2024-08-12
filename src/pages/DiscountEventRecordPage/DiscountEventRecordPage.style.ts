@@ -19,6 +19,7 @@ export const Header = styled.div`
   align-items: center;
   width: 100%;
   padding: 10px 0;
+  z-index: 10;
 `
 
 export const Title = styled.h1`
@@ -35,6 +36,7 @@ export const BackButton = styled.button`
   cursor: pointer;
   position: absolute;
   left: 10px;
+  z-index: 10;
 `
 
 export const EventList = styled.div`

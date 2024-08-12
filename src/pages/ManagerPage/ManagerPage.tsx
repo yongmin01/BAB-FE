@@ -34,7 +34,7 @@ export default function ManagerPage() {
   const [businessData, setBusinessData] = useState<ManagerRegisterState | null>(
     null,
   )
-  console.log(discountEvents)
+
   useEffect(() => {
     if (isRegistered) {
       setBusinessData(managerRegisterInfoStore.getState())
@@ -48,11 +48,7 @@ export default function ManagerPage() {
   }, [storeInfos])
 
   useEffect(() => {
-    console.log(discountEvents)
-  }, [discountEvents])
-
-  useEffect(() => {
-    //가게등록한게 유지된다 가정
+    //가게등록을 기반으로 할인을 할 수 있기에 일단 사업자등록증 화면은 안 나오도록 하고 가게정보가 등록됐다 가정
     setStoreRegistered(true)
   }, [setStoreRegistered])
 
