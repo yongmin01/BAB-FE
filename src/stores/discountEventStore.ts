@@ -2,8 +2,9 @@ import { create } from 'zustand'
 import { generateUniqueId } from '@utils/generateUniqueId'
 
 interface Discount {
-  id: number
-  name: string
+  menuId: number
+  menuPrice: number
+  menuName: string
   discountPrice: number
   isChecked: boolean
 }
@@ -26,14 +27,26 @@ interface DiscountEventState {
   setDiscountPrice: (id: number, price: number) => void
   initializeDiscounts: (
     menu: {
-      id: number
+      menuId: number
       image: string
       name: string
       price: number
       isDiscounted?: boolean
     }[],
   ) => void
-  addDiscountEventWithId: (discountId: number) => void
+  addDiscountEventWithId: (
+    discountId: number,
+    storeName: string,
+    discountTitle: string,
+    startDate: string,
+    endDate: string,
+    createDiscountMenuDataDtoList: {
+      menuId: number
+      menuName: string
+      menuPrice: number
+      discountPrice: number
+    }[],
+  ) => void
 
   removeDiscountEventById: (eventId: number) => void
 }
@@ -68,7 +81,9 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
       currentEvent: {
         ...state.currentEvent,
         discounts: state.currentEvent.discounts.map((discount) =>
-          discount.id === id ? { ...discount, isChecked: isChecked } : discount,
+          discount.menuId === id
+            ? { ...discount, isChecked: isChecked }
+            : discount,
         ),
       },
     })),
@@ -77,27 +92,54 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
       currentEvent: {
         ...state.currentEvent,
         discounts: state.currentEvent.discounts.map((discount) =>
-          discount.id === id ? { ...discount, discountPrice: price } : discount,
+          discount.menuId === id
+            ? { ...discount, discountPrice: price }
+            : discount,
         ),
       },
     })),
   initializeDiscounts: (menu) =>
-    set((state) => ({
-      currentEvent: {
-        ...state.currentEvent,
-        discounts: menu.map((item) => ({
-          id: item.id,
-          name: item.name,
+    set((state) => {
+      const discounts = menu.map((item) => {
+        console.log('Initializing discount for item:', item) // 연동 후 업데이트 됐나 확인
+        return {
+          menuId: item.menuId,
+          menuPrice: item.price,
+          menuName: item.name,
           discountPrice: 0,
           isChecked: false,
-        })),
-      },
-    })),
-  addDiscountEventWithId: (discountId) => {
+        }
+      })
+
+      return {
+        currentEvent: {
+          ...state.currentEvent,
+          discounts: discounts,
+        },
+      }
+    }),
+  addDiscountEventWithId: (
+    discountId,
+    storeName,
+    discountTitle,
+    startDate,
+    endDate,
+    createDiscountMenuDataDtoList,
+  ) => {
     const state = get()
     const newEvent: DiscountEvent = {
-      ...state.currentEvent,
-      discountId: discountId, // 받은 discountId를 사용
+      discountId: discountId,
+      storeName: storeName,
+      discountTitle: discountTitle,
+      startDate: startDate,
+      endDate: endDate,
+      discounts: createDiscountMenuDataDtoList.map((item) => ({
+        menuId: item.menuId,
+        menuName: item.menuName,
+        discountPrice: item.discountPrice,
+        menuPrice: item.menuPrice,
+        isChecked: true,
+      })),
     }
     set({
       discountEvents: [...state.discountEvents, newEvent],

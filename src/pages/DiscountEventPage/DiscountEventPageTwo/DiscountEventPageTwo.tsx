@@ -18,7 +18,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
-import { handleDiscountRegister } from '@apis/Discount/discountRegister.ts'
+import { handleDiscountEventRegister } from '@apis/Discount/discountEventRegister'
 
 export default function DiscountEventPageTwo() {
   const navigate = useNavigate()
@@ -49,13 +49,20 @@ export default function DiscountEventPageTwo() {
 
   const handleSubmit = async () => {
     try {
-      const discountId = await handleDiscountRegister() // 할인 이벤트 API 호출
-      if (discountId) {
-        addDiscountEventWithId(discountId) // 할인 이벤트 ID와 함께 이벤트 저장
+      const discountInfo = await handleDiscountEventRegister() // 할인 이벤트 API 호출
+      if (discountInfo) {
+        addDiscountEventWithId(
+          discountInfo.discountId,
+          discountInfo.storeNAme,
+          discountInfo.title,
+          discountInfo.startDate,
+          discountInfo.endDate,
+          discountInfo.createDiscountMenuDataDtoList,
+        )
+        //할인 성공적으로 추가 됐으면 성공 여부 따져서 알림 API 호출
+        console.log(discountEvents)
       }
-      console.log(discountId)
-      console.log(discountEvents)
-      navigate('/manager') // 성공 시 페이지 이동
+      navigate('/manager')
     } catch (error) {
       console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
       alert('할인 이벤트 생성에 실패했습니다. 다시 시도해주세요.')

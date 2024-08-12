@@ -4,14 +4,14 @@ import storeInfoStore from '@stores/storeInfoStore'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export async function handleDiscountRegister() {
+export async function handleDiscountEventRegister() {
   const { currentEvent } = discountEventStore.getState()
   const { storeInfos } = storeInfoStore.getState()
 
   // API 요청에 사용할 데이터 준비
   const eventData = {
     discountMenuDataDtoList: currentEvent.discounts.map((discount) => ({
-      menuId: discount.id,
+      menuId: discount.menuId,
       discountPrice: discount.discountPrice,
     })),
     title: currentEvent.discountTitle,
@@ -22,6 +22,7 @@ export async function handleDiscountRegister() {
   try {
     // 실제 API 호출
     const response = await axios.post(
+      //솔미님 쪽에서 가게 등록되고 스토어에서 가게 id 가져와서 여기에 와있을 것 - 현재는 임의로
       `${API_BASE_URL}/v1/stores/${storeInfos[0].id}/menus/discounts`,
       eventData,
       {
@@ -30,8 +31,15 @@ export async function handleDiscountRegister() {
         },
       },
     )
-    console.log('할인 이벤트가 성공적으로 생성되었습니다:')
-    return response.data.result.discountId
+
+    console.log('전체 응답 데이터:', response.data)
+    console.log(
+      '할인 이벤트가 성공적으로 생성되었습니다:',
+      response.data.result,
+    )
+
+    // result 객체 전체를 반환
+    return response.data.result
   } catch (error) {
     console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
   }
