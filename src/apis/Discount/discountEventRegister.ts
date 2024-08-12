@@ -10,10 +10,12 @@ export async function handleDiscountEventRegister() {
 
   // API 요청에 사용할 데이터 준비
   const eventData = {
-    discountMenuDataDtoList: currentEvent.discounts.map((discount) => ({
-      menuId: discount.menuId,
-      discountPrice: discount.discountPrice,
-    })),
+    discountMenuDataDtoList: currentEvent.discounts
+      .filter((discount) => discount.isChecked && discount.discountPrice > 0) // 체크된 항목만 필터링
+      .map((discount) => ({
+        menuId: discount.menuId,
+        discountPrice: discount.discountPrice,
+      })),
     title: currentEvent.discountTitle,
     startDate: currentEvent.startDate,
     endDate: currentEvent.endDate,
@@ -22,7 +24,7 @@ export async function handleDiscountEventRegister() {
   try {
     // 실제 API 호출
     const response = await axios.post(
-      //솔미님 쪽에서 가게 등록되고 스토어에서 가게 id 가져와서 여기에 와있을 것 - 현재는 임의로
+      //솔미님 쪽에서 가게 등록되고 스토어에서 현재 사장님의 가게 id 가져와서 여기로 가져올 것 - 현재는 임의로
       `${API_BASE_URL}/v1/stores/${storeInfos[0].id}/menus/discounts`,
       eventData,
       {

@@ -10,7 +10,7 @@ interface BusinessHours {
 
 export interface MenuItem {
   //할인된 가격 생각도 해야될듯
-  id: number
+  menuId: number
   image: string
   name: string
   price: number
@@ -47,7 +47,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
   storeInfos: [
     {
       id: 1,
-      name: '기본 가게 이름',
+      name: '금산양꼬치 본점',
       storeLink: 'http://example.com',
       image: 'default_image.png',
       university: '기본 대학',
@@ -63,14 +63,14 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
       ],
       menu: [
         {
-          id: 1,
+          menuId: 1,
           image: 'menu1.png',
           name: '메뉴 1',
           price: 10000,
           isDiscounted: false,
         },
         {
-          id: 2,
+          menuId: 2,
           image: 'menu2.png',
           name: '메뉴 2',
           price: 12000,
@@ -104,7 +104,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           ? {
               ...store,
               menu: store.menu.map((item) =>
-                item.id === menuId
+                item.menuId === menuId
                   ? {
                       ...item,
                       price: isDiscounted
