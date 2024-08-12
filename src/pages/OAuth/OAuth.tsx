@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import SyncLoader from 'react-spinners/SyncLoader'
@@ -7,35 +7,60 @@ import { LoginStore } from '@stores/loginStore'
 
 export default function OAuth() {
   const navigate = useNavigate()
-  const { setIsLogined } = LoginStore((state) => state)
+  const { membertype, setIsLogined, setToken } = LoginStore((state) => state)
+  useEffect(() => {
+    // 인가코드
+    let code = new URL(window.location.href).searchParams.get('code')
+    console.log(code)
 
-  //인가코드
-  let code = new URL(window.location.href).searchParams.get('code')
-
-  const options = {
-    url: 'https://kauth.kakao.com/oauth/token', //임시 서버 주소, 백엔드 api 명세서 나오면 그때 수정
-    method: 'POST',
-    data: {
-      token: code, //인가코드 서버로 넘기기
-    },
-  }
-
-  axios(options)
-    .then((response) => {
-      if (response.data.isSuccess == true) {
-        console.log(response)
-        localStorage.setItem('kakao_token', response.data.result.jwt)
-        setIsLogined(true)
-        navigate('/mapPage')
-      } else if (response.data.isSuccess == false) {
-        alert(response.data.message)
-        navigate('/signup')
+    let options = {} //ifelse 안에 선언하면 밖에서 사용x해서 빼놓음
+    if (membertype === 'student') {
+      //회원유형별로 다른 api 사용
+      options = {
+        url: 'http://43.201.218.182:8080/v1/users/student', // 임시 서버 주소
+        method: 'POST',
+        headers: {
+          accept: '*/*',
+          'Content-Type': 'application/json',
+        },
+        data: {
+          token: code, // 인가코드 서버로 넘기기
+        },
       }
-    })
+    } else {
+      options = {
+        url: 'http://43.201.218.182:8080/v1/users/owner', // 임시 서버 주소
+        method: 'POST',
+        headers: {
+          accept: '*/*',
+          'Content-Type': 'application/json',
+        },
+        data: {
+          token: code, // 인가코드 서버로 넘기기
+        },
+      }
+    }
 
-    .catch((error) => {
-      console.error('Error during OAuth process:', error)
-    })
+    axios(options)
+      .then((response) => {
+        if (response.data.isSuccess) {
+          console.log(response)
+          setToken(response.data.result.jwt)
+          setIsLogined(true)
+          navigate('/map')
+        } else {
+          alert(response.data.message)
+          navigate('/signup')
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error('Server responded with an error:', error.response.data)
+        } else {
+          console.error('Error during OAuth process:', error)
+        }
+      })
+  }, [navigate, setIsLogined])
 
   return (
     <LoadContainer>

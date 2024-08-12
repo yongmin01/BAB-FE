@@ -28,10 +28,7 @@ export default function MemberType() {
 
   return (
     <MemberContainer>
-      <Welcome>
-        {user} 님, <br />
-        환영합니다!
-      </Welcome>
+      <Welcome>환영합니다!</Welcome>
       <SelectMessage>
         서비스 이용을 위해
         <br />
