@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
 export const AfterSearchBarContainer = styled.div`
-  position: fixed;
+  position: absolute;
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 100%;
   height: 40px;
   background-color: white;
   z-index: 1;
@@ -48,10 +48,10 @@ export const AfterSearchBarDiscountStyle = styled.div`
 `
 
 export const SearchBarContainer = styled.div`
-  position: fixed;
+  position: absolute;
   flex-direction: column;
   display: flex;
-  width: 400px;
+  width: 100%;
   background-color: none;
   align-items: center;
   z-index: 1;

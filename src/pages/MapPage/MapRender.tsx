@@ -26,7 +26,6 @@ export default function MapRender() {
   const [filterCheck, setFilterCheck] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-  const [loading, setLoading] = useState<boolean>(true)
 
   function addMarker(marker: google.maps.marker.AdvancedMarkerElement): void {
     setMarkers((prev) => [...prev, marker])
