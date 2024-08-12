@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react'
+import React, { useState, ChangeEvent, useEffect } from 'react'
 import {
   StyledSearchInput,
   StyledDropdownList,
@@ -9,7 +9,7 @@ import {
 } from './StoreUniversitySearch.style'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
 import { getUniversities } from '@apis/getUnivetsities'
-import useDebounce from '@hooks/useDebounce'
+import { useDebounce } from '@hooks/useDebounce'
 
 interface University {
   universityId: number
@@ -35,26 +35,29 @@ export const StoreUniversitySearch = React.memo(function StoreUniversitySearch({
   const [universitySearch, setUniversitySearch] = useState('')
   const [universityResults, setUniversityResults] = useState<University[]>([])
 
-  const debouncedSearch = useDebounce(async (value: string) => {
-    if (value) {
-      try {
-        const results = await getUniversities(value)
-        setUniversityResults(results)
-        if (containerRef.current) {
-          containerRef.current.scrollTop = containerRef.current.scrollHeight
+  const debouncedSearchTerm = useDebounce(universitySearch, 1000)
+
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (debouncedSearchTerm) {
+        try {
+          const results = await getUniversities(debouncedSearchTerm)
+          setUniversityResults(results)
+
+          if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight
+          }
+        } catch (error) {
+          console.error('대학 검색 컴포넌트 오류', error)
         }
-      } catch (error) {
-        console.error('대학 검색 컴포넌트 오류', error)
       }
-    } else {
-      setUniversityResults([])
     }
-  }, 500)
+
+    handleSearch()
+  }, [debouncedSearchTerm, containerRef])
 
   const handleUniversitySearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setUniversitySearch(value)
-    debouncedSearch(value)
+    setUniversitySearch(e.target.value)
   }
 
   const handleUniversitySelect = (university: string) => {
