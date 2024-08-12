@@ -24,16 +24,23 @@ export default function DiscountEventRecordPage() {
   const discountEvents = discountEventStore.getState().discountEvents
 
   useEffect(() => {
-    if (storeInfos.length && storeInfos[0].id) {
-      fetchDiscountEvents(storeInfos[0].id).then(() => {
+    async function loadDiscountEvents() {
+      if (storeInfos.length && storeInfos[0].id) {
+        await fetchDiscountEvents(storeInfos[0].id)
+
+        // 할인이벤트가 없을 경우 EmptyState가 보이도록 빈 배열로 설정
+        if (discountEventStore.getState().discountEvents.length === 0) {
+          discountEventStore.setState({ discountEvents: [] })
+        }
+
         console.log(
           'Fetched Discount Events:',
           discountEventStore.getState().discountEvents,
         )
-      })
-    } else {
-      return
+      }
     }
+
+    loadDiscountEvents()
   }, [storeInfos])
 
   const handleDeleteClick = (eventId: number) => {
