@@ -1,15 +1,17 @@
-export default function useDebounce<T extends (...args: any[]) => void>(
-  func: T,
-  delay: number,
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | undefined
+import { useState, useEffect } from 'react'
 
-  return function (...args: Parameters<T>) {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-    timeoutId = setTimeout(() => {
-      func(...args)
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
     }, delay)
-  }
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
 }
