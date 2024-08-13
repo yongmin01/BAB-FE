@@ -23,26 +23,6 @@ export const StyledScrollableContent = styled.div`
     display: none;
   }
 `
-export const StyledRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`
-export const StyledBackIcon = styled.img`
-  height: 20px;
-  width: 10.5px;
-  position: absolute;
-  left: 0;
-`
-export const StyledTitle = styled.p`
-  font-weight: 600;
-  font-size: 20px;
-  color: #111111;
-  text-align: center;
-  flex-grow: 1;
-`
 
 export const StyledFormContainer = styled.div`
   margin-top: 10px;
