@@ -1,16 +1,7 @@
 import RegistrationPrompt from '@components/RegistrationPrompt'
 import { ManagerRegisterState } from '@stores/managerRegisterInfoStore'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
-import {
-  ManagerPageContainer,
-  Card,
-  CardImage,
-  CardTitle,
-  Button,
-  AccountInfo,
-  AccountDetail,
-  AccountActions,
-} from './ManagerPage.style'
+import { ManagerPageContainer } from './ManagerPage.style'
 import icon from '@assets/managerMypage/등록증 아이콘.svg'
 import menuIcon from '@assets/managerMypage/메뉴아이콘.svg'
 import useModalStore from '@stores/modalStore'
@@ -146,44 +137,6 @@ export default function ManagerPage() {
       )}
       <MyPageCardAccount />
       {isStoreRegistered ? <DiscountModal /> : null}
-      {/* {isStoreRegistered ? (
-        <ManagerCompletedCard />
-      ) : (
-        <Card>
-          <CardTitle>
-            <RegistrationPrompt
-              isRegistered={isRegistered}
-              businessData={businessData ? [businessData] : null}
-            />
-          </CardTitle>
-          {isRegistered && businessData ? (
-            <>
-              <CardImage src={menuIcon} alt="메뉴 아이콘" />
-              <Button onClick={handleStoreRegisterClick}>
-                가게 등록하러 가기
-              </Button>
-            </>
-          ) : (
-            <>
-              <CardImage src={icon} alt="등록증 아이콘" />
-              <Button onClick={handleManagerRegisterClick}>
-                사업자 정보 등록하기
-              </Button>
-            </>
-          )}
-        </Card>
-      )} */}
-      {/* <AccountInfo>
-        <AccountDetail className="title">계정</AccountDetail>
-        <AccountDetail className="subtitle">
-          <span>아이디</span>
-          <span>kosoohyeon1</span>
-        </AccountDetail>
-        <AccountDetail className="divider" />
-        <AccountActions>
-          <span>로그아웃</span>
-        </AccountActions>
-      </AccountInfo> */}
     </ManagerPageContainer>
   )
 }

@@ -1,9 +1,5 @@
-import Back from '@assets/RegisterStoreInfo/back.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
 import {
-  StyledRow,
-  StyledBackIcon,
-  StyledTitle,
   StyledScrollableContent,
   StyledButton,
   StyledContainer,
@@ -72,10 +68,6 @@ export default function FirstRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      {/* <StyledRow>
-        <StyledBackIcon onClick={handleBack} src={Back} />
-        <StyledTitle>가게 정보 등록</StyledTitle>
-      </StyledRow> */}
       <HeaderTitle title="가게 정보 등록" icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
