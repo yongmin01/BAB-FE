@@ -15,7 +15,7 @@ export interface MenuItem {
   image: string
   name: string
   price: number
-  discountPrice: number | null // 할인 가격 추가
+  discountPrice: number // 할인 가격 추가
   isDiscounted?: boolean // 추가된 필드
 }
 
@@ -24,7 +24,6 @@ export interface StoreInfo {
   name: string
   lat: number | null | undefined //경도 위도 추가
   lng: number | null | undefined
-  storeType: string // 무슨 종류의 음식을 파는지 확인하기 위해 추가
   storeLink: string
   isStoreRegistered: boolean
   image: string
@@ -77,7 +76,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           image: '',
           name: '김치찌개',
           price: 8000,
-          discountPrice: null,
+          discountPrice: 0,
           isDiscounted: false,
         },
         {
@@ -85,7 +84,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           image: '',
           name: '된장찌개',
           price: 7500,
-          discountPrice: null,
+          discountPrice: 0,
           isDiscounted: false,
         },
         {
@@ -93,7 +92,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           image: '',
           name: '계란말이',
           price: 5000,
-          discountPrice: null,
+          discountPrice: 0,
           isDiscounted: false,
         },
       ],
@@ -204,7 +203,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
             id: store.menu.length + 1,
             image: '',
             price: Math.floor(Math.random() * 7000),
-            discountPrice: null,
+            discountPrice: 0,
             isDiscounted: false,
           })
         }

@@ -5,7 +5,7 @@ import Map from '@components/MapCard/GoogleMapCard/Map'
 import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
 import { mapStore } from '@stores/mapStore'
-import storeInfoStore from '@stores/storeInfoStore'
+import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
 import { Wrapper, Status } from '@googlemaps/react-wrapper'
 
 //////////////  최상부 컨테이너  //////////////
@@ -26,7 +26,13 @@ export default function MapRender() {
   const [filterCheck, setFilterCheck] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
+  const [tempInfos, setTempInfo] = useState<StoreInfo[]>([])
+  const key = import.meta.env.VITE_API_KEY
 
+  // Places 가게 타입 확인 후 id 삽입 함수
+  function addStore(store: StoreInfo): void {
+    setTempInfo((prev) => [...prev, store])
+  }
   function addMarker(marker: google.maps.marker.AdvancedMarkerElement): void {
     setMarkers((prev) => [...prev, marker])
   }
@@ -47,9 +53,9 @@ export default function MapRender() {
 
   function findDiscount(id: number): boolean {
     let check = false
-    storeInfos.forEach((info) => {
+    tempInfos.forEach((info) => {
       if (info.id === id) {
-        if (info.menu[0].discountPrice !== null) {
+        if (info.menu[0].discountPrice !== 0) {
           check = true
         } else {
           check = false
@@ -114,9 +120,14 @@ export default function MapRender() {
             <SyncLoader color="#4f7233" margin={5} />
           </SpinnerContainer>
         ) : (
-          <Wrapper apiKey={import.meta.env.VITE_API_KEY} render={render}>
+          <Wrapper
+            apiKey="AIzaSyCTuG8TXrNLMXsVUZGcG_G_NKPgvS3CGzQ"
+            render={render}
+          >
             <Map
               markers={markers}
+              tempInfos={tempInfos}
+              addStore={addStore}
               addMarker={addMarker}
               clearMarker={clearMarker}
               searchValue={searchValue}
