@@ -29,6 +29,7 @@ export default function DiscountEventPageTwo() {
     discountEvents,
   } = discountEventStore()
   const { storeInfos } = storeInfoStore()
+  const currentStoreName = storeInfos[0]?.name || '가게 이름 없음' // 현재 가게 이름 설정
   const [selectedMessage, setSelectedMessage] = useState<string>(
     currentEvent.discountTitle,
   )
@@ -109,12 +110,12 @@ export default function DiscountEventPageTwo() {
                 <MenuRow
                   onClick={() =>
                     handleSelectedMessage(
-                      '밥이득 김치찌개 전 메뉴 1000원 할인',
+                      `${currentStoreName} 전 메뉴 1000원 할인`, // 동적으로 가게 이름 반영
                       'discount1',
                     )
                   }
                 >
-                  <MenuLabel>밥이득 김치찌개 전 메뉴 1000원 할인</MenuLabel>
+                  <MenuLabel>{`${currentStoreName} 전 메뉴 1000원 할인`}</MenuLabel>
                   <CheckboxWrapper>
                     <input
                       type="checkbox"
@@ -122,7 +123,7 @@ export default function DiscountEventPageTwo() {
                       checked={selectedCheckbox === 'discount1'}
                       onChange={() =>
                         handleSelectedMessage(
-                          '밥이득 김치찌개 전 메뉴 1000원 할인',
+                          `${currentStoreName} 전 메뉴 1000원 할인`,
                           'discount1',
                         )
                       }
@@ -133,12 +134,12 @@ export default function DiscountEventPageTwo() {
                 <MenuRow
                   onClick={() =>
                     handleSelectedMessage(
-                      '밥이득 김치찌개에서 할인행사 합니다!',
+                      `${currentStoreName}에서 할인행사 합니다!`,
                       'discount2',
                     )
                   }
                 >
-                  <MenuLabel>밥이득 김치찌개에서 할인행사 합니다!</MenuLabel>
+                  <MenuLabel>{`${currentStoreName}에서 할인행사 합니다!`}</MenuLabel>
                   <CheckboxWrapper>
                     <input
                       type="checkbox"
@@ -146,7 +147,7 @@ export default function DiscountEventPageTwo() {
                       checked={selectedCheckbox === 'discount2'}
                       onChange={() =>
                         handleSelectedMessage(
-                          '밥이득 김치찌개에서 할인행사 합니다!',
+                          `${currentStoreName}에서 할인행사 합니다!`,
                           'discount2',
                         )
                       }
