@@ -22,10 +22,7 @@ export const fetchDiscountEvents = async (storeId: number) => {
           }),
         )
 
-      discountEventStore.setState({
-        //데이터 잘 받아왔으면 스토어에 업데이트
-        discountEvents: fetchedDiscountEvents,
-      })
+      return fetchedDiscountEvents
     } else {
       console.error('Failed to fetch discount events:', response.data.message)
     }

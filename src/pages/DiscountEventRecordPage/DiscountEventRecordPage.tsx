@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   PageContainer,
   Header,
@@ -13,7 +13,7 @@ import {
 } from '@pages/DiscountEventRecordPage/DiscountEventRecordPage.style'
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
-import discountEventStore from '@stores/discountEventStore'
+import discountEventStore, { DiscountEvent } from '@stores/discountEventStore'
 import { fetchDiscountEvents } from '@apis/Discount/fetchDiscountEvents'
 import EmptyState from '@components/EmptyState'
 
@@ -21,41 +21,41 @@ export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
   const { storeInfos } = storeInfoStore()
   const { removeDiscountEventById } = discountEventStore()
-  const discountEvents = discountEventStore.getState().discountEvents
+  const [pastDiscountEvents, setPastDiscountEvents] = useState<DiscountEvent[]>(
+    [],
+  )
 
   useEffect(() => {
     async function loadDiscountEvents() {
       if (storeInfos.length && storeInfos[0].id) {
-        await fetchDiscountEvents(storeInfos[0].id)
-
-        // 할인이벤트가 없을 경우 EmptyState가 보이도록 빈 배열로 설정
-        if (discountEventStore.getState().discountEvents.length === 0) {
-          discountEventStore.setState({ discountEvents: [] })
+        const events = await fetchDiscountEvents(storeInfos[0].id)
+        // 가져온 이벤트를 상태에 저장
+        if (events) {
+          setPastDiscountEvents(events)
+        } else {
+          setPastDiscountEvents([]) // 기본값으로 빈 배열 설정
         }
-
-        console.log(
-          'Fetched Discount Events:',
-          discountEventStore.getState().discountEvents,
-        )
       }
     }
 
     loadDiscountEvents()
   }, [storeInfos])
 
+  console.log('Fetched Past Discount Events:', pastDiscountEvents)
+
   const handleDeleteClick = (eventId: number) => {
     removeDiscountEventById(eventId)
   } //여기 API 코드는 할인정보 삭제 브렌치 파서 진행하겠습니다(본격적인 할인 로직 다룰때)
   //현재는 클라이언트 단에서(스토어) 삭제되는거까지만 해놨습니다.
   return (
-    <PageContainer events={discountEvents.length > 0 ? 'true' : 'false'}>
+    <PageContainer events={pastDiscountEvents.length > 0 ? 'true' : 'false'}>
       <Header>
         <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
         <Title>진행했던 할인행사 보기</Title>
       </Header>
-      {discountEvents.length > 0 ? (
+      {pastDiscountEvents.length > 0 ? (
         <EventList>
-          {discountEvents.map((event) => (
+          {pastDiscountEvents.map((event) => (
             <EventItem key={event.discountId}>
               <EventTitle>{event.storeName}</EventTitle>
               <EventDescription>{event.discountTitle}</EventDescription>
