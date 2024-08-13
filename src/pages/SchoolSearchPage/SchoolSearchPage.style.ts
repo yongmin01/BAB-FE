@@ -87,6 +87,13 @@ export const StyledInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+
+  color: #000000;
 `
 export const Result = styled.div`
   display: flex;
@@ -159,5 +166,27 @@ export const SubText = styled.span`
 export const SearchValue = styled.span`
   color: #ff4d4d;
 `
-export const CandidateSchoolBox = styled.div``
-export const CandidateSchool = styled.div``
+export const CandidateSchoolBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 50px;
+  border: 0.4px solid #767676;
+  border-radius: 5px;
+  background-color: #ffffff;
+  margin-top: 10px;
+  padding: 0 8px;
+  overflow: scroll;
+`
+export const CandidateSchool = styled.div`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+
+  border-bottom: 0.1px solid #767676;
+  padding: 5px;
+  color: #000000;
+  &:last-child {
+    border: none;
+  }
+`

@@ -39,6 +39,7 @@ export default function SchoolSearchPage() {
   const [showAlert, setShowAlert] = useState(false)
   const token = import.meta.env.VITE_KAKAO_LOGIN_TEST_TOKEN
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
   interface School {
     universityId: number
     universityName: string
@@ -71,7 +72,7 @@ export default function SchoolSearchPage() {
       const response = await axios.patch(
         `${API_BASE_URL}/v1/users/student/university`,
         {
-          params: { universityId: universityId },
+          universityId: universityId,
         },
         {
           headers: {
@@ -81,12 +82,13 @@ export default function SchoolSearchPage() {
       )
       if (response.status === 200) {
         setIsSchoolSet(true)
-        setSchoolName(response.data.result.universityName)
-        setAddress(response.data.result.universityAddress)
+        setSchoolName(response.data.result.university.universityName)
+        setAddress(response.data.result.university.universityAddress)
         navigate('/studentPage')
       }
     } catch (error) {
-      console.log('에러 :', error)
+      console.log(error)
+      alert('잠시 후에 다시 시도해주세요!')
     }
   }
 
