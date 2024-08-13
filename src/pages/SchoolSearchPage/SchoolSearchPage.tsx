@@ -17,6 +17,8 @@ import {
   Text,
   SubText,
   SearchValue,
+  CandidateSchoolBox,
+  CandidateSchool,
 } from './SchoolSearchPage.style'
 import { HiMagnifyingGlass } from 'react-icons/hi2'
 import Button from '@components/Button/Button'
@@ -56,14 +58,15 @@ export default function SchoolSearchPage() {
         const response = await axios.get(`${API_BASE_URL}/v1/universities`, {
           params: { universityName: searchVal },
         })
-        setCandidateSchool(response.data.result)
+        if (response.data.result.length >= 1) {
+          setCandidateSchool(response.data.result)
+        }
       } catch (error) {
         console.log(error)
       }
     }
   }
   const setSchoolRequest = async (universityId: number) => {
-    // 토큰 만료 에러
     try {
       const response = await axios.patch(
         `${API_BASE_URL}/v1/users/student/university`,
@@ -76,7 +79,12 @@ export default function SchoolSearchPage() {
           },
         },
       )
-      console.log('응답 : ', response)
+      if (response.status === 200) {
+        setIsSchoolSet(true)
+        setSchoolName(response.data.result.universityName)
+        setAddress(response.data.result.universityAddress)
+        navigate('/studentPage')
+      }
     } catch (error) {
       console.log('에러 :', error)
     }
@@ -96,11 +104,7 @@ export default function SchoolSearchPage() {
   }
   const handleSetSchool = () => {
     if (selectedSchool) {
-      setIsSchoolSet(true)
       setSchoolRequest(selectedSchool.universityId)
-      setSchoolName(selectedSchool.universityName)
-      setAddress(selectedSchool.universityAddress)
-      navigate('/studentPage')
     }
   }
 
@@ -113,6 +117,7 @@ export default function SchoolSearchPage() {
       clearTimeout(timer)
     }
   }, [searchVal])
+
   return (
     <SchoolSearchPageContainer>
       <Title>
@@ -159,14 +164,17 @@ export default function SchoolSearchPage() {
               ></StyledInput>
               <HiMagnifyingGlass onClick={search} />
             </StyledForm>
-            {candidateSchool ? (
-              <div>
+            {candidateSchool.length >= 1 && searchVal ? (
+              <CandidateSchoolBox>
                 {candidateSchool.map((school) => (
-                  <div onClick={() => setSelectedSchool(school)}>
+                  <CandidateSchool
+                    key={school.universityId}
+                    onClick={() => setSearchVal(school.universityName)}
+                  >
                     {school.universityName}
-                  </div>
+                  </CandidateSchool>
                 ))}
-              </div>
+              </CandidateSchoolBox>
             ) : null}
             {showAlert ? (
               <Alert>

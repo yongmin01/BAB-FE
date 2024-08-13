@@ -159,3 +159,5 @@ export const SubText = styled.span`
 export const SearchValue = styled.span`
   color: #ff4d4d;
 `
+export const CandidateSchoolBox = styled.div``
+export const CandidateSchool = styled.div``
