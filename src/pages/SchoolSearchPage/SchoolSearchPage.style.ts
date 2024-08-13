@@ -11,8 +11,11 @@ export const SchoolSearchPageContainer = styled.div`
   align-items: center;
 
   padding-top: 20px;
+  padding-bottom: 20px;
 
   background-color: #f8f8f8;
+
+  overflow: scroll;
 `
 
 export const Title = styled.div`
@@ -126,4 +129,33 @@ export const ControlBtn = styled.div`
 
   margin-top: auto;
   margin-bottom: 5.6vh;
+`
+
+export const Alert = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 104px;
+`
+export const Text = styled.span`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+
+  color: #000000;
+`
+export const SubText = styled.span`
+  display: inline-block;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+
+  color: #767676;
+`
+export const SearchValue = styled.span`
+  color: #ff4d4d;
 `

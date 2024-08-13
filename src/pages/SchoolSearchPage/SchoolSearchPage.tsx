@@ -13,43 +13,106 @@ import {
   SchoolName,
   SchoolAddress,
   ControlBtn,
+  Alert,
+  Text,
+  SubText,
+  SearchValue,
 } from './SchoolSearchPage.style'
 import { HiMagnifyingGlass } from 'react-icons/hi2'
-import logo from '@assets/dummy/suu_emblem1.jpg'
 import Button from '@components/Button/Button'
 
 import { studentInfoStore } from '@stores/studentInfoStore'
 import { schoolInfoStore } from '@stores/schoolInfoStore'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 export default function SchoolSearchPage() {
-  const [response, setResponse] = useState<boolean>(false)
+  const [selectedSchool, setSelectedSchool] = useState<School>()
   const [searchVal, setSearchVal] = useState<string>('')
   const { studentName, setIsSchoolSet } = studentInfoStore((state) => state)
   const { setSchoolName, setAddress } = schoolInfoStore((state) => state)
-
-  const dummy = {
-    schoolName: '숭실대학교',
-    address: '서울특별시 동작구 상도로 369',
+  const [candidateSchool, setCandidateSchool] = useState<School[]>([])
+  const [showAlert, setShowAlert] = useState(false)
+  const token = import.meta.env.VITE_KAKAO_LOGIN_TEST_TOKEN
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+  interface School {
+    universityId: number
+    universityName: string
+    universityLogo: string
+    universityAddress: string
   }
 
   const navigate = useNavigate()
-  const handleSearch = () => {
-    setResponse(true) // 학교 검색 api 개발 완료되면 수정 예정
+  const request = async () => {
+    if (showAlert) {
+      if (searchVal == '') {
+        setShowAlert(false)
+      }
+    }
+    if (searchVal !== '') {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/v1/universities`, {
+          params: { universityName: searchVal },
+        })
+        setCandidateSchool(response.data.result)
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
-  const backToSearch = () => {
-    setResponse(false)
-    setSearchVal('')
-  }
-  const handleSetSchool = () => {
-    setIsSchoolSet(true)
-    setSchoolName(dummy.schoolName)
-    setAddress(dummy.address)
-    navigate('/studentPage')
+  const setSchoolRequest = async (universityId: number) => {
+    // 토큰 만료 에러
+    try {
+      const response = await axios.patch(
+        `${API_BASE_URL}/v1/users/student/university`,
+        {
+          params: { universityId: universityId },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      console.log('응답 : ', response)
+    } catch (error) {
+      console.log('에러 :', error)
+    }
   }
 
+  const search = () => {
+    if (candidateSchool.length == 1) {
+      setSelectedSchool(candidateSchool[0])
+    } else if (candidateSchool.length == 0) {
+      setShowAlert(true)
+    }
+  }
+  const backToSearch = () => {
+    setSelectedSchool(undefined)
+    setSearchVal('')
+    setCandidateSchool([])
+  }
+  const handleSetSchool = () => {
+    if (selectedSchool) {
+      setIsSchoolSet(true)
+      setSchoolRequest(selectedSchool.universityId)
+      setSchoolName(selectedSchool.universityName)
+      setAddress(selectedSchool.universityAddress)
+      navigate('/studentPage')
+    }
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      request()
+    }, 500)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [searchVal])
   return (
     <SchoolSearchPageContainer>
       <Title>
@@ -57,7 +120,7 @@ export default function SchoolSearchPage() {
         <TitleText>학생 정보 입력</TitleText>
       </Title>
       <PageContent>
-        {response ? (
+        {selectedSchool ? (
           <>
             <Step>
               아래 학교로
@@ -65,10 +128,12 @@ export default function SchoolSearchPage() {
               {studentName}님의 학교를 등록할게요.
             </Step>
             <Result>
-              <SchoolLogo src={logo} />
+              <SchoolLogo src={selectedSchool.universityLogo} />
               <School>
-                <SchoolName>{dummy.schoolName}</SchoolName>
-                <SchoolAddress>{dummy.address}</SchoolAddress>
+                <SchoolName>{selectedSchool.universityName}</SchoolName>
+                <SchoolAddress>
+                  {selectedSchool.universityAddress}
+                </SchoolAddress>
               </School>
             </Result>
             <ControlBtn>
@@ -87,13 +152,30 @@ export default function SchoolSearchPage() {
               <br />
               재학 중인 학교를 검색해주세요.
             </Step>
-            <StyledForm>
+            <StyledForm onSubmit={(e) => e.preventDefault()}>
               <StyledInput
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
               ></StyledInput>
-              <HiMagnifyingGlass onClick={handleSearch} />
+              <HiMagnifyingGlass onClick={search} />
             </StyledForm>
+            {candidateSchool ? (
+              <div>
+                {candidateSchool.map((school) => (
+                  <div onClick={() => setSelectedSchool(school)}>
+                    {school.universityName}
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {showAlert ? (
+              <Alert>
+                <Text>
+                  <SearchValue>'{searchVal}'</SearchValue>를 찾을 수 없습니다.
+                </Text>
+                <SubText>입력하신 정보를 다시 한번 확인해주세요!</SubText>
+              </Alert>
+            ) : null}
           </>
         )}
       </PageContent>
