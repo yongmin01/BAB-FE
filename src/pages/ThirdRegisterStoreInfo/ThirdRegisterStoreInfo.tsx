@@ -1,10 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import Back from '@assets/RegisterStoreInfo/back.svg'
 import nav from '@assets/RegisterStoreInfo/thirdstep.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
 
 import {
-  StyledBackIcon,
   StyledButton,
   StyledContainer,
   StyledFormContainer,
@@ -14,9 +12,7 @@ import {
   StyledNavImg,
   StyledNavImgWrapper,
   StyledNavText,
-  StyledRow,
   StyledScrollableContent,
-  StyledTitle,
   StyledUploadText,
   StyledErrorMessage,
   StyledInputContainer,
@@ -25,6 +21,7 @@ import {
 import { useState } from 'react'
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function ThirdRegisterStoreInfo() {
   const [isError, setIsError] = useState<boolean>(false)
@@ -69,10 +66,7 @@ export default function ThirdRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <StyledRow>
-        <StyledBackIcon onClick={handleBack} src={Back} />
-        <StyledTitle>가게 정보 등록</StyledTitle>
-      </StyledRow>
+      <HeaderTitle title="가게 정보 등록" icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>

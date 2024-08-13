@@ -1,9 +1,9 @@
 import { StyledCard } from '../MyPageCard.style'
 import { CardTitle } from '../MyPageCard.style'
-import { StyledAccount, Text, Btn } from './StudentPageCardAccount.style'
+import { StyledAccount, Text, Btn } from './MyPageCardAccount.style'
 import { studentInfoStore } from '@stores/studentInfoStore'
 
-export default function StudentPageCardAccount() {
+export default function MyPageCardAccount() {
   const { id } = studentInfoStore((state) => state)
 
   return (

@@ -4,9 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { format, parseISO } from 'date-fns'
 import {
   PageContainer,
-  Header,
-  Title,
-  BackButton,
   EventForm,
   Label,
   SpanLabel,
@@ -26,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore, { MenuItem } from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function DiscountEventPage() {
   const navigate = useNavigate()
@@ -153,10 +151,11 @@ export default function DiscountEventPage() {
   return (
     <>
       <PageContainer>
-        <Header>
-          <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
-          <Title>할인 행사 진행하기</Title>
-        </Header>
+        <HeaderTitle
+          title="할인 행사 진행하기"
+          icon="back"
+          onClick={() => navigate('/manager')}
+        />
         <EventForm>
           <DateDataWrapper>
             <Label>행사 기간 선택</Label>

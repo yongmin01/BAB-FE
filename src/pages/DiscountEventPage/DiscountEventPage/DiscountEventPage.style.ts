@@ -5,35 +5,15 @@ export const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   background-color: #f8f8f8;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-`
-
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0;
-`
-
-export const Title = styled.h1`
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  flex-grow: 1;
-`
-
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  position: absolute;
-  left: 10px;
+  padding: 58px 20px 20px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const EventForm = styled.form`
