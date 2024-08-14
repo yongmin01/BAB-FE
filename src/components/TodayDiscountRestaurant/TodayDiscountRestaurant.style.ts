@@ -6,6 +6,7 @@ export const RestaurantList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 19px;
+  margin-top: 20px;
 `
 
 export const Restaurant = styled.div`

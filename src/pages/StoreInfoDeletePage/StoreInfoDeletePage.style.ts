@@ -4,18 +4,13 @@ export const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
   width: 100%;
   height: 100%;
-`
-
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  position: absolute;
-  left: 10px;
+  padding: 58px 16px 16px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const SubTitle = styled.div`
@@ -27,22 +22,8 @@ export const SubTitle = styled.div`
   height: 60px;
   font-size: 1.2rem;
   color: #333;
-  margin: 0px;
-  margin-top: 10px;
+  margin: 58px 0 0;
   font-weight: 700;
-`
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 16px 0;
-`
-export const Title = styled.h1`
-  font-size: 24px;
-  font-weight: 600;
-  text-align: center;
-  flex-grow: 1;
 `
 
 export const DeleteButton = styled.button`

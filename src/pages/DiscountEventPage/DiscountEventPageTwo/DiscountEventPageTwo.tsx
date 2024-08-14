@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   PageContainer,
-  Header,
-  Title,
-  BackButton,
   EventForm,
   Label,
   Textarea,
@@ -18,7 +15,11 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+<<<<<<< HEAD
 import { handleDiscountEventRegister } from '@apis/Discount/discountEventRegister'
+=======
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+>>>>>>> develop
 
 export default function DiscountEventPageTwo() {
   const navigate = useNavigate()
@@ -88,12 +89,11 @@ export default function DiscountEventPageTwo() {
   return (
     <>
       <PageContainer>
-        <Header>
-          <BackButton onClick={() => navigate('/discount-event')}>
-            &lt;
-          </BackButton>
-          <Title>할인 행사 진행하기</Title>
-        </Header>
+        <HeaderTitle
+          title="할인 행사 진행하기"
+          icon="back"
+          onClick={() => navigate('/discount-event')}
+        />
         <DiscountDataWrapper>
           <Label>행사 문구</Label>
           <EventForm>
