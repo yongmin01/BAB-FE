@@ -50,10 +50,11 @@ export default function DiscountEventRecordPage() {
   //현재는 클라이언트 단에서(스토어) 삭제되는거까지만 해놨습니다.
   return (
     <PageContainer events={pastDiscountEvents.length > 0 ? 'true' : 'false'}>
-      <Header>
-        <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
-        <Title>진행했던 할인행사 보기</Title>
-      </Header>
+      <HeaderTitle
+        title="진행했던 할인행사 보기"
+        icon="back"
+        onClick={() => navigate('/manager')}
+      />
       {pastDiscountEvents.length > 0 ? (
         <EventList>
           {pastDiscountEvents.map((event) => (

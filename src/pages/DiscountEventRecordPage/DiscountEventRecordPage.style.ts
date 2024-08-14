@@ -5,11 +5,11 @@ export const PageContainer = styled.div<{ events: string }>`
   flex-direction: column;
   align-items: center;
   justify-content: ${({ events }) => (events ? 'flex-start' : 'center')};
-  padding: 20px;
   background-color: #f8f8f8;
   width: 100%;
   height: 100%;
   overflow-y: ${({ events }) => (events === 'true' ? 'auto' : 'hidden')};
+  padding: 58px 20px 20px;
   box-sizing: border-box;
 `
 
