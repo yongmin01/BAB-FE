@@ -15,11 +15,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
-<<<<<<< HEAD
 import { handleDiscountEventRegister } from '@apis/Discount/discountEventRegister'
-=======
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
->>>>>>> develop
 
 export default function DiscountEventPageTwo() {
   const navigate = useNavigate()

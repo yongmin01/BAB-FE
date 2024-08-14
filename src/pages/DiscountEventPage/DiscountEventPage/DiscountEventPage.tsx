@@ -23,11 +23,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore, { MenuItem } from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
-<<<<<<< HEAD
 import { fetchMenus } from '@apis/Discount/fetchMenu'
-=======
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
->>>>>>> develop
 
 export default function DiscountEventPage() {
   const navigate = useNavigate()

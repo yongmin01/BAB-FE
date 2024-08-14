@@ -4,17 +4,13 @@ export const PageContainer = styled.div<{ events: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-<<<<<<< HEAD
   justify-content: ${({ events }) => (events ? 'flex-start' : 'center')};
   padding: 20px;
-=======
->>>>>>> develop
   background-color: #f8f8f8;
   width: 100%;
   height: 100%;
   overflow-y: ${({ events }) => (events === 'true' ? 'auto' : 'hidden')};
   box-sizing: border-box;
-<<<<<<< HEAD
 `
 
 export const Header = styled.div`
@@ -41,13 +37,11 @@ export const BackButton = styled.button`
   position: absolute;
   left: 10px;
   z-index: 10;
-=======
   padding: 58px 20px 20px;
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
   }
->>>>>>> develop
 `
 
 export const EventList = styled.div`

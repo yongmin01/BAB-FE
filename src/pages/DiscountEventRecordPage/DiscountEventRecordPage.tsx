@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react'
-=======
->>>>>>> develop
 import {
   PageContainer,
   EventList,
@@ -10,17 +7,16 @@ import {
   EventDescription,
   EventPeriod,
   DeleteButton,
+  Header,
+  BackButton,
+  Title,
 } from '@pages/DiscountEventRecordPage/DiscountEventRecordPage.style'
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
-<<<<<<< HEAD
 import discountEventStore, { DiscountEvent } from '@stores/discountEventStore'
 import { fetchDiscountEvents } from '@apis/Discount/fetchDiscountEvents'
 import EmptyState from '@components/EmptyState'
-=======
-import discountEventStore from '@stores/discountEventStore'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
->>>>>>> develop
 
 export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
@@ -53,7 +49,6 @@ export default function DiscountEventRecordPage() {
   } //여기 API 코드는 할인정보 삭제 브렌치 파서 진행하겠습니다(본격적인 할인 로직 다룰때)
   //현재는 클라이언트 단에서(스토어) 삭제되는거까지만 해놨습니다.
   return (
-<<<<<<< HEAD
     <PageContainer events={pastDiscountEvents.length > 0 ? 'true' : 'false'}>
       <Header>
         <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
@@ -77,28 +72,6 @@ export default function DiscountEventRecordPage() {
       ) : (
         <EmptyState />
       )}
-=======
-    <PageContainer>
-      <HeaderTitle
-        title="진행했던 할인행사 보기"
-        icon="back"
-        onClick={() => navigate('/manager')}
-      />
-      <EventList>
-        {discountEvents.map((event) => (
-          <EventItem key={event.id}>
-            <EventTitle>{storeInfos[0].name}</EventTitle>
-            <EventDescription>{event.eventMessage}</EventDescription>
-            <EventPeriod>
-              {event.startDate} ~ {event.endDate}
-            </EventPeriod>
-            <DeleteButton onClick={() => handleDeleteClick(event.id)}>
-              삭제
-            </DeleteButton>
-          </EventItem>
-        ))}
-      </EventList>
->>>>>>> develop
     </PageContainer>
   )
 }
