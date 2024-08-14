@@ -7,9 +7,6 @@ import {
   EventDescription,
   EventPeriod,
   DeleteButton,
-  Header,
-  BackButton,
-  Title,
 } from '@pages/DiscountEventRecordPage/DiscountEventRecordPage.style'
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'

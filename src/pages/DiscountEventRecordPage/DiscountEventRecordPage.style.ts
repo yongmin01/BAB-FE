@@ -13,37 +13,6 @@ export const PageContainer = styled.div<{ events: string }>`
   box-sizing: border-box;
 `
 
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0;
-  z-index: 10;
-`
-
-export const Title = styled.h1`
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  flex-grow: 1;
-`
-
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  position: absolute;
-  left: 10px;
-  z-index: 10;
-  padding: 58px 20px 20px;
-  overflow: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`
-
 export const EventList = styled.div`
   width: 100%;
   margin-top: 20px;
