@@ -20,14 +20,21 @@ export default function SearchBar({
   handleSearchValue,
 }: Props) {
   const [data, setData] = useState<string>('')
-
+  const [focus, setFocus] = useState(false)
   const handleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData(e.target.value)
+  }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (data !== '') {
+        handleSearchValue(data)
+      }
+    }
   }
 
   return (
     <SearchBarContainer>
-      <SearchBarWrapper>
+      <SearchBarWrapper focus={focus}>
         <SearchBarIconWrapper
           onClick={() => {
             handleSearchValue(data)
@@ -40,6 +47,9 @@ export default function SearchBar({
           placeholder="먹고 싶은 메뉴를 검색해보세요"
           value={data}
           onChange={(e) => handleValue(e)}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
         />
       </SearchBarWrapper>
       <SearchBarDiscountWrapper>
