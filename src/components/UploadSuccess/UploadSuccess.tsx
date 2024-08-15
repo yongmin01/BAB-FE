@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   StyledButton,
   StyledButtonContainer,
@@ -16,27 +16,23 @@ interface UploadSuccessProps {
 }
 
 export default function UploadSuccess({ retry }: UploadSuccessProps) {
-  const dummyData = {
-    registrationNumber: '000-00-0000',
-    companyName: '밥이득 김치찌개',
-    businessAddress: '서울특별시 마포구 OO길 13 (OO동)',
-    businessType: '숙박 및 음식점업',
-    businessCategory: '한식 일반 음식점업',
-  }
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const [registrationData, setRegistrationData] = useState({
     registrationNumber: '',
-    companyName: '',
-    businessAddress: '',
-    businessType: '',
-    businessCategory: '',
+    storeName: '',
+    address: '',
+    businessTypes: '',
+    categories: '',
   })
 
   useEffect(() => {
-    setRegistrationData(dummyData)
-  }, [])
-
-  const navigate = useNavigate()
+    if (location.state && location.state.registrationData) {
+      console.log(location.state.registrationData)
+      setRegistrationData(location.state.registrationData)
+    }
+  }, [location.state])
 
   const handleNextClick = () => {
     navigate('/registerSuccess')
@@ -68,23 +64,19 @@ export default function UploadSuccess({ retry }: UploadSuccessProps) {
           <StyledLabel>상호(법인명)</StyledLabel>
           <StyledValue
             type="text"
-            value={registrationData.companyName}
+            value={registrationData.storeName}
             readOnly
           />
         </StyledInfoRow>
         <StyledInfoRow>
           <StyledLabel>사업장 주소</StyledLabel>
-          <StyledValue
-            type="text"
-            value={registrationData.businessAddress}
-            readOnly
-          />
+          <StyledValue type="text" value={registrationData.address} readOnly />
         </StyledInfoRow>
         <StyledInfoRow>
           <StyledLabel>업태</StyledLabel>
           <StyledValue
             type="text"
-            value={registrationData.businessType}
+            value={registrationData.businessTypes}
             readOnly
           />
         </StyledInfoRow>
@@ -92,7 +84,7 @@ export default function UploadSuccess({ retry }: UploadSuccessProps) {
           <StyledLabel>종목</StyledLabel>
           <StyledValue
             type="text"
-            value={registrationData.businessCategory}
+            value={registrationData.categories}
             readOnly
           />
         </StyledInfoRow>

@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react'
 import UploadSuccess from '@components/UploadSuccess/UploadSuccess'
 import UploadFail from '@components/UploadFail/UploadFail'
 import Loader from '@components/Loader/Loader'
+import { postCertificates } from '@apis/postCertificates'
 
 export default function BusinessDocUpload() {
   const navigate = useNavigate()
@@ -26,6 +27,7 @@ export default function BusinessDocUpload() {
     useImageUpload()
   const [isLoading, setIsLoading] = useState(false)
   const [isUploadSuccess, setIsUploadSuccess] = useState<boolean | null>(null)
+  const token = import.meta.env.VITE_APP_API_TOKEN
 
   useEffect(() => {
     if (selectedImage) {
@@ -34,14 +36,22 @@ export default function BusinessDocUpload() {
   }, [selectedImage])
 
   const handleUpload = async () => {
+    if (!selectedImage) {
+      return
+    }
+
     setIsLoading(true)
 
     try {
-      // 임시 API 처리 - 항상 성공하는 것으로 가정
-      // 나중에는 아예 따로 분리해서 코드 작성할 예정임다
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      const response = await postCertificates(selectedImage, token)
+      console.log('성공', response)
+      console.log(response.result)
       setIsUploadSuccess(true)
+      navigate('/uploadSuccess', {
+        state: { registrationData: response.result },
+      })
     } catch (error) {
+      console.error('업로드 실패', error)
       setIsUploadSuccess(false)
     } finally {
       setIsLoading(false)
@@ -53,7 +63,11 @@ export default function BusinessDocUpload() {
       alert('이미지를 업로드해주세요.')
       return
     }
-    navigate('/registerSuccess')
+    if (isUploadSuccess) {
+      navigate('/registerSuccess')
+    } else {
+      alert('이미지 인식이 실패하였습니다.')
+    }
   }
 
   const handleBack = () => {
