@@ -3,6 +3,7 @@ import styled from 'styled-components'
 interface StyledCardProps {
   $paddingtop: string
   $paddingbottom: string
+  $paddingright?: string
 }
 export const StyledCard = styled.div<StyledCardProps>`
   box-sizing: border-box;
@@ -16,6 +17,7 @@ export const StyledCard = styled.div<StyledCardProps>`
   padding-left: 24px;
   padding-top: ${(props) => props.$paddingtop};
   padding-bottom: ${(props) => props.$paddingbottom};
+  padding-right: ${(props) => props.$paddingright};
 
   background: #ffffff;
   box-shadow: 4px 4px 10px 4px rgba(67, 89, 105, 0.05);

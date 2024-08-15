@@ -109,7 +109,7 @@ export default function SchoolSearchPage() {
     <SchoolSearchPageContainer>
       <HeaderTitle
         title="학생 정보 입력"
-        icon="back"
+        $icon="back"
         onClick={() => navigate('/studentPage')}
       />
       <PageContent>

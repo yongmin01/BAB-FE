@@ -55,7 +55,7 @@ export default function StoreInfoDeletePage() {
     <PageContainer>
       <HeaderTitle
         title="가게 삭제"
-        icon="back"
+        $icon="back"
         onClick={() => navigate('/storeInfo-edit')}
       />
       <SubTitle>

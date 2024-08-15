@@ -7,7 +7,7 @@ import NotifyIcon from '@components/NotifyIcon'
 import BackIcon from '@components/BackIcon'
 
 interface HeaderTitleStyleProps {
-  icon?: 'back' | 'notification'
+  $icon?: 'back' | 'notification'
 }
 interface HeaderTitleProps extends HeaderTitleStyleProps {
   title: string
@@ -16,18 +16,18 @@ interface HeaderTitleProps extends HeaderTitleStyleProps {
 
 export default function HeaderTitle({
   title,
-  icon,
+  $icon,
   onClick,
 }: HeaderTitleProps) {
   return (
     <Container>
-      {icon == 'back' && (
+      {$icon == 'back' && (
         <Icon onClick={onClick}>
           <BackIcon />
         </Icon>
       )}
-      <Title icon={icon}>{title}</Title>
-      {icon == 'notification' && (
+      <Title $icon={$icon}>{title}</Title>
+      {$icon == 'notification' && (
         <Icon onClick={onClick}>
           <NotifyIcon />
         </Icon>
