@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { buttonSize, buttonType, fontWeight } from './Button.style'
 interface ButtonStyleProps {
-  colorType: 'gray' | 'yellow'
+  $colortype: 'gray' | 'yellow'
   fontWeight?: 'SemiBold' | 'Bold' | 'ExtraBold'
   width: 'half' | 'full' | string
 }
@@ -23,7 +23,7 @@ const ButtonStyle = styled.button<ButtonStyleProps>`
   border: none;
 
   ${(props) => props.fontWeight && fontWeight[props.fontWeight]};
-  ${(props) => buttonType[props.colorType]?.['normal']};
+  ${(props) => buttonType[props.$colortype]?.['normal']};
 `
 
 interface ButtonProps extends ButtonStyleProps {

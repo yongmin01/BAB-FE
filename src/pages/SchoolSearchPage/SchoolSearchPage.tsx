@@ -131,10 +131,14 @@ export default function SchoolSearchPage() {
               </School>
             </Result>
             <ControlBtn>
-              <Button onClick={backToSearch} width="half" colorType="gray">
+              <Button onClick={backToSearch} width="half" $colortype="gray">
                 다시 입력할게요.
               </Button>
-              <Button onClick={handleSetSchool} width="half" colorType="yellow">
+              <Button
+                onClick={handleSetSchool}
+                width="half"
+                $colortype="yellow"
+              >
                 좋아요!
               </Button>
             </ControlBtn>
