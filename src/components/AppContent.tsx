@@ -23,6 +23,7 @@ import SchoolSearchPage from '@pages/SchoolSearchPage/SchoolSearchPage'
 import RegisterStoreSuccess from '@pages/RegisterSuccess/RegisterStoreSuccess'
 import BusinessDocUpload from '@pages/BusinessDocUpload/BusinessDocUpload'
 import RegisterSuccess from '@pages/RegisterSuccess/RegisterSuccess'
+import UploadSuccess from './UploadSuccess/UploadSuccess'
 
 export default function AppContent() {
   const location = useLocation()
@@ -73,6 +74,10 @@ export default function AppContent() {
         />
         <Route path="/registerSuccess" element={<RegisterSuccess />} />
         <Route path="/businessdocupload" element={<BusinessDocUpload />} />
+        <Route
+          path="/uploadSuccess"
+          element={<UploadSuccess retry={() => {}} />}
+        />
       </Routes>
       {showFooter && <Footer />}
     </>
