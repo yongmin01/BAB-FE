@@ -29,6 +29,7 @@ import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
 import { postStoreRegister } from '@apis/postStoreRegister'
 import { StoreUniversitySearch } from '@components/StoreUniversitySearch/StoreUniversitySearch'
+import storeInfoStore from '@stores/storeInfoStore'
 
 export default function FirstRegisterStoreInfo() {
   const navigate = useNavigate()
@@ -45,6 +46,8 @@ export default function FirstRegisterStoreInfo() {
   const [storeName, setStoreName] = useState('')
   const token = import.meta.env.VITE_APP_API_TOKEN
   // 나중에 로그인할 때 토큰 저장 후 store에서 가져올 예정입니당
+
+  const addStoreInfo = storeInfoStore((state) => state.addStoreInfo)
 
   const handleNext = async () => {
     const isStoreLinkValid = storeLink.validate('링크를 입력해 주세요.')
@@ -67,7 +70,24 @@ export default function FirstRegisterStoreInfo() {
           bannerFiles = Array.from(fileInputRef.current.files)
         }
 
-        await postStoreRegister(formData, token, bannerFiles)
+        const response = await postStoreRegister(formData, token, bannerFiles)
+
+        const { id, name } = response.result
+
+        addStoreInfo({
+          id,
+          name,
+          lat: latitude,
+          lng: longitude,
+          storeType: '',
+          storeLink: storeLink.value,
+          isStoreRegistered: true,
+          image: selectedImage?.thumbnail || '',
+          university: school.value,
+          businessHours: [],
+          breakTime: [],
+          menu: [],
+        })
         navigate('/secondRegisterStoreInfo')
       } catch (error) {
         alert('가게 등록 중 오류가 발생했습니다. 다시 시도해 주세요.')
