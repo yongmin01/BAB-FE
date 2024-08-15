@@ -1,5 +1,7 @@
+import '@assets/mapIcon/markerAnimation.css'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { mapStore } from '@stores/mapStore'
 import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
 import { stores } from '@stores/tempStore'
@@ -35,6 +37,17 @@ export default function Map({
   const { lat, lng, googleMap, setGoogleMap } = mapStore()
   const [zoom, setZoom] = useState<number | undefined>(16)
   const { storeInfos, tempAddStoreInfo, addMenu } = storeInfoStore()
+  const navigate = useNavigate()
+
+  //마커 감시변수
+  const intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('drop')
+        intersectionObserver.unobserve(entry.target)
+      }
+    })
+  })
 
   //할인 확인 함수 o
   function findIsDiscount(id: number): storeInfo {
@@ -128,13 +141,27 @@ export default function Map({
             info.menu[0].discountPrice === 0
               ? greyIcon(info.menu[0].price)
               : yellowIcon(info.menu[0].price, info.menu[0].discountPrice)
+          logo.classList.add('drop')
           const markerView = new AdvancedMarkerElement({
             map: googleMap,
             position: new google.maps.LatLng(info.lat as number, info.lng),
             title: info.name,
             content: logo,
           })
+          markerView.addListener('click', () => {
+            ////// 임시 코드 //////
+            navigate('/1')
+          })
           markerView.id = info.id.toString()
+          const marker = markerView.content as HTMLElement
+          marker.style.opacity = '0'
+          marker.addEventListener('animationend', (event) => {
+            marker.classList.remove('drop')
+            marker.style.opacity = '1'
+          })
+          const time = 1 + Math.random()
+          marker.style.setProperty('--delay-time', time + 's')
+          intersectionObserver.observe(marker)
           addMarker(markerView)
         })
       } else {
@@ -144,13 +171,14 @@ export default function Map({
   }, [tempInfos])
 
   //가게검색 기능 싹 다 바꿔야함
+  ///   임시코드    ///
   function findPlaces() {
     if (searchValue === '음식점') {
       stores.forEach((store) => {
         addStore(store)
       })
     }
-    //필요 없음
+
     /*const { Place } = (await google.maps.importLibrary(
       'places',
     )) as google.maps.PlacesLibrary

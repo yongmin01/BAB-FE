@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactElement } from 'react'
+import { useState, useEffect, ReactElement, lazy, Suspense } from 'react'
 import { SyncLoader } from 'react-spinners'
 import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
@@ -16,7 +16,11 @@ const render = (status: Status): ReactElement => {
   }
   return <div>로딩 완료!!</div>
 }
-
+const AsyncWrapper = lazy(() =>
+  import('@googlemaps/react-wrapper').then((module) => ({
+    default: module.Wrapper,
+  })),
+)
 export default function MapRender() {
   const { storeInfos } = storeInfoStore()
   const { googleMap } = mapStore()
@@ -27,7 +31,6 @@ export default function MapRender() {
   const [searchValue, setSearchValue] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
   const [tempInfos, setTempInfo] = useState<StoreInfo[]>([])
-  const key = import.meta.env.VITE_API_KEY
 
   // Places 가게 타입 확인 후 id 삽입 함수
   function addStore(store: StoreInfo): void {
@@ -108,7 +111,7 @@ export default function MapRender() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 1000)
+    }, 500)
     return () => clearTimeout(timer)
   }, [])
 
@@ -120,31 +123,39 @@ export default function MapRender() {
             <SyncLoader color="#4f7233" margin={5} />
           </SpinnerContainer>
         ) : (
-          <Wrapper
-            apiKey="AIzaSyCTuG8TXrNLMXsVUZGcG_G_NKPgvS3CGzQ"
-            render={render}
+          <Suspense
+            fallback={
+              <SpinnerContainer>
+                <SyncLoader color="#4f7233" margin={5} />
+              </SpinnerContainer>
+            }
           >
-            <Map
-              markers={markers}
-              tempInfos={tempInfos}
-              addStore={addStore}
-              addMarker={addMarker}
-              clearMarker={clearMarker}
-              searchValue={searchValue}
-            />
-            {searchValue === '' ? (
-              <SearchBar
-                handleFilterCheck={handleFilterCheck}
-                handleSearchValue={handleSearchValue}
-              />
-            ) : (
-              <AfterSearchBar
-                handleFilterCheck={handleFilterCheck}
+            <AsyncWrapper
+              apiKey="AIzaSyCTuG8TXrNLMXsVUZGcG_G_NKPgvS3CGzQ"
+              render={render}
+            >
+              <Map
+                markers={markers}
+                tempInfos={tempInfos}
+                addStore={addStore}
+                addMarker={addMarker}
+                clearMarker={clearMarker}
                 searchValue={searchValue}
-                handleSearchValue={handleSearchValue}
               />
-            )}
-          </Wrapper>
+              {searchValue === '' ? (
+                <SearchBar
+                  handleFilterCheck={handleFilterCheck}
+                  handleSearchValue={handleSearchValue}
+                />
+              ) : (
+                <AfterSearchBar
+                  handleFilterCheck={handleFilterCheck}
+                  searchValue={searchValue}
+                  handleSearchValue={handleSearchValue}
+                />
+              )}
+            </AsyncWrapper>
+          </Suspense>
         )}
       </MapContainer>
     </>
