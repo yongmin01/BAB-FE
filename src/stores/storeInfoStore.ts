@@ -1,6 +1,15 @@
 import { create } from 'zustand'
-import discountEventStore from './discountEventStore'
 import { produce } from 'immer'
+
+interface StoreName {
+  storeName: string
+  saveStoreName: (storeName: string) => void
+}
+
+export const useStoreName = create<StoreName>((set) => ({
+  storeName: '',
+  saveStoreName: (name) => set({ storeName: name }),
+}))
 
 interface BusinessHours {
   day: string

@@ -10,6 +10,7 @@ import {
   StyledValue,
 } from './UploadSuccess.style'
 import { useEffect, useState } from 'react'
+import { useStoreName } from '@stores/storeInfoStore'
 
 interface UploadSuccessProps {
   retry: () => void
@@ -18,6 +19,7 @@ interface UploadSuccessProps {
 export default function UploadSuccess({ retry }: UploadSuccessProps) {
   const navigate = useNavigate()
   const location = useLocation()
+  const saveStoreName = useStoreName((state) => state.saveStoreName)
 
   const [registrationData, setRegistrationData] = useState({
     registrationNumber: '',
@@ -35,6 +37,7 @@ export default function UploadSuccess({ retry }: UploadSuccessProps) {
   }, [location.state])
 
   const handleNextClick = () => {
+    saveStoreName(registrationData.storeName)
     navigate('/registerSuccess')
   }
 
