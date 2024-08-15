@@ -30,5 +30,16 @@ export const CardTitle = styled.div<CardTitleProps>`
 
   font-weight: 700;
   font-size: 20px;
+  line-height: 28px;
   color: #000000;
+`
+export const CardSubTitle = styled.div`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 28px;
+
+  letter-spacing: 0.01em;
+
+  color: #676767;
 `
