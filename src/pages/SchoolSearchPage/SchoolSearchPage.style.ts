@@ -169,7 +169,7 @@ export const SearchValue = styled.span`
 export const CandidateSchoolBox = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 50px;
+  max-height: 60px;
   border: 0.4px solid #767676;
   border-radius: 5px;
   background-color: #ffffff;
@@ -184,8 +184,8 @@ export const CandidateSchool = styled.div`
   line-height: 20px;
 
   border-bottom: 0.1px solid #767676;
-  padding: 5px;
-  color: #000000;
+  padding: 8px;
+  color: #767676;
   &:last-child {
     border: none;
   }
