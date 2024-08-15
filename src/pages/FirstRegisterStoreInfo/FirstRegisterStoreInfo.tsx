@@ -29,11 +29,13 @@ import { ChangeEvent, useRef, useState } from 'react'
 import { useErrorInput } from '@hooks/useErrorInput'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
+import { useStoreName } from '@stores/storeInfoStore'
 
 export default function FirstRegisterStoreInfo() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { selectedImage, handleUpload } = useImageLoad()
+  const { storeName, saveStoreName } = useStoreName()
 
   const storeLink = useErrorInput('')
   const school = useErrorInput('')
@@ -41,7 +43,7 @@ export default function FirstRegisterStoreInfo() {
   const [roadAddress, setRoadAddress] = useState('')
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
-  const [storeName, setStoreName] = useState('')
+  // const [storeName, setStoreName] = useState('')
 
   const handleNext = () => {
     const isStoreLinkValid = storeLink.validate('링크를 입력해 주세요.')
@@ -90,7 +92,7 @@ export default function FirstRegisterStoreInfo() {
             type="text"
             placeholder="밥이득 김치찌개"
             value={storeName}
-            onChange={(e) => setStoreName(e.target.value)}
+            onChange={(e) => saveStoreName(e.target.value)}
           />
           <StyledLabel>주소 입력</StyledLabel>
           <AddressSearch
