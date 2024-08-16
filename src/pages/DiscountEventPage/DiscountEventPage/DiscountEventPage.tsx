@@ -68,6 +68,15 @@ export default function DiscountEventPage() {
     loadMenus()
   }, [storeInfos, initializeDiscounts])
 
+  useEffect(() => {
+    const allPrices = currentEvent.discounts.map((d) =>
+      d.isChecked ? d.discountPrice : 0,
+    )
+    const uniquePrices = [...new Set(allPrices)]
+    const uniformPrice = uniquePrices.length === 1 && uniquePrices[0] > 0
+    setIsUniformPrice(uniformPrice)
+  }, [currentEvent.discounts])
+
   const handleNextClick = () => {
     // 유효성 검사 로직
     let periodError = ''
@@ -184,14 +193,7 @@ export default function DiscountEventPage() {
       return
     }
 
-    setDiscountChecked(id, price >= 0)
-
-    // 모든 메뉴의 가격이 동일한지 확인
-    const activeDiscounts = currentEvent.discounts.filter((d) => d.isChecked)
-    const allPrices = activeDiscounts.map((d) => d.discountPrice)
-    const uniquePrices = [...new Set(allPrices)]
-    const uniformPrice = uniquePrices.length === 1 && uniquePrices[0] > 0
-    setIsUniformPrice(uniformPrice)
+    setDiscountChecked(id, price > 0)
 
     const isValidDiscount = price >= 0 && discount.isChecked
 
