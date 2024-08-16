@@ -14,6 +14,7 @@ import discountEventStore, { DiscountEvent } from '@stores/discountEventStore'
 import { fetchDiscountEvents } from '@apis/Discount/fetchDiscountEvents'
 import EmptyState from '@components/EmptyState'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { deleteDiscountEvent } from '@apis/Discount/deleteDiscountEvent'
 
 export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
@@ -41,10 +42,18 @@ export default function DiscountEventRecordPage() {
 
   console.log('Fetched Past Discount Events:', pastDiscountEvents)
 
-  const handleDeleteClick = (eventId: number) => {
+  const handleDeleteClick = async (eventId: number) => {
     removeDiscountEventById(eventId)
+    /*
+    const removedEventId = await deleteDiscountEvent()
+    const updatedEvents = pastDiscountEvents.filter((pastEvent) => {
+      return pastEvent.discountId !== removedEventId;
+    });
+    setPastDiscountEvents(updatedEvents)
   } //여기 API 코드는 할인정보 삭제 브렌치 파서 진행하겠습니다(본격적인 할인 로직 다룰때)
   //현재는 클라이언트 단에서(스토어) 삭제되는거까지만 해놨습니다.
+  */
+  }
   return (
     <PageContainer events={pastDiscountEvents.length > 0 ? 'true' : 'false'}>
       <HeaderTitle
