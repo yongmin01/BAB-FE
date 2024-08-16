@@ -1,4 +1,5 @@
 import '@assets/mapIcon/markerAnimation.css'
+import { fetchMarker } from '@apis/Store/fetchMarker'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -80,6 +81,7 @@ export default function Map({
         mapId: 'eb4ca83b18a77f42',
       })
       setGoogleMap(initialMap)
+      fetchMarker()
       initialMap.addListener('zoom_changed', () => {
         setZoom(initialMap.getZoom())
       })
@@ -155,7 +157,7 @@ export default function Map({
           markerView.id = info.id.toString()
           const marker = markerView.content as HTMLElement
           marker.style.opacity = '0'
-          marker.addEventListener('animationend', (event) => {
+          marker.addEventListener('animationend', () => {
             marker.classList.remove('drop')
             marker.style.opacity = '1'
           })
