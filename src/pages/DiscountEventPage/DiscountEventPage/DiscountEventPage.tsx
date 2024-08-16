@@ -37,6 +37,7 @@ export default function DiscountEventPage() {
   } = discountEventStore()
   const { storeInfos, updateMenuDiscount } = storeInfoStore()
   const [menuList, setMenuList] = useState<MenuItem[]>([])
+  const [isUniformPrice, setIsUniformPrice] = useState<boolean>(false)
 
   const [errorMessages, setErrorMessages] = useState<{
     periodError: string
@@ -126,7 +127,7 @@ export default function DiscountEventPage() {
           )
         }
       })
-      navigate('/discount-eventTwo')
+      navigate('/discount-eventTwo', { state: { isUniformPrice } })
     }
   }
 
@@ -184,6 +185,13 @@ export default function DiscountEventPage() {
     }
 
     setDiscountChecked(id, price >= 0)
+
+    // 모든 메뉴의 가격이 동일한지 확인
+    const activeDiscounts = currentEvent.discounts.filter((d) => d.isChecked)
+    const allPrices = activeDiscounts.map((d) => d.discountPrice)
+    const uniquePrices = [...new Set(allPrices)]
+    const uniformPrice = uniquePrices.length === 1 && uniquePrices[0] > 0
+    setIsUniformPrice(uniformPrice)
 
     const isValidDiscount = price >= 0 && discount.isChecked
 

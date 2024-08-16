@@ -31,7 +31,7 @@ export default function DiscountEventRecordPage() {
         if (events) {
           setPastDiscountEvents(events)
         } else {
-          setPastDiscountEvents([]) // 기본값으로 빈 배열 설정
+          setPastDiscountEvents([])
         }
       }
     }
