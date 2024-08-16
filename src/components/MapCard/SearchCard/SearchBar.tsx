@@ -34,7 +34,7 @@ export default function SearchBar({
 
   return (
     <SearchBarContainer>
-      <SearchBarWrapper focus={focus}>
+      <SearchBarWrapper $focus={focus}>
         <SearchBarIconWrapper
           onClick={() => {
             handleSearchValue(data)

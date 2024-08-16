@@ -6,7 +6,7 @@ import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
 import { mapStore } from '@stores/mapStore'
 import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
-import { Wrapper, Status } from '@googlemaps/react-wrapper'
+import { Status } from '@googlemaps/react-wrapper'
 
 //////////////  최상부 컨테이너  //////////////
 

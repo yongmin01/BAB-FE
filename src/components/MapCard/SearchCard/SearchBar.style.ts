@@ -57,7 +57,7 @@ export const SearchBarContainer = styled.div`
   z-index: 1;
 `
 
-export const SearchBarWrapper = styled.div<{ focus: boolean }>`
+export const SearchBarWrapper = styled.div<{ $focus: boolean }>`
   display: flex;
   width: 90%;
   margin-top: 30px;
@@ -66,7 +66,7 @@ export const SearchBarWrapper = styled.div<{ focus: boolean }>`
   border-radius: 20px;
   color: grey;
   transition: scale 300ms;
-  scale: ${(props) => (props.focus ? '1.05' : '1')};
+  scale: ${(props) => (props.$focus ? '1.05' : '1')};
 `
 
 export const SearchBarInput = styled.input`
