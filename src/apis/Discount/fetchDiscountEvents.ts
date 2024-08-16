@@ -2,8 +2,8 @@ import axios from 'axios'
 import discountEventStore, { DiscountEvent } from '@stores/discountEventStore'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-//미리 작성해둔 진행했던 할인 행사 페이지 api 로직
-export const fetchDiscountEvents = async (storeId: number) => {
+
+export async function fetchDiscountEvents(storeId: number) {
   try {
     const response = await axios.get(
       `${API_BASE_URL}/v1/stores/${storeId}/discounts`,
