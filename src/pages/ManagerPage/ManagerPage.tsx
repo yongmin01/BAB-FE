@@ -23,6 +23,8 @@ import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
 import NotifyIcon from '@components/NotifyIcon'
 import discountEventStore from '@stores/discountEventStore'
 import { generateUniqueId } from '@utils/generateUniqueId'
+import { LoginStore } from '@stores/loginStore'
+import { useNavigate } from 'react-router-dom'
 
 export default function ManagerPage() {
   const { isRegistered, setIsRegistered, setManagerRegistrationInfo } =
@@ -35,6 +37,16 @@ export default function ManagerPage() {
   const [businessData, setBusinessData] = useState<ManagerRegisterState | null>(
     null,
   )
+  const { setIsLogined, setToken, setMembertype } = LoginStore((state) => state)
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    setIsLogined(false)
+    setToken('')
+    setMembertype('')
+    alert('로그아웃되었습니다!')
+    navigate('/')
+  }
 
   useEffect(() => {
     if (isRegistered) {
@@ -142,7 +154,7 @@ export default function ManagerPage() {
         </AccountDetail>
         <AccountDetail className="divider" />
         <AccountActions>
-          <span>로그아웃</span>
+          <span onClick={handleLogout}>로그아웃</span>
         </AccountActions>
       </AccountInfo>
       {isStoreRegistered ? <DiscountModal /> : null}

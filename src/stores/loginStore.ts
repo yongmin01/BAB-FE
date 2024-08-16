@@ -15,7 +15,7 @@ export interface LoginStateType {
 export const LoginStore = create(
   persist<LoginStateType>(
     (set) => ({
-      user: '고서현',
+      user: '',
       membertype: '', //사장님 or 학생
       isLogined: false,
       kakao_token: '',

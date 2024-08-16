@@ -1,5 +1,5 @@
 const REST_API_KEY = import.meta.env.VITE_REACT_APP_KAKAO_OAUTH_API_KEY
-const REDIRECT_URI = 'http://localhost:5173/oauth'
+const REDIRECT_URI = import.meta.env.VITE_OAUTH_REDIRECT_URI
 
 export const Kakao_Auth_Url = `https://kauth.kakao.com/oauth/authorize?
 response_type=code&
