@@ -1,8 +1,6 @@
-import Back from '@assets/RegisterStoreInfo/back.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
 import {
   StyledScrollableContent,
-  StyledBackIcon,
   StyledButton,
   StyledContainer,
   StyledFormContainer,
@@ -11,10 +9,8 @@ import {
   StyledNavImg,
   StyledNavImgWrapper,
   StyledNavText,
-  StyledRow,
   StyledSearchInput,
   StyledSection,
-  StyledTitle,
   StyledUploadBox,
   StyledUploadImg,
   StyledUploadText,
@@ -30,6 +26,7 @@ import { useErrorInput } from '@hooks/useErrorInput'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
 import { useStoreName } from '@stores/storeInfoStore'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function FirstRegisterStoreInfo() {
   const navigate = useNavigate()
@@ -73,10 +70,7 @@ export default function FirstRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <StyledRow>
-        <StyledBackIcon onClick={handleBack} src={Back} />
-        <StyledTitle>가게 정보 등록</StyledTitle>
-      </StyledRow>
+      <HeaderTitle title="가게 정보 등록" icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>

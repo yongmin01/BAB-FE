@@ -1,18 +1,7 @@
 import RegistrationPrompt from '@components/RegistrationPrompt'
 import { ManagerRegisterState } from '@stores/managerRegisterInfoStore'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
-import {
-  ManagerPageContainer,
-  Title,
-  TitleText,
-  Card,
-  CardImage,
-  CardTitle,
-  Button,
-  AccountInfo,
-  AccountDetail,
-  AccountActions,
-} from './ManagerPage.style'
+import { ManagerPageContainer } from './ManagerPage.style'
 import icon from '@assets/managerMypage/등록증 아이콘.svg'
 import menuIcon from '@assets/managerMypage/메뉴아이콘.svg'
 import useModalStore from '@stores/modalStore'
@@ -20,10 +9,18 @@ import { useEffect, useState } from 'react'
 import DiscountModal from '@components/Modal/DiscountModal'
 import ManagerCompletedCard from '@components/ManagerCompletedCard/ManagerCompletedCard'
 import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
-import NotifyIcon from '@components/NotifyIcon'
 import discountEventStore from '@stores/discountEventStore'
 import { generateUniqueId } from '@utils/generateUniqueId'
 import { useNavigate } from 'react-router-dom'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import MyPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
+import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
+import {
+  ImgBtnContainer,
+  Btn,
+  StyledArrow,
+} from '@components/MyPageCard/MyPageCardTop/MyPageCardTop.style'
+import ArrowImg from '@assets/StudentPage/arrow.svg'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
@@ -105,49 +102,40 @@ export default function ManagerPage() {
   }
   return (
     <ManagerPageContainer>
-      <Title>
-        <TitleText>마이페이지</TitleText>
-        <NotifyIcon />
-      </Title>
+      <HeaderTitle title="마이페이지" icon="notification" />
+
       {isStoreRegistered ? (
         <ManagerCompletedCard />
       ) : (
-        <Card>
-          <CardTitle>
-            <RegistrationPrompt
-              isRegistered={isRegistered}
-              businessData={businessData ? [businessData] : null}
-            />
-          </CardTitle>
+        <StyledCard paddingTop="35px" paddingBottom="26px">
+          <RegistrationPrompt
+            isRegistered={isRegistered}
+            businessData={businessData ? [businessData] : null}
+          />
           {isRegistered && businessData ? (
             <>
-              <CardImage src={menuIcon} alt="메뉴 아이콘" />
-              <Button onClick={handleStoreRegisterClick}>
-                가게 등록하러 가기
-              </Button>
+              <ImgBtnContainer gap="12px">
+                <img src={menuIcon} alt="메뉴 아이콘" />
+                <Btn onClick={handleStoreRegisterClick} padding="18px">
+                  가게 등록하러 가기
+                  <StyledArrow src={ArrowImg} />
+                </Btn>
+              </ImgBtnContainer>
             </>
           ) : (
             <>
-              <CardImage src={icon} alt="등록증 아이콘" />
-              <Button onClick={handleManagerRegisterClick}>
-                사업자 정보 등록하기
-              </Button>
+              <ImgBtnContainer gap="18px">
+                <img src={icon} alt="등록증 아이콘" />
+                <Btn onClick={handleManagerRegisterClick} padding="18px">
+                  사업자 정보 등록하기
+                  <StyledArrow src={ArrowImg} />
+                </Btn>
+              </ImgBtnContainer>
             </>
           )}
-        </Card>
+        </StyledCard>
       )}
-
-      <AccountInfo>
-        <AccountDetail className="title">계정</AccountDetail>
-        <AccountDetail className="subtitle">
-          <span>아이디</span>
-          <span>kosoohyeon1</span>
-        </AccountDetail>
-        <AccountDetail className="divider" />
-        <AccountActions>
-          <span>로그아웃</span>
-        </AccountActions>
-      </AccountInfo>
+      <MyPageCardAccount />
       {isStoreRegistered ? <DiscountModal /> : null}
     </ManagerPageContainer>
   )
