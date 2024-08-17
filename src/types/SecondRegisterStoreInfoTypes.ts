@@ -1,6 +1,11 @@
 export type OperatingHour = {
+  day: string
   openTime: string
   closeTime: string
+  breakTime?: {
+    startTime: string
+    endTime: string
+  }
 }
 
 export type BreakTimeType = {
