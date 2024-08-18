@@ -73,7 +73,7 @@ export default function BusinessDocUpload() {
     <StyledContainer>
       <HeaderTitle
         title="사업자 등록증 등록"
-        icon="back"
+        $icon="back"
         onClick={handleBack}
       />
       <StyledSection onClick={openCamera}>

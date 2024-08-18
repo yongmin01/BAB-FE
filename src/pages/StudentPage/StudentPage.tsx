@@ -33,7 +33,7 @@ export default function StudentPage() {
 
   return (
     <StudentPageContainer>
-      <HeaderTitle title={'마이페이지'} icon="notification" />
+      <HeaderTitle title={'마이페이지'} $icon="notification" />
       <Content>
         <MyPageCardTop />
         {isSchoolSet ? <DiscountInfo /> : null}

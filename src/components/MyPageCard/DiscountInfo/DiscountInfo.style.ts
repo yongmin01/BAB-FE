@@ -12,14 +12,18 @@ export const DiscountItem = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 `
 
 export const Text = styled.div<{ color: string }>`
+  width: 46%; // 임의 지정 수정 필요할듯
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
-  text-align: center;
-
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   color: ${(props) => props.color};
 `
 

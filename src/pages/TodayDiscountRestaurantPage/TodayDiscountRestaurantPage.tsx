@@ -9,7 +9,7 @@ export default function TodayDiscountRestaurantPage() {
     <TodayDiscountRestaurantPageContainer>
       <HeaderTitle
         title="오늘의 할인 식당"
-        icon="back"
+        $icon="back"
         onClick={() => navigator('/studentPage')}
       />
       <TodayDiscountRestaurant />

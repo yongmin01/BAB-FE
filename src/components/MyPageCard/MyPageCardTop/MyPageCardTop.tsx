@@ -23,12 +23,15 @@ export default function MyPageCardTop() {
     navigate('/schoolSearch')
   }
   return (
-    <StyledCard paddingTop="35px" paddingBottom={isSchoolSet ? '16px' : '26px'}>
+    <StyledCard
+      $paddingtop="35px"
+      $paddingbottom={isSchoolSet ? '16px' : '26px'}
+    >
       <CardTitle>{studentName}님!</CardTitle>
       {isSchoolSet ? (
         <>
           <CardTitle>{schoolName} 근처 식당으로</CardTitle>
-          <CardTitle paddingBottom="21px">할인 정보를 알려드릴게요!</CardTitle>
+          <CardTitle $paddingbottom="21px">할인 정보를 알려드릴게요!</CardTitle>
           <ImgBtnContainer>
             <img
               src={PinImg}
@@ -41,12 +44,12 @@ export default function MyPageCardTop() {
         </>
       ) : (
         <>
-          <CardTitle paddingBottom="22px">
+          <CardTitle $paddingbottom="22px">
             학생이라면 정보를 알려주세요.
           </CardTitle>
-          <ImgBtnContainer gap="18px">
+          <ImgBtnContainer $gap="18px">
             <img src={StudentIDCardImg} width="115px" height="73px" />
-            <Btn onClick={() => navigate('/schoolSearch')} padding="22px">
+            <Btn onClick={() => navigate('/schoolSearch')} $padding="22px">
               학교찾기
               <StyledArrow src={ArrowImg} />
             </Btn>

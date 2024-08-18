@@ -26,7 +26,7 @@ export default function DiscountEventRecordPage() {
     <PageContainer>
       <HeaderTitle
         title="진행했던 할인행사 보기"
-        icon="back"
+        $icon="back"
         onClick={() => navigate('/manager')}
       />
       <EventList>

@@ -7,8 +7,8 @@ export default function MyPageCardAccount() {
   const accountId = useStudentInfoStore((state) => state.accountId)
 
   return (
-    <StyledCard paddingTop="24px" paddingBottom="21px">
-      <CardTitle paddingBottom="18px">계정</CardTitle>
+    <StyledCard $paddingtop="24px" $paddingbottom="21px">
+      <CardTitle $paddingbottom="18px">계정</CardTitle>
       <StyledAccount>
         <Text>아이디</Text>
         <Text color="#9A9A9A">{accountId}</Text>

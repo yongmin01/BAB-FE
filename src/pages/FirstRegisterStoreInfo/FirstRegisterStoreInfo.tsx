@@ -99,7 +99,7 @@ export default function FirstRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <HeaderTitle title="가게 정보 등록" icon="back" onClick={handleBack} />
+      <HeaderTitle title="가게 정보 등록" $icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>

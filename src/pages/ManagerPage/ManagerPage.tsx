@@ -99,21 +99,21 @@ export default function ManagerPage() {
   }
   return (
     <ManagerPageContainer>
-      <HeaderTitle title="마이페이지" icon="notification" />
+      <HeaderTitle title="마이페이지" $icon="notification" />
 
       {isStoreRegistered ? (
         <ManagerCompletedCard />
       ) : (
-        <StyledCard paddingTop="35px" paddingBottom="26px">
+        <StyledCard $paddingtop="35px" $paddingbottom="26px">
           <RegistrationPrompt
             isRegistered={isRegistered}
             businessData={businessData ? [businessData] : null}
           />
           {isRegistered && businessData ? (
             <>
-              <ImgBtnContainer gap="12px">
+              <ImgBtnContainer $gap="12px">
                 <img src={menuIcon} alt="메뉴 아이콘" />
-                <Btn onClick={handleStoreRegisterClick} padding="18px">
+                <Btn onClick={handleStoreRegisterClick} $padding="18px">
                   가게 등록하러 가기
                   <StyledArrow src={ArrowImg} />
                 </Btn>
@@ -121,9 +121,9 @@ export default function ManagerPage() {
             </>
           ) : (
             <>
-              <ImgBtnContainer gap="18px">
+              <ImgBtnContainer $gap="18px">
                 <img src={icon} alt="등록증 아이콘" />
-                <Btn onClick={handleManagerRegisterClick} padding="18px">
+                <Btn onClick={handleManagerRegisterClick} $padding="18px">
                   사업자 정보 등록하기
                   <StyledArrow src={ArrowImg} />
                 </Btn>
