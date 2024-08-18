@@ -37,7 +37,7 @@ export default function StoreInfoEditPage() {
     <PageContainer>
       <HeaderTitle
         title="가게 정보 수정"
-        icon="back"
+        $icon="back"
         onClick={() => navigate('/manager')}
       />
       <SubTitle>

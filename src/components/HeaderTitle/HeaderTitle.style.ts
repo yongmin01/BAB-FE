@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 interface HeaderTitleStyleProps {
-  icon?: 'back' | 'notification'
+  $icon?: 'back' | 'notification'
 }
 
 export const Container = styled.div<HeaderTitleStyleProps>`
@@ -26,15 +26,15 @@ export const Title = styled.h1<HeaderTitleStyleProps>`
   flex: 1;
 
   text-align: center;
-  ${({ icon }) =>
-    icon === 'back' &&
+  ${({ $icon }) =>
+    $icon === 'back' &&
     css`
       color: #111111;
       margin-left: -10.5px;
     `}
 
-  ${({ icon }) =>
-    icon === 'notification' &&
+  ${({ $icon }) =>
+    $icon === 'notification' &&
     css`
       color: #767676;
       margin-right: -25px;

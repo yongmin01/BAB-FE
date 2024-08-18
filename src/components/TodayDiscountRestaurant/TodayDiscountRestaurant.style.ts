@@ -101,3 +101,46 @@ export const Price = styled.div`
   font-weight: Light;
   color: #767676;
 `
+
+export const EmptyContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+export const EmptyAlert = styled.span`
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+
+  text-align: center;
+
+  color: #000000;
+`
+export const Comment = styled.span`
+  margin-bottom: 32px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+
+  text-align: center;
+
+  color: #767676;
+`
+export const Btn = styled.button`
+  box-sizing: border-box;
+  padding: 8px 14px;
+
+  background: #ffffff;
+  border: 0.4px solid #b0b0b0;
+  border-radius: 20px;
+`
