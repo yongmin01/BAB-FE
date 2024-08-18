@@ -6,10 +6,7 @@ interface OperatingHour {
   day: string
   openTime: string
   closeTime: string
-  breakTime?: {
-    startTime: string
-    endTime: string
-  }
+  breakTime: { startTime: string; endTime: string } | Record<string, never>
 }
 
 interface ApiResponse {
