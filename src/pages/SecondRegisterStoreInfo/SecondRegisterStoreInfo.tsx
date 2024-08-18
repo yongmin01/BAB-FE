@@ -30,10 +30,18 @@ import {
 import { BreakTime } from '@components/BreakTime/BreakTime'
 import { useErrorInput } from '@hooks/useErrorInput'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { postOperatingHours } from '@apis/postOperatingHours'
+import storeInfoStore from '@stores/storeInfoStore'
+const token = import.meta.env.VITE_APP_API_TOKEN
 
 const days = ['월', '화', '수', '목', '금', '토', '일']
+const serverDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
 export default function SecondRegisterStoreInfo() {
+  const storeInfo = storeInfoStore(
+    (state) => state.storeInfos[state.storeInfos.length - 1],
+  )
+  const storeId = storeInfo?.id
   const navigate = useNavigate()
   const [breakTimes, setBreakTimes] = useState<BreakTimeType[]>([
     {
@@ -44,9 +52,11 @@ export default function SecondRegisterStoreInfo() {
   ])
 
   const [operatingHours, setOperatingHours] = useState<OperatingHour[]>(
-    days.map(() => ({
+    days.map((day) => ({
+      day,
       openTime: '09:00',
       closeTime: '22:00',
+      breakTime: {},
     })),
   )
 
@@ -55,7 +65,7 @@ export default function SecondRegisterStoreInfo() {
     Array(days.length).fill(false),
   )
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!checkedDays.includes(true)) {
       error.setError('운영 시간을 작성해 주세요.')
     } else {
@@ -63,24 +73,42 @@ export default function SecondRegisterStoreInfo() {
         .map((checked, index) => {
           if (checked) {
             const breakTime = breakTimes.find((bt) => bt.selectedDays[index])
-            return {
-              day: days[index],
-              openTime: operatingHours[index].openTime + ':00',
-              closeTime: operatingHours[index].closeTime + ':00',
+
+            const operatingHour: OperatingHour = {
+              day: serverDays[index],
+              openTime: `${operatingHours[index].openTime}:00`,
+              closeTime: `${operatingHours[index].closeTime}:00`,
               breakTime: breakTime
                 ? {
-                    startTime: breakTime.start + ':00',
-                    endTime: breakTime.end + ':00',
+                    startTime: `${breakTime.start}:00`,
+                    endTime: `${breakTime.end}:00`,
                   }
                 : {},
             }
+
+            return operatingHour
           }
           return null
         })
         .filter(Boolean)
 
-      console.log(payload)
-      navigate('/thirdRegisterStoreInfo')
+      try {
+        const response = await postOperatingHours(
+          storeId,
+          payload as OperatingHour[],
+          token,
+        )
+
+        if (response.isSuccess) {
+          navigate('/thirdRegisterStoreInfo')
+        } else {
+          console.error(response.message)
+          error.setError(response.message)
+        }
+      } catch (e) {
+        console.error('운영시간 등록 실패', e)
+        error.setError('운영 시간 등록에 실패했습니다.')
+      }
     }
   }
 
