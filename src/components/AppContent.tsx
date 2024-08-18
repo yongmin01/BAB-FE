@@ -23,6 +23,9 @@ import RegisterStoreSuccess from '@pages/RegisterSuccess/RegisterStoreSuccess'
 import BusinessDocUpload from '@pages/BusinessDocUpload/BusinessDocUpload'
 import RegisterSuccess from '@pages/RegisterSuccess/RegisterSuccess'
 import UploadSuccess from './UploadSuccess/UploadSuccess'
+import EditThirdRegisterStoreInfo from '@pages/ThirdRegisterStoreInfo/EditThirdRegisterStoreInfo'
+import EditFirstRegisterStoreInfo from '@pages/FirstRegisterStoreInfo/EditFirstRegisterStoreInfo'
+import EditSecondRegisterStoreInfo from '@pages/SecondRegisterStoreInfo/EditSecondRegisterStoreInfo'
 
 export default function AppContent() {
   const location = useLocation()
@@ -66,6 +69,18 @@ export default function AppContent() {
         <Route
           path="/thirdregisterstoreinfo"
           element={<ThirdRegisterStoreInfo />}
+        />
+        <Route
+          path="/editfirstregisterstoreinfo"
+          element={<EditFirstRegisterStoreInfo />}
+        />
+        <Route
+          path="/editsecondregisterstoreinfo"
+          element={<EditSecondRegisterStoreInfo />}
+        />
+        <Route
+          path="/editthirdregisterstoreinfo"
+          element={<EditThirdRegisterStoreInfo />}
         />
         <Route
           path="/registerstoresuccess"
