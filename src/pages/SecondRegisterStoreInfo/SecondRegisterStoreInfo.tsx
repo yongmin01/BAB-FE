@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Back from '@assets/RegisterStoreInfo/back.svg'
 import nav from '@assets/RegisterStoreInfo/secondstep.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
 import {
@@ -10,7 +9,6 @@ import {
 
 import {
   StyledAddTimeButton,
-  StyledBackIcon,
   StyledBreakTimeContainer,
   StyledButton,
   StyledCheckBox,
@@ -23,16 +21,15 @@ import {
   StyledNavImg,
   StyledNavImgWrapper,
   StyledNavText,
-  StyledRow,
   StyledScrollableContent,
   StyledTimeInput,
   StyledTimeRow,
   StyledTimeTable,
   StyledTimeText,
-  StyledTitle,
 } from './SecondRegisterStoreInfo.style'
 import { BreakTime } from '@components/BreakTime/BreakTime'
 import { useErrorInput } from '@hooks/useErrorInput'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 const days = ['월', '화', '수', '목', '금', '토', '일']
 
@@ -120,10 +117,7 @@ export default function SecondRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <StyledRow>
-        <StyledBackIcon onClick={handleBack} src={Back} />
-        <StyledTitle>가게 정보 등록</StyledTitle>
-      </StyledRow>
+      <HeaderTitle title="가게 정보 등록" $icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>

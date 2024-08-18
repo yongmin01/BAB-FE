@@ -2,40 +2,26 @@ import styled from 'styled-components'
 import search from '../../assets/RegisterStoreInfo/search.svg'
 
 export const StyledContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  max-width: 400px;
+
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 16px;
+  align-items: center;
+  /* margin: 0 auto; */
+  padding: 58px 16px 90px;
   box-sizing: border-box;
-  height: 100vh;
-  position: relative;
-  padding-bottom: 80px;
+  /* position: relative; */
 `
 export const StyledScrollableContent = styled.div`
+  width: 100%;
   flex: 1;
-  overflow-y: auto;
-`
-export const StyledRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`
-export const StyledBackIcon = styled.img`
-  height: 20px;
-  width: 10.5px;
-  position: absolute;
-  left: 0;
-`
-export const StyledTitle = styled.p`
-  font-weight: 600;
-  font-size: 20px;
-  color: #111111;
-  text-align: center;
-  flex-grow: 1;
+  /* overflow-y: auto; */
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const StyledFormContainer = styled.div`

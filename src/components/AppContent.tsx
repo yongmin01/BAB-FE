@@ -1,7 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import ManagerPage from '@pages/ManagerPage/ManagerPage'
 import Footer from '@components/Footer/Footer'
-import StatusBar from '@components/StatusBar/StatusBar'
 import Splash from '@pages/Splash/Splash'
 import MemberType from '@pages/MemberType/MemberType'
 import Signup from '@pages/Signup/Signup'
@@ -20,6 +19,10 @@ import SecondRegisterStoreInfo from '@pages/SecondRegisterStoreInfo/SecondRegist
 import ThirdRegisterStoreInfo from '@pages/ThirdRegisterStoreInfo/ThirdRegisterStoreInfo'
 import MapRender from '@pages/MapPage/MapRender'
 import SchoolSearchPage from '@pages/SchoolSearchPage/SchoolSearchPage'
+import RegisterStoreSuccess from '@pages/RegisterSuccess/RegisterStoreSuccess'
+import BusinessDocUpload from '@pages/BusinessDocUpload/BusinessDocUpload'
+import RegisterSuccess from '@pages/RegisterSuccess/RegisterSuccess'
+import UploadSuccess from './UploadSuccess/UploadSuccess'
 
 export default function AppContent() {
   const location = useLocation()
@@ -31,7 +34,7 @@ export default function AppContent() {
     location.pathname === '/mapPage'
   return (
     <>
-      <StatusBar />
+      {/* <StatusBar /> */}
       <Routes>
         <Route path="/" element={<Splash />} />
         <Route path="/memberType" element={<MemberType />} />
@@ -64,6 +67,17 @@ export default function AppContent() {
           path="/thirdregisterstoreinfo"
           element={<ThirdRegisterStoreInfo />}
         />
+        <Route
+          path="/registerstoresuccess"
+          element={<RegisterStoreSuccess />}
+        />
+        <Route path="/registerSuccess" element={<RegisterSuccess />} />
+        <Route path="/businessdocupload" element={<BusinessDocUpload />} />
+        <Route
+          path="/uploadSuccess"
+          element={<UploadSuccess retry={() => {}} />}
+        />
+        <Route path="/managerUpload" element={<BusinessDocUpload />} />
       </Routes>
       {showFooter && <Footer />}
     </>

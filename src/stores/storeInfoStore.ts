@@ -1,6 +1,15 @@
 import { create } from 'zustand'
-import discountEventStore from './discountEventStore'
 import { produce } from 'immer'
+
+interface StoreName {
+  storeName: string
+  saveStoreName: (storeName: string) => void
+}
+
+export const useStoreName = create<StoreName>((set) => ({
+  storeName: '',
+  saveStoreName: (name) => set({ storeName: name }),
+}))
 
 interface BusinessHours {
   day: string
@@ -11,7 +20,7 @@ interface BusinessHours {
 
 export interface MenuItem {
   //할인된 가격 생각도 해야될듯
-  id: number //메뉴 ID
+  menuId: number
   image: string
   name: string
   price: number
@@ -35,6 +44,7 @@ export interface StoreInfo {
 
 interface StoreInfoState {
   storeInfos: StoreInfo[]
+  isStoreRegistered: boolean
   setStoreInfo: (info: StoreInfo) => void
   tempAddStoreInfo: (
     storeId: number,
@@ -59,47 +69,44 @@ interface StoreInfoState {
 const storeInfoStore = create<StoreInfoState>((set) => ({
   storeInfos: [
     {
-      id: 1, // 가게 ID 추가
-      name: '밥이득 김치찌개',
-      storeLink: '',
-      storeType: 'soup',
+      id: 1,
+      name: '금산양꼬치 본점',
+      lat: 37.5665,
+      lng: 126.978,
+      storeType: '한식',
+      storeLink: 'http://example.com',
       isStoreRegistered: true,
-      image: '',
-      lat: 37.495304,
-      lng: 126.955165,
-      university: '',
-      businessHours: [],
-      breakTime: [],
+      image: 'default_image.png',
+      university: '기본 대학',
+      businessHours: [
+        { day: 'Monday', open: '09:00', close: '18:00', isChecked: true },
+        { day: 'Tuesday', open: '09:00', close: '18:00', isChecked: true },
+      ],
+      breakTime: [
+        { day: 'Monday', open: '12:00', close: '13:00', isChecked: true },
+        { day: 'Tuesday', open: '12:00', close: '13:00', isChecked: true },
+      ],
       menu: [
         {
-          id: 0,
-          image: '',
-          name: '김치찌개',
-          price: 8000,
-          discountPrice: 0,
+          menuId: 1,
+          image: 'menu1.png',
+          name: '메뉴 1',
+          price: 10000,
+          discountPrice: null,
           isDiscounted: false,
         },
         {
-          id: 1,
-          image: '',
-          name: '된장찌개',
-          price: 7500,
-          discountPrice: 0,
-          isDiscounted: false,
-        },
-        {
-          id: 2,
-          image: '',
-          name: '계란말이',
-          price: 5000,
-          discountPrice: 0,
+          menuId: 2,
+          image: 'menu2.png',
+          name: '메뉴 2',
+          price: 12000,
+          discountPrice: null,
           isDiscounted: false,
         },
       ],
     },
-    // 다른 가게도 추가 가능
-  ],
-  // 가게 추가 기능??
+  ], // 초기값을 설정
+  isStoreRegistered: false,
   setStoreInfo: (info) =>
     set((state) => ({
       storeInfos: state.storeInfos.map((store) =>
@@ -140,12 +147,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
   //초기 가게 등록 상태 false로 지정
   //isStoreRegistered: false,
   //준영님 가게 등록 or 등록 해제 기능
-  setStoreRegistered: (registered) =>
-    set(
-      produce((state: StoreInfoState) => {
-        state.storeInfos[0].isStoreRegistered = registered
-      }),
-    ),
+  setStoreRegistered: (registered) => set({ isStoreRegistered: registered }),
   //가게 ID로 가게 탐색 후 등록 기능
   registerStore: (storeId) =>
     set(
@@ -177,7 +179,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           ? {
               ...store,
               menu: store.menu.map((item) =>
-                item.id === menuId
+                item.menuId === menuId
                   ? {
                       ...item,
                       price: isDiscounted
@@ -200,7 +202,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
         if (store) {
           store.menu.push({
             name,
-            id: store.menu.length + 1,
+            menuId: store.menu.length + 1,
             image: '',
             price: Math.floor(Math.random() * 7000),
             discountPrice: 0,
@@ -215,7 +217,9 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
       produce((state: StoreInfoState) => {
         const store = state.storeInfos.find((store) => store.id === storeId)
         if (store) {
-          const filteredMenu = store.menu.filter((info) => info.id !== menuId)
+          const filteredMenu = store.menu.filter(
+            (info) => info.menuId !== menuId,
+          )
           store.menu = filteredMenu
         }
       }),

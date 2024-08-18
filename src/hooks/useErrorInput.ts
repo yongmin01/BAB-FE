@@ -6,6 +6,7 @@ interface UseInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   validate: (message: string) => boolean
   setError: (message: string) => void
+  setValue: (value: string) => void
 }
 
 export const useErrorInput = (initialValue: string): UseInputProps => {
@@ -31,5 +32,6 @@ export const useErrorInput = (initialValue: string): UseInputProps => {
     onChange,
     validate,
     setError,
+    setValue,
   }
 }
