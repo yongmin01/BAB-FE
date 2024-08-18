@@ -2,7 +2,7 @@ import greyLogo from '@assets/mapIcon/grey_webp/grey_2x.webp'
 
 export default function greyIcon(price: number) {
   const container = document.createElement('div')
-  container.className = 'greyContainer'
+  container.className = 'container'
   container.style.position = 'relative'
   container.style.display = 'inline-block'
   container.style.textAlign = 'center'

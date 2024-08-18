@@ -2,7 +2,7 @@ import yellowLogo from '@assets/mapIcon/yellow_webp/yellow_2x.webp'
 
 export default function yellowIcon(price: number, discountprice: number) {
   const container = document.createElement('div')
-  container.className = 'yellowContainer'
+  container.className = 'container'
   container.style.position = 'relative'
   container.style.display = 'flex'
   container.style.textAlign = 'center'
