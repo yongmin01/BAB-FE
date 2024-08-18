@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import discountEventStore from '@stores/discountEventStore'
 import storeInfoStore from '@stores/storeInfoStore'
 
@@ -40,9 +40,14 @@ export async function handleDiscountEventRegister() {
       response.data.result,
     )
 
-    // result 객체 전체를 반환
-    return response.data.result
+    return response.data
   } catch (error) {
     console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
+
+    if (error instanceof AxiosError && error.response) {
+      return error.response.data // 에러 응답 데이터를 반환
+    }
+
+    return null
   }
 }
