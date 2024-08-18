@@ -19,7 +19,6 @@ import { deleteDiscountEvent } from '@apis/Discount/deleteDiscountEvent'
 export default function DiscountEventRecordPage() {
   const navigate = useNavigate()
   const { storeInfos } = storeInfoStore()
-  const { removeDiscountEventById } = discountEventStore()
   const [pastDiscountEvents, setPastDiscountEvents] = useState<DiscountEvent[]>(
     [],
   )
@@ -28,7 +27,6 @@ export default function DiscountEventRecordPage() {
     async function loadDiscountEvents() {
       if (storeInfos.length && storeInfos[0].id) {
         const events = await fetchDiscountEvents(storeInfos[0].id)
-        // 가져온 이벤트를 상태에 저장
         if (events) {
           setPastDiscountEvents(events)
         } else {
