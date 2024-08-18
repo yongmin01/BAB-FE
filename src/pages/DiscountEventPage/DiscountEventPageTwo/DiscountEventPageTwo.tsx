@@ -71,8 +71,8 @@ export default function DiscountEventPageTwo() {
         )
         //할인 성공적으로 추가 됐으면 성공 여부 따져서 알림 API 호출하는 코드 작성
         console.log(discountEventStore.getState().discountEvents)
+        navigate('/manager')
       }
-      navigate('/manager')
     } catch (error) {
       console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
       alert('할인 이벤트 생성에 실패했습니다. 다시 시도해주세요.')
