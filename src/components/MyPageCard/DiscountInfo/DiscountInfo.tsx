@@ -24,9 +24,9 @@ export default function DiscountInfo() {
   }, [])
 
   return (
-    <StyledCard paddingTop="24px" paddingBottom="27px">
+    <StyledCard $paddingtop="24px" $paddingbottom="27px">
       <div style={{ display: 'flex', gap: '109px', alignItems: 'start' }}>
-        <CardTitle paddingBottom="35px">오늘의 할인 식당</CardTitle>
+        <CardTitle $paddingbottom="35px">오늘의 할인 식당</CardTitle>
         <More to="/todayDiscountRestaurant">
           <div>더보기</div>
           <div>&gt;</div>

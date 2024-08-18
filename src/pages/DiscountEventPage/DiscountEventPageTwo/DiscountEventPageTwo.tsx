@@ -70,7 +70,7 @@ export default function DiscountEventPageTwo() {
       <PageContainer>
         <HeaderTitle
           title="할인 행사 진행하기"
-          icon="back"
+          $icon="back"
           onClick={() => navigate('/discount-event')}
         />
         <DiscountDataWrapper>

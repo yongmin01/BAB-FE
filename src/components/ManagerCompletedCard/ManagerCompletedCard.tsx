@@ -20,11 +20,11 @@ export default function ManagerCompletedCard() {
   const navigate = useNavigate()
 
   return (
-    <StyledCard paddingTop="24px" paddingBottom="20px" paddingRignt="19px">
+    <StyledCard $paddingtop="24px" $paddingbottom="20px" $paddingright="19px">
       {storeInfos && storeInfos.length > 0 ? (
         <>
           <CardSubTitle>{managerName} 사장님의</CardSubTitle>
-          <CardTitle paddingBottom="13px">{storeInfos[0].name}</CardTitle>
+          <CardTitle $paddingbottom="13px">{storeInfos[0].name}</CardTitle>
           <CardContent>
             <CardButton onClick={() => navigate('/discount-event')}>
               <span>할인행사</span>

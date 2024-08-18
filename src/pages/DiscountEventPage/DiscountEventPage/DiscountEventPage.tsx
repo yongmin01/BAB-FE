@@ -153,7 +153,7 @@ export default function DiscountEventPage() {
       <PageContainer>
         <HeaderTitle
           title="할인 행사 진행하기"
-          icon="back"
+          $icon="back"
           onClick={() => navigate('/manager')}
         />
         <EventForm>
