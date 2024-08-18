@@ -4,7 +4,8 @@ import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { mapStore } from '@stores/mapStore'
-import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
+import storeInfoStore from '@stores/storeInfoStore'
+import { StoreInfo } from '@stores/tempStore'
 import { stores } from '@stores/tempStore'
 import greyIcon from '@assets/mapIcon/greyIcon'
 import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
@@ -14,10 +15,13 @@ import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
 type Props = {
   markers: google.maps.marker.AdvancedMarkerElement[]
   searchValue: string
+  sendSearchValue: string
   tempInfos: StoreInfo[]
   addStore: (store: StoreInfo) => void
   addMarker: (marker: google.maps.marker.AdvancedMarkerElement) => void
   clearMarker: () => void
+  setLat: (value: number) => void
+  setLng: (value: number) => void
 }
 
 interface storeInfo {
@@ -26,19 +30,44 @@ interface storeInfo {
   check: boolean
 }
 
+interface SchoolLoc {
+  lat: number
+  lng: number
+}
+
 export default function Map({
   markers,
   addStore,
   addMarker,
   clearMarker,
   searchValue,
+  sendSearchValue,
   tempInfos,
+  setLat,
+  setLng,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const { lat, lng, googleMap, setGoogleMap } = mapStore()
   const [zoom, setZoom] = useState<number | undefined>(16)
   const { storeInfos, tempAddStoreInfo, addMenu } = storeInfoStore()
   const navigate = useNavigate()
+  const schoolLocations: SchoolLoc[] = [
+    //한국공학대학교
+    {
+      lat: 37.340189,
+      lng: 126.733596,
+    },
+    //인하대학교
+    {
+      lat: 37.450022,
+      lng: 126.653488,
+    },
+    //숭실대학교
+    {
+      lat: 37.496344,
+      lng: 126.957224,
+    },
+  ]
 
   //마커 감시변수
   const intersectionObserver = new IntersectionObserver((entries) => {
@@ -57,20 +86,76 @@ export default function Map({
 
     tempInfos.forEach((info) => {
       if (info.id === id) {
-        if (info.menu[0].isDiscounted === false) {
+        if (info.discountPrice === 0) {
           storeinfo.check = false
-          storeinfo.price = info.menu[0].price
+          storeinfo.price = info.price
           storeinfo.discountPrice = 0
         } else {
           storeinfo.check = true
-          storeinfo.price = info.menu[0].price
-          storeinfo.discountPrice = info.menu[0].discountPrice
+          storeinfo.price = info.price
+          storeinfo.discountPrice = info.discountPrice
         }
       }
     })
     return storeinfo
   }
-
+  //데이터 기준으로 학교 위도 경도 확인
+  function findLocation(): void {
+    let location: SchoolLoc
+    let latitudeAvg: number
+    let latitudeMin: number = 100
+    let longitudeAvg: number
+    let longitudeMin: number = 100
+    stores.forEach((store) => {
+      latitudeAvg += store.lat as number
+      longitudeAvg += store.lng as number
+    })
+    latitudeAvg /= stores.length
+    longitudeAvg /= stores.length
+    schoolLocations.forEach((school) => {
+      if (
+        latitudeMin > school.lat - latitudeAvg &&
+        longitudeMin > school.lng - longitudeAvg
+      ) {
+        location.lat = school.lat
+        location.lng = school.lng
+        latitudeMin = school.lat - latitudeAvg
+        longitudeMin = school.lng - longitudeAvg
+      }
+    })
+    setLat(location.lat)
+    setLng(location.lng)
+  }
+  //가게검색 기능 싹 다 바꿔야함
+  function findPlaces() {
+    ///   임시코드    ///
+    if (searchValue === '음식점') {
+      stores.forEach((store) => {
+        addStore(store)
+      })
+    }
+    /// 메뉴검색 API 구현 완료 시 사용 ///
+    /*
+    if (googleMap) {
+      const bounds = googleMap.getBounds()
+      //남서쪽 경도 위도
+      const minLat = bounds?.getSouthWest().lat()
+      const minLng = bounds?.getSouthWest().lng()
+      //북동쪽 경도 위도
+      const maxLat = bounds?.getNorthEast().lat()
+      const maxLng = bounds?.getNorthEast().lng()
+      stores.forEach((store) => {
+        if (
+          store.lat < maxLat &&
+          store.lng < maxLng &&
+          store.lat > minLat &&
+          store.lng > minLng
+        ) {
+          addStore(store)
+        }
+      })
+    }*/
+  }
   //지도 초기화 o
   useEffect(() => {
     if (ref.current) {
@@ -140,9 +225,9 @@ export default function Map({
         )) as google.maps.MarkerLibrary
         tempInfos.forEach((info) => {
           const logo =
-            info.menu[0].discountPrice === 0
-              ? greyIcon(info.menu[0].price)
-              : yellowIcon(info.menu[0].price, info.menu[0].discountPrice)
+            info.discountPrice === 0
+              ? greyIcon(info.price)
+              : yellowIcon(info.price, info.discountPrice)
           logo.classList.add('drop')
           const markerView = new AdvancedMarkerElement({
             map: googleMap,
@@ -151,8 +236,9 @@ export default function Map({
             content: logo,
           })
           markerView.addListener('click', () => {
-            ////// 임시 코드 //////
-            navigate('/1')
+            navigate(`/shopdetail/${markerView.id}`, {
+              state: sendSearchValue,
+            })
           })
           markerView.id = info.id.toString()
           const marker = markerView.content as HTMLElement
@@ -164,6 +250,7 @@ export default function Map({
           const time = 1 + Math.random()
           marker.style.setProperty('--delay-time', time + 's')
           intersectionObserver.observe(marker)
+          console.log(marker)
           addMarker(markerView)
         })
       } else {
@@ -171,58 +258,6 @@ export default function Map({
       }
     })()
   }, [tempInfos])
-
-  //가게검색 기능 싹 다 바꿔야함
-  ///   임시코드    ///
-  function findPlaces() {
-    if (searchValue === '음식점') {
-      stores.forEach((store) => {
-        addStore(store)
-      })
-    }
-
-    /*const { Place } = (await google.maps.importLibrary(
-      'places',
-    )) as google.maps.PlacesLibrary
-
-    const request = {
-      textQuery: searchValue,
-      fields: ['displayName', 'location', 'businessStatus', 'types'],
-      includedType: 'restaurant',
-      maxResultCount: 5,
-      region: 'kr',
-      language: 'ko',
-      locationRestriction: googleMap.getBounds(),
-      useStrictTypeFiltering: false,
-    }
-
-    const { places } = await Place.searchByText(request)
-    let storeType: string | undefined = ''
-    places.forEach((place) => {
-      if (storeType !== '') {
-        return
-      } else {
-        storeType = place.types?.find((type) => type !== 'restaurant' || 'food')
-      }
-    })
-
-    console.log(storeType)  
-    if (request.textQuery === '음식점') {
-    } else {
-      if (places.length) {
-        places.forEach((place) => {
-          console.log(place.types)
-          console.log(place.displayName)
-          const check = findRestaurant(place.types)
-          if (check === true) {
-            addStore(place.id)
-          }
-        })
-      } else {
-        console.log('No results')
-      }
-    }*/
-  }
 
   return <MapWrapper ref={ref} id="map" />
 }

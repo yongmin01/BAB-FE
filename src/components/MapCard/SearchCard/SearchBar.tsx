@@ -13,11 +13,13 @@ import { IoIosSearch } from 'react-icons/io'
 type Props = {
   handleFilterCheck: () => void
   handleSearchValue: (value: string) => void
+  handleSendSearchValue: (value: string) => void
 }
 
 export default function SearchBar({
   handleFilterCheck,
   handleSearchValue,
+  handleSendSearchValue,
 }: Props) {
   const [data, setData] = useState<string>('')
   const [focus, setFocus] = useState(false)
@@ -27,6 +29,7 @@ export default function SearchBar({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (data !== '') {
+        handleSendSearchValue(data)
         handleSearchValue(data)
       }
     }
