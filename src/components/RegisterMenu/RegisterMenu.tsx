@@ -1,4 +1,5 @@
-import useImageLoad from '@hooks/useImageLoad'
+import React from 'react'
+import useImageUpload from '@hooks/useImageUpload'
 import Camera from '@assets/RegisterStoreInfo/camera.svg'
 import {
   StyledCheckBox,
@@ -11,20 +12,52 @@ import {
   StyledUploadBox,
   StyledUploadImg,
 } from './RegisterMenu.style'
-import { useRef } from 'react'
-
+import { postUploadMenuImage } from '@apis/postuploadMenuImage'
 import { RegisterMenuProps } from 'src/types/RegisterMenuTypes'
 
-export const RegisterMenu = ({ index, menu, onChange }: RegisterMenuProps) => {
-  const { selectedImage, handleUpload } = useImageLoad()
-  const fileInputRef = useRef<HTMLInputElement>(null)
+const token = import.meta.env.VITE_APP_API_TOKEN
+
+export function RegisterMenu({ index, menu, onChange }: RegisterMenuProps) {
+  const { selectedImage, handleImgUpload, openCamera, fileInputRef } =
+    useImageUpload()
+
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleImgUpload(event)
+
+    if (event.target.files && event.target.files[0]) {
+      try {
+        const imageUrl = await postUploadMenuImage(event.target.files[0], token)
+
+        const customEvent = {
+          target: {
+            name: 'menuUrl',
+            value: imageUrl,
+          },
+        } as React.ChangeEvent<HTMLInputElement>
+        console.log(imageUrl)
+        onChange(customEvent, index)
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error)
+      }
+    }
+  }
+
+  const handleSignatureChange = () => {
+    const customEvent = {
+      target: {
+        name: 'isSignature',
+        value: !menu.isSignature,
+      },
+    } as unknown as React.ChangeEvent<HTMLInputElement>
+    onChange(customEvent, index)
+  }
 
   return (
     <>
       <StyledMenuRow>
-        <StyledUploadBox onClick={() => fileInputRef.current?.click()}>
+        <StyledUploadBox onClick={openCamera}>
           <StyledUploadImg
-            src={selectedImage ? selectedImage.thumbnail : Camera}
+            src={selectedImage ? URL.createObjectURL(selectedImage) : Camera}
             alt={selectedImage ? '미리보기' : '업로드 아이콘'}
             $isthumbnail={selectedImage ? 1 : 0}
           />
@@ -48,7 +81,7 @@ export const RegisterMenu = ({ index, menu, onChange }: RegisterMenuProps) => {
               type="text"
               name="price"
               placeholder="가격을 입력하세요."
-              value={menu.price}
+              value={menu.price.toString()}
               onChange={(e) => onChange(e, index)}
             />
             <span>₩</span>
@@ -57,7 +90,10 @@ export const RegisterMenu = ({ index, menu, onChange }: RegisterMenuProps) => {
       </StyledMenuRow>
       <StyledCheckboxContainer>
         <StyledMenuLabel>
-          <StyledCheckBox />
+          <StyledCheckBox
+            checked={menu.isSignature}
+            onChange={handleSignatureChange}
+          />
           대표 메뉴로 등록하기
         </StyledMenuLabel>
       </StyledCheckboxContainer>
