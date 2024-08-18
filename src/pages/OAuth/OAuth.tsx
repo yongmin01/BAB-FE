@@ -10,16 +10,27 @@ export default function OAuth() {
   const { membertype, setIsLogined, setToken } = LoginStore((state) => state)
   useEffect(() => {
     const handleLogin = async () => {
-      const result = loginApi(membertype)
+      const result = await loginApi(membertype)
       if (result) {
         setToken(result.jwt)
         setIsLogined(true)
         if (membertype === 'manager') {
-          result.isStoreExist ? navigate('/map') : navigate('/manager')
+          //사장
+          if (result.isStoreExist) {
+            navigate('/map')
+          } else {
+            navigate('/manager')
+          }
         } else {
-          result.isStoreExist ? navigate('/map') : navigate('/studentPage')
+          //학생
+          if (result.isUniversityExist) {
+            navigate('/map')
+          } else {
+            navigate('/studentPage')
+          }
         }
       } else {
+        //result를 제대로 못 받아왔을 때
         navigate('/signup')
       }
     }

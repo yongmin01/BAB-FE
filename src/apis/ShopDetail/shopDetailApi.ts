@@ -5,7 +5,7 @@ export default async function shopDetailApi(
   kakao_token: string,
 ) {
   const options = {
-    url: `https://babedeuk.shop:8080/v1/stores/${1}`, // storeId 제대로 사용
+    url: `https://babedeuk.shop:8080/v1/stores/${storeId}`, // storeId 제대로 사용
     method: 'GET',
     headers: {
       accept: '*/*',

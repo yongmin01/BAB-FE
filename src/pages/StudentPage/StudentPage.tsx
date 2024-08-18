@@ -1,5 +1,5 @@
 import StudentPageCardTop from '@components/MyPageCard/StudentPageCardTop/StudentPageCardTop'
-import StudentPageCardAccount from '@components/MyPageCard/Account/StudentPageCardAccount'
+import StudentPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
 import DiscountInfo from '@components/MyPageCard/DiscountInfo/DiscountInfo'
 import {
   StudentPageContainer,

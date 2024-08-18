@@ -60,11 +60,11 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
     <DetailContainer>
       <BackBar storeCategory={'포케'} />
       <MenuHeader>
-        <BkImg $imgsrc={storeInfo.bannerUrlList}>
+        <BkImg $imgsrc={storeInfo.bannerUrl}>
           <ShopTitle>{storeInfo.storeName}</ShopTitle>
           <EventContainer>
             <Event>가게 특별 할인</Event>
-            <LinkBtn onClick={() => navigate(storeInfo.storeLink)}>
+            <LinkBtn onClick={() => window.open(storeInfo.storeLink)}>
               링크 바로가기{` >`}
             </LinkBtn>
           </EventContainer>
