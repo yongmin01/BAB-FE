@@ -16,8 +16,8 @@ import logo from '@assets/dummy/suu_emblem1.jpg'
 import Button from '@components/Button/Button'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
-import { studentInfoStore } from '@stores/studentInfoStore'
-import { schoolInfoStore } from '@stores/schoolInfoStore'
+import { useStudentInfoStore } from '@stores/studentInfoStore'
+import { useSchoolInfoStore } from '@stores/schoolInfoStore'
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -25,8 +25,11 @@ import { useNavigate } from 'react-router-dom'
 export default function SchoolSearchPage() {
   const [response, setResponse] = useState<boolean>(false)
   const [searchVal, setSearchVal] = useState<string>('')
-  const { studentName, setIsSchoolSet } = studentInfoStore((state) => state)
-  const { setSchoolName, setAddress } = schoolInfoStore((state) => state)
+  const { studentName, setIsSchoolSet } = useStudentInfoStore((state) => state)
+
+  const { schoolName, address, setSchoolName, setAddress } = useSchoolInfoStore(
+    (state) => state,
+  )
 
   const dummy = {
     schoolName: '숭실대학교',
@@ -66,8 +69,8 @@ export default function SchoolSearchPage() {
             <Result>
               <SchoolLogo src={logo} />
               <School>
-                <SchoolName>{dummy.schoolName}</SchoolName>
-                <SchoolAddress>{dummy.address}</SchoolAddress>
+                <SchoolName>{schoolName}</SchoolName>
+                <SchoolAddress>{address}</SchoolAddress>
               </School>
             </Result>
             <ControlBtn>
