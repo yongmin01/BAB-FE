@@ -25,23 +25,19 @@ import { SchoolTypes } from 'src/types/SchoolTypes'
 import { studentUniversityRegister } from '@apis/studentUniversityRegister'
 import { useStudentInfoStore } from '@stores/studentInfoStore'
 import { useSchoolInfoStore } from '@stores/schoolInfoStore'
+import { getUniversities } from '@apis/getUnivetsities'
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 
 export default function SchoolSearchPage() {
   const [selectedSchool, setSelectedSchool] = useState<SchoolTypes>()
   const [searchVal, setSearchVal] = useState<string>('')
   const { studentName, setIsSchoolSet } = useStudentInfoStore((state) => state)
-
-  const { schoolName, address, setSchoolName, setAddress } = useSchoolInfoStore(
-    (state) => state,
-  )
+  const { setSchoolName, setAddress } = useSchoolInfoStore((state) => state)
 
   const [candidateSchool, setCandidateSchool] = useState<SchoolTypes[]>([])
   const [showAlert, setShowAlert] = useState<boolean>(false)
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
   const navigate = useNavigate()
 
@@ -54,12 +50,9 @@ export default function SchoolSearchPage() {
     }
     if (searchVal !== '') {
       try {
-        const response = await axios.get(`${API_BASE_URL}/v1/universities`, {
-          // 솔미님 코드(getUniversities)로 교체 예정
-          params: { universityName: searchVal },
-        })
-        if (response.data.result.length >= 1) {
-          setCandidateSchool(response.data.result)
+        const response = await getUniversities(searchVal)
+        if (response.length >= 1) {
+          setCandidateSchool(response)
         }
       } catch (error) {
         console.log(error)
