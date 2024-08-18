@@ -36,7 +36,7 @@ export default function SchoolSearchPage() {
   const { studentName, setIsSchoolSet } = studentInfoStore((state) => state)
   const { setSchoolName, setAddress } = schoolInfoStore((state) => state)
   const [candidateSchool, setCandidateSchool] = useState<SchoolTypes[]>([])
-  const [showAlert, setShowAlert] = useState(false)
+  const [showAlert, setShowAlert] = useState<boolean>(false)
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
   const navigate = useNavigate()
 
