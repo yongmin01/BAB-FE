@@ -17,6 +17,8 @@ export const Container = styled.div<HeaderTitleStyleProps>`
   padding: 0 24px;
   box-sizing: border-box;
   background-color: #f8f8f8;
+
+  z-index: 999;
 `
 export const Title = styled.h1<HeaderTitleStyleProps>`
   font-style: normal;
