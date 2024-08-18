@@ -143,14 +143,6 @@ const discountEventStore = create<DiscountEventState>((set, get) => ({
     }
     set({
       discountEvents: [...state.discountEvents, newEvent],
-      currentEvent: {
-        discountId: 0,
-        storeName: '',
-        startDate: '',
-        endDate: '',
-        discountTitle: '',
-        discounts: [],
-      },
     })
   },
   removeDiscountEventById: (eventId) => {
