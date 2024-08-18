@@ -12,26 +12,18 @@ import {
 export default function MemberType() {
   const navigate = useNavigate()
 
-  const { user, membertype, isLogined, setMembertype } = LoginStore(
-    (state) => state,
-  )
+  const { membertype, setMembertype } = LoginStore((state) => state)
 
   const handleInputStudent = () => {
     setMembertype('student')
-    console.log('student local storage')
-    console.log('현재 로그인 상태1', { user, membertype, isLogined })
   }
   const handleInputManager = () => {
     setMembertype('manager')
-    console.log('manager local storage')
   }
 
   return (
     <MemberContainer>
-      <Welcome>
-        {user} 님, <br />
-        환영합니다!
-      </Welcome>
+      <Welcome>환영합니다!</Welcome>
       <SelectMessage>
         서비스 이용을 위해
         <br />
@@ -39,7 +31,7 @@ export default function MemberType() {
       </SelectMessage>
       <MemberButton onClick={handleInputStudent}>학생이에요</MemberButton>
       <MemberButton onClick={handleInputManager}>사장님이에요</MemberButton>
-      <StartButton onClick={() => navigate('/signup')}>
+      <StartButton onClick={() => navigate('/signup')} disabled={!membertype}>
         밥이득 시작하기
       </StartButton>
     </MemberContainer>

@@ -10,7 +10,7 @@ export const Welcome = styled.div`
   font-size: 30px;
   font-weight: 1000;
   text-align: left;
-  margin-top: 50px;
+  margin-top: 80px;
 `
 
 export const SelectMessage = styled.div`
@@ -18,7 +18,7 @@ export const SelectMessage = styled.div`
   font-weight: 600;
   text-align: left;
   margin-top: 16px;
-  margin-bottom: 230px;
+  margin-bottom: 260px;
   color: #767676;
 `
 

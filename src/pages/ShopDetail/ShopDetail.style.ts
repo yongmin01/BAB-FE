@@ -102,11 +102,14 @@ export const CouponInfoBody = styled.div`
   font-weight: 600;
 `
 
-export const MenuContainer = styled.div``
+export const MenuContainer = styled.div`
+  padding-top: 20px;
+  padding-bottom: 70px;
+`
 
 export const Line = styled.div`
   background-color: #f8f8f8;
   width: 400px;
   height: 2px;
-  margin: 20px 0px;
+  margin-top: 20px;
 `

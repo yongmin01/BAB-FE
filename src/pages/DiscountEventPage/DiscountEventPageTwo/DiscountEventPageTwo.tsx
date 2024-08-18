@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   PageContainer,
   EventForm,
@@ -12,19 +12,25 @@ import {
   SubmitButton,
   DiscountDataWrapper,
 } from '@pages/DiscountEventPage/DiscountEventPageTwo/DiscountEventPageTwo.style'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+import { handleDiscountEventRegister } from '@apis/Discount/discountEventRegister'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function DiscountEventPageTwo() {
   const navigate = useNavigate()
-  const { currentEvent, setEventMessage, addDiscountEvent } =
+  const { currentEvent, setEventMessage, addDiscountEventWithId } =
     discountEventStore()
   const { storeInfos } = storeInfoStore()
+  const currentStoreName = storeInfos[0]?.name || '가게 이름 없음' // 현재 가게 이름 설정
   const [selectedMessage, setSelectedMessage] = useState<string>(
-    currentEvent.eventMessage,
+    currentEvent.discountTitle,
   )
+  const location = useLocation()
+  const { isUniformPrice } = location.state || {
+    isUniformPrice: false,
+  }
 
   const [selectedCheckbox, setSelectedCheckbox] = useState<string | null>(null)
 
@@ -37,33 +43,41 @@ export default function DiscountEventPageTwo() {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setSelectedMessage(e.target.value)
     setEventMessage(e.target.value)
-    setSelectedCheckbox(null) // 직접 입력시 체크박스 해제
+    setSelectedCheckbox(null)
   }
 
-  const handleSubmit = () => {
-    const discountData = addDiscountEvent() //추가되는 하나씩의 데이터
-    const state = discountEventStore.getState() //현재 최신화된 스토어의 상태 가져오기
-    console.log(discountData)
-    console.log('Updated Discount Events:', state.discountEvents) //최신화된 스토어에서 discountEvents 가져옴
-    console.log(currentEvent.discounts) // 할인 정보 보기위해 콘솔 찍어봄
-    console.log(storeInfos[0].menu) // 할인된 가격만큼 가게 스토어에 반영됐는지 확인해봄
-    navigate('/manager')
-  }
+  useEffect(() => {
+    if (isUniformPrice) {
+      if (
+        !currentEvent.discounts.length ||
+        currentEvent.discounts[0]?.discountPrice === undefined
+      ) {
+        navigate('/discount-event')
+      }
+    }
+  }, [isUniformPrice, currentEvent.discounts])
 
-  //나중에 사용할 api호출 함수 미리 작성해둠
-  /*
-    const handleSubmit = async () => {
-    addDiscountEvent()
-    const eventData = currentEvent
+  const handleSubmit = async () => {
     try {
-      const discountData = await axios.post('/임의 주소', eventData)
-      console.log(`할인 이벤트가 성공적으로 생성되었습니다. ${discountData}`)
-      navigate('/manager')
+      const discountInfo = await handleDiscountEventRegister() // 할인 이벤트 API 호출
+      if (discountInfo) {
+        addDiscountEventWithId(
+          discountInfo.discountId,
+          discountInfo.storeName,
+          discountInfo.title,
+          discountInfo.startDate,
+          discountInfo.endDate,
+          discountInfo.createDiscountMenuDataDtoList,
+        )
+        //할인 성공적으로 추가 됐으면 성공 여부 따져서 알림 API 호출하는 코드 작성
+        console.log(discountEventStore.getState().discountEvents)
+        navigate('/manager')
+      }
     } catch (error) {
       console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
+      alert('할인 이벤트 생성에 실패했습니다. 다시 시도해주세요.')
     }
   }
-  */
 
   return (
     <>
@@ -80,45 +94,35 @@ export default function DiscountEventPageTwo() {
             <hr />
             <Textarea
               placeholder="행사 안내 문구를 입력해주세요."
-              value={selectedMessage}
+              value={currentEvent.discountTitle}
               onChange={handleTextareaChange}
             />
             <Label>선택하기</Label>
             <MenuTable>
               <MenuTableBody>
-                <MenuRow
-                  onClick={() =>
-                    handleSelectedMessage(
-                      '밥이득 김치찌개 전 메뉴 1000원 할인',
-                      'discount1',
-                    )
-                  }
-                >
-                  <MenuLabel>밥이득 김치찌개 전 메뉴 1000원 할인</MenuLabel>
-                  <CheckboxWrapper>
-                    <input
-                      type="checkbox"
-                      id="discount1"
-                      checked={selectedCheckbox === 'discount1'}
-                      onChange={() =>
-                        handleSelectedMessage(
-                          '밥이득 김치찌개 전 메뉴 1000원 할인',
-                          'discount1',
-                        )
-                      }
-                    />
-                    <label htmlFor="discount1"></label>
-                  </CheckboxWrapper>
-                </MenuRow>
-                <MenuRow
-                  onClick={() =>
-                    handleSelectedMessage(
-                      '밥이득 김치찌개에서 할인행사 합니다!',
-                      'discount2',
-                    )
-                  }
-                >
-                  <MenuLabel>밥이득 김치찌개에서 할인행사 합니다!</MenuLabel>
+                {isUniformPrice ? (
+                  <>
+                    <MenuRow>
+                      <MenuLabel>{`${currentStoreName} 전 메뉴 ${currentEvent.discounts[0]?.discountPrice}원 할인`}</MenuLabel>
+                      <CheckboxWrapper>
+                        <input
+                          type="checkbox"
+                          id="discount1"
+                          checked={selectedCheckbox === 'discount1'}
+                          onChange={() =>
+                            handleSelectedMessage(
+                              `${currentStoreName} 전 메뉴 ${currentEvent.discounts[0]?.discountPrice}원 할인`,
+                              'discount1',
+                            )
+                          }
+                        />
+                        <label htmlFor="discount1"></label>
+                      </CheckboxWrapper>
+                    </MenuRow>
+                  </>
+                ) : null}
+                <MenuRow>
+                  <MenuLabel>{`${currentStoreName}에서 할인행사 합니다!`}</MenuLabel>
                   <CheckboxWrapper>
                     <input
                       type="checkbox"
@@ -126,7 +130,7 @@ export default function DiscountEventPageTwo() {
                       checked={selectedCheckbox === 'discount2'}
                       onChange={() =>
                         handleSelectedMessage(
-                          '밥이득 김치찌개에서 할인행사 합니다!',
+                          `${currentStoreName}에서 할인행사 합니다!`,
                           'discount2',
                         )
                       }

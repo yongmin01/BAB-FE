@@ -140,9 +140,10 @@ export const MenuRow = styled.div`
 `
 
 export const MenuLabel = styled.span`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  min-width: 55px;
+  width: 70px;
+  min-width: 70px;
 `
 
 export const PriceInput = styled.input`

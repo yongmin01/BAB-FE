@@ -1,18 +1,16 @@
 import styled from 'styled-components'
 
-export const PageContainer = styled.div`
+export const PageContainer = styled.div<{ events: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: ${({ events }) => (events ? 'flex-start' : 'center')};
   background-color: #f8f8f8;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
+  overflow-y: ${({ events }) => (events === 'true' ? 'auto' : 'hidden')};
   padding: 58px 20px 20px;
-  overflow: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  box-sizing: border-box;
 `
 
 export const EventList = styled.div`
@@ -54,6 +52,49 @@ export const DeleteButton = styled.button`
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
+  cursor: pointer;
+  box-sizing: border-box;
+`
+export const EmptyStateContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+`
+
+export const EmptyStateMessage = styled.div`
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #777;
+  }
+`
+
+export const StartEventButton = styled.button`
+  background-color: #ffffff;
+  color: gray;
+  font-size: 1rem;
+  height: 40px;
+  padding: 10px 20px;
+  border: 1px solid #b0b0b0;
+  font-weight: 400;
+  border-radius: 20px;
   cursor: pointer;
   box-sizing: border-box;
 `

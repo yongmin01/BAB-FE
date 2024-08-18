@@ -34,14 +34,11 @@ export default function StoreInfoDeletePage() {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked)
   }
-  //실제 api 다룰때는 api함수 호출 -> 리턴받은 id 받고 removeStore에 인자로 보내주기 -> 가게 정보 업뎃
-  //현재는 일단 removeStore를 통해 스토어에서 없어지는거 확인
   const handleDeleteClick = async () => {
     if (isChecked && storeId !== null) {
       try {
-        //const deletedStoreId = await deleteStore(storeId) - api 다루는 부분
-        //removeStoreInfo(deletedStoreId) - 반환받은 부분
-        removeStoreInfo(storeId)
+        const deletedStoreId = await deleteStore(storeId)
+        removeStoreInfo(deletedStoreId)
         const updatedStoreInfos = storeInfoStore.getState().storeInfos
         console.log(`Store with ID ${storeId} deleted successfully`)
         console.log('Updated Store Infos:', updatedStoreInfos)

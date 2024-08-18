@@ -4,10 +4,14 @@ export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-left: 20px;
+  margin-bottom: 10px;
   text-align: left;
 `
 export const MenuImg = styled.img`
   width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
 `
 export const MenuTitle = styled.div`
   font-size: 13px;

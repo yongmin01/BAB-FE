@@ -1,7 +1,7 @@
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import nav from '@assets/RegisterStoreInfo/thirdstep.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
-
 import {
   StyledButton,
   StyledContainer,
@@ -18,26 +18,36 @@ import {
   StyledInputContainer,
   StyledMenuLabel,
 } from './ThirdRegisterStoreInfo.style'
-import { useState } from 'react'
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { postAddMenu } from '@apis/postAddMenu'
+import storeInfoStore from '@stores/storeInfoStore'
+
+const token = import.meta.env.VITE_APP_API_TOKEN
 
 export default function ThirdRegisterStoreInfo() {
+  const storeInfo = storeInfoStore(
+    (state) => state.storeInfos[state.storeInfos.length - 1],
+  )
+  const storeId = storeInfo?.id
   const [isError, setIsError] = useState<boolean>(false)
-
   const navigate = useNavigate()
+
   const handleBack = () => {
     navigate(-1)
   }
 
   const [menus, setMenus] = useState<Menu[]>([
-    { name: '', price: '' },
-    { name: '', price: '' },
+    { name: '', price: 0, menuUrl: '', isSignature: false },
+    { name: '', price: 0, menuUrl: '', isSignature: false },
   ])
 
   const handleAddMenu = () => {
-    setMenus([...menus, { name: '', price: '' }])
+    setMenus([
+      ...menus,
+      { name: '', price: 0, menuUrl: '', isSignature: false },
+    ])
   }
 
   const handleMenuChange = (
@@ -51,13 +61,43 @@ export default function ThirdRegisterStoreInfo() {
     setMenus(updatedMenus)
   }
 
-  const handleNext = () => {
-    // const isNextButtonDisabled = !menus.every((menu) => menu.name && menu.price)
-    const isFormValid = menus.every((menu) => menu.name && menu.price)
+  const handleNext = async () => {
+    const signatureMenuCount = menus.filter((menu) => menu.isSignature).length
+
+    if (signatureMenuCount > 1) {
+      setIsError(true)
+      return
+    }
+    const isFormValid = menus.every(
+      (menu) =>
+        menu.name &&
+        menu.price &&
+        (typeof menu.menuUrl === 'string' ||
+          (menu.menuUrl as { menuImageUrl: string }).menuImageUrl),
+    )
+
     if (isFormValid) {
       setIsError(false)
-      console.log('폼 유효함')
-      // navigate('/nextpage')
+      try {
+        const formattedMenus = menus.map((menu) => ({
+          ...menu,
+          menuUrl:
+            typeof menu.menuUrl === 'string'
+              ? menu.menuUrl
+              : (menu.menuUrl as { menuImageUrl: string }).menuImageUrl,
+        }))
+        const response = await postAddMenu(storeId, formattedMenus, token)
+        if (response.isSuccess) {
+          console.log('성공')
+          alert('성공')
+
+          // navigate('/manager') // 다음 페이지로 이동
+        } else {
+          console.error('실패', response.message)
+        }
+      } catch (error) {
+        console.error('메뉴 추가 중 오류 발생:', error)
+      }
     } else {
       setIsError(true)
       console.log('모든 필드를 채워주세요.')
@@ -82,7 +122,9 @@ export default function ThirdRegisterStoreInfo() {
             {isError && (
               <StyledErrorMessage>
                 <img src={errorIcon} alt="Error icon" />
-                모든 필드를 채워주세요.
+                {menus.filter((menu) => menu.isSignature).length > 1
+                  ? '대표 메뉴는 하나만 선택할 수 있습니다.'
+                  : '모든 필드를 채워주세요.'}
               </StyledErrorMessage>
             )}
           </StyledInputContainer>

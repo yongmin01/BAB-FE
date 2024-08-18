@@ -9,7 +9,6 @@ import {
   StyledNavImg,
   StyledNavImgWrapper,
   StyledNavText,
-  StyledSearchInput,
   StyledSection,
   StyledUploadBox,
   StyledUploadImg,
@@ -24,6 +23,7 @@ import { ChangeEvent, useRef, useState } from 'react'
 import { useErrorInput } from '@hooks/useErrorInput'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
+import { useStoreName } from '@stores/storeInfoStore'
 import { postStoreRegister } from '@apis/postStoreRegister'
 import { StoreUniversitySearch } from '@components/StoreUniversitySearch/StoreUniversitySearch'
 import storeInfoStore from '@stores/storeInfoStore'
@@ -34,6 +34,7 @@ export default function FirstRegisterStoreInfo() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const { selectedImage, handleUpload } = useImageLoad()
+  const { storeName, saveStoreName } = useStoreName()
 
   const storeLink = useErrorInput('')
   const school = useErrorInput('')
@@ -41,10 +42,8 @@ export default function FirstRegisterStoreInfo() {
   const [roadAddress, setRoadAddress] = useState('')
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
-  const [storeName, setStoreName] = useState('')
   const token = import.meta.env.VITE_APP_API_TOKEN
-  // 나중에 로그인할 때 토큰 저장 후 store에서 가져올 예정입니당
-
+  // const [storeName, setStoreName] = useState('')
   const addStoreInfo = storeInfoStore((state) => state.addStoreInfo)
 
   const handleNext = async () => {
@@ -115,7 +114,7 @@ export default function FirstRegisterStoreInfo() {
             type="text"
             placeholder="밥이득 김치찌개"
             value={storeName}
-            onChange={(e) => setStoreName(e.target.value)}
+            onChange={(e) => saveStoreName(e.target.value)}
           />
           <StyledLabel>주소 입력</StyledLabel>
           <AddressSearch

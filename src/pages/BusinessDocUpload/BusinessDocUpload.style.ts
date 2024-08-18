@@ -61,6 +61,7 @@ export const StyledButton = styled.button`
   font-size: 15px;
   font-weight: 800;
   border-radius: 10px;
+  border: none;
   text-align: center;
   position: absolute;
   bottom: 16px;
