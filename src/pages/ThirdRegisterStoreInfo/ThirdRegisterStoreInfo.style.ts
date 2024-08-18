@@ -105,6 +105,7 @@ export const StyledButton = styled.button`
   text-align: center;
   position: absolute;
   bottom: 16px;
+  border: none;
 `
 export const StyledMenuTable = styled.div`
   width: 342px;

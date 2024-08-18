@@ -61,6 +61,7 @@ export const StyledButton = styled.button`
   text-align: center;
   position: absolute;
   bottom: 16px;
+  border: none;
 `
 export const StyledTimeTable = styled.div`
   width: 342px;
