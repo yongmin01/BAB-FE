@@ -11,6 +11,7 @@ import ManagerCompletedCard from '@components/ManagerCompletedCard/ManagerComple
 import storeInfoStore, { StoreInfo } from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
 import { generateUniqueId } from '@utils/generateUniqueId'
+import { useNavigate } from 'react-router-dom'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import MyPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
 import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
@@ -22,6 +23,7 @@ import {
 import ArrowImg from '@assets/StudentPage/arrow.svg'
 
 export default function ManagerPage() {
+  const navigate = useNavigate()
   const { isRegistered, setIsRegistered, setManagerRegistrationInfo } =
     managerRegisterInfoStore()
   const { isStoreRegistered, setStoreRegistered } = storeInfoStore()
@@ -55,6 +57,7 @@ export default function ManagerPage() {
       industry: '업태',
       item: '종목',
     })
+    navigate('/businessdocupload')
   }
 
   const handleStoreRegisterClick = (): void => {
