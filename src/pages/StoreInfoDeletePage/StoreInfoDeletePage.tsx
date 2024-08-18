@@ -13,12 +13,14 @@ import storeInfoStore from '@stores/storeInfoStore'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 
 export default function StoreInfoDeletePage() {
   const navigate = useNavigate()
   const [isChecked, setIsChecked] = useState<boolean>(false)
   const storeInfos = storeInfoStore((state) => state.storeInfos)
   const removeStoreInfo = storeInfoStore((state) => state.removeStoreInfo)
+  const { ownerNickname } = managerRegisterInfoStore()
 
   // 현재 등록된 가게 정보가 없을 경우에 대한 처리
   const storeId = storeInfos.length > 0 ? storeInfos[0].id : null
@@ -56,8 +58,7 @@ export default function StoreInfoDeletePage() {
         onClick={() => navigate('/storeInfo-edit')}
       />
       <SubTitle>
-        {/* 고서현 사장님 부분은 로그인 정보 받아와서 이름으로 랜더링 해주기 */}
-        고서현 사장님! <br />
+        {ownerNickname} 사장님! <br />
         가게를 정말 삭제할까요?
       </SubTitle>
       <Content>
