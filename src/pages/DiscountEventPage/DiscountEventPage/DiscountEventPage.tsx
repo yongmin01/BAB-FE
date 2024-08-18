@@ -4,9 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { format, parseISO } from 'date-fns'
 import {
   PageContainer,
-  Header,
-  Title,
-  BackButton,
   EventForm,
   Label,
   SpanLabel,
@@ -26,6 +23,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 import storeInfoStore, { MenuItem } from '@stores/storeInfoStore'
 import discountEventStore from '@stores/discountEventStore'
+import { fetchMenus } from '@apis/Discount/fetchMenu'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function DiscountEventPage() {
   const navigate = useNavigate()
@@ -37,6 +36,8 @@ export default function DiscountEventPage() {
     currentEvent,
   } = discountEventStore()
   const { storeInfos, updateMenuDiscount } = storeInfoStore()
+  const [menuList, setMenuList] = useState<MenuItem[]>([])
+  const [isUniformPrice, setIsUniformPrice] = useState<boolean>(false)
 
   const [errorMessages, setErrorMessages] = useState<{
     periodError: string
@@ -46,12 +47,38 @@ export default function DiscountEventPage() {
     discountError: '',
   })
 
+  /*
   useEffect(() => {
     initializeDiscounts(storeInfos[0].menu)
   }, [storeInfos[0].menu, initializeDiscounts])
+  */
+  useEffect(() => {
+    async function loadMenus() {
+      if (storeInfos.length > 0) {
+        const menus = await fetchMenus(storeInfos[0].id)
+        setMenuList(menus)
+        initializeDiscounts(menus)
+        console.log(
+          'Initialized discounts:',
+          discountEventStore.getState().currentEvent.discounts,
+        )
+      }
+    }
+
+    loadMenus()
+  }, [storeInfos, initializeDiscounts])
+
+  useEffect(() => {
+    const allPrices = currentEvent.discounts.map((d) =>
+      d.isChecked ? d.discountPrice : 0,
+    )
+    const uniquePrices = [...new Set(allPrices)]
+    const uniformPrice = uniquePrices.length === 1 && uniquePrices[0] > 0
+    setIsUniformPrice(uniformPrice)
+  }, [currentEvent.discounts])
 
   const handleNextClick = () => {
-    //유효성 검사 로직 커스텀훅으로 분리 예정
+    // 유효성 검사 로직
     let periodError = ''
     let discountError = ''
     let hasError = false
@@ -70,13 +97,27 @@ export default function DiscountEventPage() {
       hasError = true
     }
 
-    let hasValidDiscount = currentEvent.discounts.some(
-      (discount) => discount.isChecked && discount.discountPrice,
+    // 유효하지 않은 할인 항목이 있는지 검사
+    // 할인 항목 검사 로직
+    const hasValidDiscount = currentEvent.discounts.some(
+      (discount) => discount.isChecked && discount.discountPrice > 0,
     )
 
     if (!hasValidDiscount) {
       discountError = '적용할 메뉴를 선택하고 가격을 입력해주세요.'
       hasError = true
+    } else {
+      // 잘못된 할인 항목이 있는지 확인
+      const invalidDiscount = currentEvent.discounts.some(
+        (discount) =>
+          (discount.isChecked === true && discount.discountPrice <= 0) ||
+          (discount.isChecked === false && discount.discountPrice > 0),
+      )
+
+      if (invalidDiscount) {
+        discountError = '적용할 메뉴를 선택하고 가격을 입력해주세요.'
+        hasError = true
+      }
     }
 
     setErrorMessages({
@@ -86,16 +127,16 @@ export default function DiscountEventPage() {
 
     if (!hasError) {
       currentEvent.discounts.forEach((discount) => {
-        if (discount.isChecked && discount.discountPrice > 0) {
+        if (discount.isChecked && discount.discountPrice !== null) {
           updateMenuDiscount(
             storeInfos[0].id,
-            discount.id,
+            discount.menuId,
             discount.discountPrice,
             discount.isChecked,
           )
         }
       })
-      navigate('/discount-eventTwo')
+      navigate('/discount-eventTwo', { state: { isUniformPrice } })
     }
   }
 
@@ -124,39 +165,54 @@ export default function DiscountEventPage() {
   }
 
   const handleCheckboxClick = (id: number, checked: boolean) => {
-    const discount = currentEvent.discounts.find((d) => d.id === id)
-    if (discount && discount.discountPrice > 0) {
-      setDiscountChecked(id, checked)
-      setErrorMessages((prev) => ({
-        ...prev,
-        discountError: '',
-      }))
-    } else {
-      setErrorMessages((prev) => ({
-        ...prev,
-        discountError: '가격을 입력해주세요.',
-      }))
+    const discount = currentEvent.discounts.find((d) => d.menuId === id)
+
+    if (!discount) {
+      console.error(`Discount not found for menuId: ${id}`)
+      return
     }
+
+    setDiscountChecked(id, checked)
+
+    const isValidDiscount = checked && discount.discountPrice > 0
+
+    setErrorMessages((prev) => ({
+      ...prev,
+      discountError: isValidDiscount
+        ? ''
+        : '적용할 메뉴를 선택하고 가격을 입력해주세요.',
+    }))
   }
 
   const handlePriceChange = (id: number, price: number) => {
     setDiscountPrice(id, price)
-    const discount = currentEvent.discounts.find((d) => d.id === id)
-    if (discount && price > 0) {
-      setErrorMessages((prev) => ({
-        ...prev,
-        discountError: '',
-      }))
+    const discount = currentEvent.discounts.find((d) => d.menuId === id)
+
+    if (!discount) {
+      console.error(`Discount not found for menuId: ${id}`)
+      return
     }
+
+    setDiscountChecked(id, price > 0)
+
+    const isValidDiscount = price >= 0 && discount.isChecked
+
+    setErrorMessages((prev) => ({
+      ...prev,
+      discountError: isValidDiscount
+        ? ''
+        : '적용할 메뉴를 선택하고 가격을 입력해주세요.',
+    }))
   }
 
   return (
     <>
       <PageContainer>
-        <Header>
-          <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
-          <Title>할인 행사 진행하기</Title>
-        </Header>
+        <HeaderTitle
+          title="할인 행사 진행하기"
+          $icon="back"
+          onClick={() => navigate('/manager')}
+        />
         <EventForm>
           <DateDataWrapper>
             <Label>행사 기간 선택</Label>
@@ -198,24 +254,27 @@ export default function DiscountEventPage() {
               <span>적용</span>
             </MenuTableHeader>
             <MenuTableBody>
-              {storeInfos[0].menu.map((item: MenuItem) => (
-                <MenuRow key={item.id}>
+              {menuList.map((item: MenuItem) => (
+                <MenuRow key={item.menuId}>
                   <MenuLabel>{item.name}</MenuLabel>
                   <PriceInput
                     type="text"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      handlePriceChange(item.id, Number(e.target.value) || 0)
+                      handlePriceChange(
+                        item.menuId,
+                        Number(e.target.value) || 0,
+                      )
                     }}
                   />
                   <CheckboxWrapper>
                     <input
                       type="checkbox"
-                      id={`menu${item.id}`}
+                      id={`menu${item.menuId}`}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        handleCheckboxClick(item.id, e.target.checked)
+                        handleCheckboxClick(item.menuId, e.target.checked)
                       }}
                     />
-                    <label htmlFor={`menu${item.id}`}></label>
+                    <label htmlFor={`menu${item.menuId}`}></label>
                   </CheckboxWrapper>
                 </MenuRow>
               ))}

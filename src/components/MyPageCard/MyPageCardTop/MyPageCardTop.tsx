@@ -1,11 +1,10 @@
-import { StyledCard } from '../MyPageCard.style'
-import { CardTitle } from '../MyPageCard.style'
+import { StyledCard, CardTitle } from '../MyPageCard.style'
 import {
-  FindSchoolContainer,
-  FindSchoolBtn,
+  ImgBtnContainer,
+  Btn,
   StyledArrow,
   EditSchool,
-} from './StudentPageCardTop.style'
+} from './MyPageCardTop.style'
 import { studentInfoStore } from '@stores/studentInfoStore'
 import { schoolInfoStore } from '@stores/schoolInfoStore'
 
@@ -15,7 +14,7 @@ import PinImg from '@assets/StudentPage/pin.svg'
 
 import { useNavigate } from 'react-router-dom'
 
-export default function StudentPageCardTop() {
+export default function MyPageCardTop() {
   const navigate = useNavigate()
   const { studentName, isSchoolSet } = studentInfoStore((state) => state)
   const { schoolName } = schoolInfoStore((state) => state)
@@ -24,39 +23,37 @@ export default function StudentPageCardTop() {
     navigate('/schoolSearch')
   }
   return (
-    <StyledCard paddingTop="35px" paddingBottom={isSchoolSet ? '16px' : '26px'}>
+    <StyledCard
+      $paddingtop="35px"
+      $paddingbottom={isSchoolSet ? '16px' : '26px'}
+    >
       <CardTitle>{studentName}님!</CardTitle>
       {isSchoolSet ? (
         <>
           <CardTitle>{schoolName} 근처 식당으로</CardTitle>
-          <CardTitle paddingBottom="21px">할인 정보를 알려드릴게요!</CardTitle>
-          <FindSchoolContainer>
+          <CardTitle $paddingbottom="21px">할인 정보를 알려드릴게요!</CardTitle>
+          <ImgBtnContainer>
             <img
               src={PinImg}
               width="64px"
               height="69px"
               style={{ marginBottom: '18px' }}
             />
-          </FindSchoolContainer>
+          </ImgBtnContainer>
           <EditSchool onClick={handleSchoolEdit}>대학 수정하기</EditSchool>
         </>
       ) : (
         <>
-          <CardTitle paddingBottom="22px">
+          <CardTitle $paddingbottom="22px">
             학생이라면 정보를 알려주세요.
           </CardTitle>
-          <FindSchoolContainer>
-            <img
-              src={StudentIDCardImg}
-              width="115px"
-              height="73px"
-              style={{ marginBottom: '18px' }}
-            />
-            <FindSchoolBtn onClick={() => navigate('/schoolSearch')}>
+          <ImgBtnContainer $gap="18px">
+            <img src={StudentIDCardImg} width="115px" height="73px" />
+            <Btn onClick={() => navigate('/schoolSearch')} $padding="22px">
               학교찾기
               <StyledArrow src={ArrowImg} />
-            </FindSchoolBtn>
-          </FindSchoolContainer>
+            </Btn>
+          </ImgBtnContainer>
         </>
       )}
     </StyledCard>

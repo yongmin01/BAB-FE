@@ -5,35 +5,15 @@ export const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   background-color: #f8f8f8;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-`
-
-export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0;
-`
-
-export const Title = styled.h1`
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  flex-grow: 1;
-`
-
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  position: absolute;
-  left: 10px;
+  padding: 58px 20px 20px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const EventForm = styled.form`
@@ -160,9 +140,10 @@ export const MenuRow = styled.div`
 `
 
 export const MenuLabel = styled.span`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  min-width: 55px;
+  width: 70px;
+  min-width: 70px;
 `
 
 export const PriceInput = styled.input`

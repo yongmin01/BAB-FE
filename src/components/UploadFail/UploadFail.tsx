@@ -17,7 +17,7 @@ export default function UploadFail({ retry }: UploadFailProps) {
 
   const RetryClick = () => {
     retry()
-    navigate('/managerUpload')
+    navigate('/businessdocupload')
   }
 
   const ManagerPageClick = () => {

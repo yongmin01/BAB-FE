@@ -1,8 +1,10 @@
+
 import { LoginStore } from '@stores/loginStore'
 import { StyledCard } from '../MyPageCard.style'
 import { CardTitle } from '../MyPageCard.style'
 import { StyledAccount, Text, Btn } from './MyPageCardAccount.style'
 import { studentInfoStore } from '@stores/studentInfoStore'
+
 import { useNavigate } from 'react-router-dom'
 
 export default function MyPageCardAccount() {
@@ -19,8 +21,8 @@ export default function MyPageCardAccount() {
   }
 
   return (
-    <StyledCard paddingTop="24px" paddingBottom="21px">
-      <CardTitle paddingBottom="18px">계정</CardTitle>
+    <StyledCard $paddingtop="24px" $paddingbottom="21px">
+      <CardTitle $paddingbottom="18px">계정</CardTitle>
       <StyledAccount>
         <Text>아이디</Text>
         <Text color="#9A9A9A">{id}</Text>
