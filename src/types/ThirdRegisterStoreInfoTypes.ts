@@ -1,4 +1,8 @@
+type MenuUrl = string | { menuImageUrl: string }
+
 export interface Menu {
   name: string
-  price: string
+  price: number
+  menuUrl: MenuUrl
+  isSignature: boolean
 }
