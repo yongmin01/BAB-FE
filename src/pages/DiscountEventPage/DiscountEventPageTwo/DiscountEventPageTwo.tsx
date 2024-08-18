@@ -1,5 +1,3 @@
-import { AxiosError } from 'axios'
-
 import React, { useEffect, useState } from 'react'
 import {
   PageContainer,
