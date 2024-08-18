@@ -1,17 +1,18 @@
 import { StyledCard } from '../MyPageCard.style'
 import { CardTitle } from '../MyPageCard.style'
 import { StyledAccount, Text, Btn } from './MyPageCardAccount.style'
-import { useStudentInfoStore } from '@stores/studentInfoStore'
 
-export default function MyPageCardAccount() {
-  const accountId = useStudentInfoStore((state) => state.accountId)
+interface MyPageAccountId {
+  accountID?: string
+}
 
+export default function MyPageCardAccount({ accountID }: MyPageAccountId) {
   return (
     <StyledCard $paddingtop="24px" $paddingbottom="21px">
       <CardTitle $paddingbottom="18px">계정</CardTitle>
       <StyledAccount>
         <Text>아이디</Text>
-        <Text color="#9A9A9A">{accountId}</Text>
+        <Text color="#9A9A9A">{accountID ? accountID : 'testID'}</Text>
       </StyledAccount>
       <hr
         style={{

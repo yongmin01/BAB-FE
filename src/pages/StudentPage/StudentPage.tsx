@@ -10,8 +10,13 @@ import { useSchoolInfoStore } from '@stores/schoolInfoStore'
 const token = import.meta.env.VITE_KAKAO_LOGIN_TEST_TOKEN
 
 export default function StudentPage() {
-  const { isSchoolSet, setIsSchoolSet, setStudentName, setAccountId } =
-    useStudentInfoStore((state) => state)
+  const {
+    isSchoolSet,
+    accountId,
+    setIsSchoolSet,
+    setStudentName,
+    setAccountId,
+  } = useStudentInfoStore((state) => state)
   const { setSchoolName, setAddress } = useSchoolInfoStore((state) => state)
   useEffect(() => {
     const request = async () => {
@@ -37,7 +42,7 @@ export default function StudentPage() {
       <Content>
         <MyPageCardTop />
         {isSchoolSet ? <DiscountInfo /> : null}
-        <MyPageCardAccount />
+        <MyPageCardAccount accountID={accountId} />
       </Content>
     </StudentPageContainer>
   )
