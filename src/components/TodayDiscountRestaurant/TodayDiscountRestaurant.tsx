@@ -31,13 +31,13 @@ export default function TodayDiscountRestaurant() {
       try {
         const res = await getTodayDiscountRestaurants()
         if (res) {
-          console.log('Data loaded successfully:', res)
+          console.log('오늘의 할인 식당:', res)
         }
       } catch (error) {
         console.log(error)
       }
     }
-    // request()
+    request()
   }, [])
 
   return (
