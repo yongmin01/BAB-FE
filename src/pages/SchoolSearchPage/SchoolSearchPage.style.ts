@@ -9,9 +9,13 @@ export const SchoolSearchPageContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
 
-  padding-top: 58px;
+  padding: 58px 0 50px;
 
   background-color: #f8f8f8;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const PageContent = styled.div`
@@ -140,7 +144,7 @@ export const SearchValue = styled.span`
 export const CandidateSchoolBox = styled.div`
   display: flex;
   flex-direction: column;
-  max-height: 60px;
+  max-height: 200px;
   border: 0.4px solid #767676;
   border-radius: 5px;
   background-color: #ffffff;
