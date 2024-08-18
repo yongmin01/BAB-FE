@@ -43,16 +43,19 @@ export default function DiscountEventRecordPage() {
   console.log('Fetched Past Discount Events:', pastDiscountEvents)
 
   const handleDeleteClick = async (eventId: number) => {
-    removeDiscountEventById(eventId)
-    /*
-    const removedEventId = await deleteDiscountEvent()
-    const updatedEvents = pastDiscountEvents.filter((pastEvent) => {
-      return pastEvent.discountId !== removedEventId;
-    });
-    setPastDiscountEvents(updatedEvents)
-  } //여기 API 코드는 할인정보 삭제 브렌치 파서 진행하겠습니다(본격적인 할인 로직 다룰때)
-  //현재는 클라이언트 단에서(스토어) 삭제되는거까지만 해놨습니다.
-  */
+    if (storeInfos.length === 0) return
+
+    const storeId = storeInfos[0].id
+    const removedEventId = await deleteDiscountEvent(storeId, eventId)
+
+    if (removedEventId !== null) {
+      const updatedEvents = pastDiscountEvents.filter(
+        (pastEvent) => pastEvent.discountId !== removedEventId,
+      )
+      setPastDiscountEvents(updatedEvents)
+    } else {
+      console.error('Failed to delete the discount event.')
+    }
   }
   return (
     <PageContainer events={pastDiscountEvents.length > 0 ? 'true' : 'false'}>
