@@ -22,9 +22,11 @@ import { useState } from 'react'
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 
 export default function ThirdRegisterStoreInfo() {
   const [isError, setIsError] = useState<boolean>(false)
+  const { setIsStoreRegistered } = managerRegisterInfoStore()
 
   const navigate = useNavigate()
   const handleBack = () => {
@@ -57,6 +59,7 @@ export default function ThirdRegisterStoreInfo() {
     if (isFormValid) {
       setIsError(false)
       console.log('폼 유효함')
+      setIsStoreRegistered(true)
       navigate('/registerstoresuccess')
     } else {
       setIsError(true)
