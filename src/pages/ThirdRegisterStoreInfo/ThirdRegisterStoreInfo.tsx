@@ -62,6 +62,12 @@ export default function ThirdRegisterStoreInfo() {
   }
 
   const handleNext = async () => {
+    const signatureMenuCount = menus.filter((menu) => menu.isSignature).length
+
+    if (signatureMenuCount > 1) {
+      setIsError(true)
+      return
+    }
     const isFormValid = menus.every(
       (menu) =>
         menu.name &&
@@ -116,7 +122,9 @@ export default function ThirdRegisterStoreInfo() {
             {isError && (
               <StyledErrorMessage>
                 <img src={errorIcon} alt="Error icon" />
-                모든 필드를 채워주세요.
+                {menus.filter((menu) => menu.isSignature).length > 1
+                  ? '대표 메뉴는 하나만 선택할 수 있습니다.'
+                  : '모든 필드를 채워주세요.'}
               </StyledErrorMessage>
             )}
           </StyledInputContainer>
