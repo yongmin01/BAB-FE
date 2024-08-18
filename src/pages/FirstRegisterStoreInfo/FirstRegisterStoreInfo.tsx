@@ -16,7 +16,6 @@ import {
   StyledUploadText,
   StyledErrorMessage,
   StyledInputContainer,
-  StyledSearchInputContainer,
 } from './FirstRegisterStoreInfo.style'
 import UploadImg from '@assets/RegisterStoreInfo/upload.svg'
 import nav from '@assets/RegisterStoreInfo/firststep.svg'
@@ -26,11 +25,15 @@ import { useErrorInput } from '@hooks/useErrorInput'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
 import { useStoreName } from '@stores/storeInfoStore'
+import { postStoreRegister } from '@apis/postStoreRegister'
+import { StoreUniversitySearch } from '@components/StoreUniversitySearch/StoreUniversitySearch'
+import storeInfoStore from '@stores/storeInfoStore'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function FirstRegisterStoreInfo() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const { selectedImage, handleUpload } = useImageLoad()
   const { storeName, saveStoreName } = useStoreName()
 
@@ -40,9 +43,11 @@ export default function FirstRegisterStoreInfo() {
   const [roadAddress, setRoadAddress] = useState('')
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
+  const token = import.meta.env.VITE_APP_API_TOKEN
   // const [storeName, setStoreName] = useState('')
+  const addStoreInfo = storeInfoStore((state) => state.addStoreInfo)
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const isStoreLinkValid = storeLink.validate('링크를 입력해 주세요.')
     const isSchoolValid = school.validate('학교를 선택해 주세요.')
 
@@ -55,12 +60,36 @@ export default function FirstRegisterStoreInfo() {
         latitude,
         storeLink: storeLink.value,
         university: school.value,
+        registration: '이건뭐에요',
       }
+      try {
+        let bannerFiles: File[] | undefined
+        if (fileInputRef.current && fileInputRef.current.files) {
+          bannerFiles = Array.from(fileInputRef.current.files)
+        }
 
-      console.log('전체 데이터', formData)
-      // 데이터 확인용, api 연결할 때 코드 분리하겠습니당
+        const response = await postStoreRegister(formData, token, bannerFiles)
 
-      navigate('/secondRegisterStoreInfo')
+        const { id, name } = response.result
+
+        addStoreInfo({
+          id,
+          name,
+          lat: latitude,
+          lng: longitude,
+          storeType: '',
+          storeLink: storeLink.value,
+          isStoreRegistered: true,
+          image: selectedImage?.thumbnail || '',
+          university: school.value,
+          businessHours: [],
+          breakTime: [],
+          menu: [],
+        })
+        navigate('/secondRegisterStoreInfo')
+      } catch (error) {
+        alert('가게 등록 중 오류가 발생했습니다. 다시 시도해 주세요.')
+      }
     }
   }
 
@@ -79,7 +108,7 @@ export default function FirstRegisterStoreInfo() {
           <div>메뉴 등록</div>
         </StyledNavText>
       </StyledNavImgWrapper>
-      <StyledScrollableContent>
+      <StyledScrollableContent ref={containerRef}>
         <StyledFormContainer>
           <StyledLabel>가게 이름</StyledLabel>
           <StyledFormInput
@@ -139,22 +168,7 @@ export default function FirstRegisterStoreInfo() {
               }
             />
           </StyledSection>
-          <StyledSearchInputContainer>
-            <StyledLabel>학교 선택</StyledLabel>
-            {school.error && (
-              <StyledErrorMessage>
-                <img src={errorIcon} alt="Error icon" />
-                {school.error}
-              </StyledErrorMessage>
-            )}
-          </StyledSearchInputContainer>
-          <StyledSearchInput
-            type="text"
-            placeholder="학교 선택"
-            value={school.value}
-            onChange={school.onChange}
-            className={school.error ? 'invalid' : ''}
-          />
+          <StoreUniversitySearch school={school} containerRef={containerRef} />
           <StyledButton onClick={handleNext}>다음</StyledButton>
         </StyledFormContainer>
       </StyledScrollableContent>
