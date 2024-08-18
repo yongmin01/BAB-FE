@@ -1,29 +1,19 @@
-import StudentPageCardTop from '@components/MyPageCard/StudentPageCardTop/StudentPageCardTop'
-import StudentPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
+import MyPageCardTop from '@components/MyPageCard/MyPageCardTop/MyPageCardTop'
+import MyPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
 import DiscountInfo from '@components/MyPageCard/DiscountInfo/DiscountInfo'
-import {
-  StudentPageContainer,
-  Content,
-  Title,
-  TitleText,
-  NotifyIcon,
-} from '../StudentPage/StudentPage.style'
+import { StudentPageContainer, Content } from '../StudentPage/StudentPage.style'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import { studentInfoStore } from '@stores/studentInfoStore'
-import bellIcon from '@assets/icons/bell.svg'
 
 export default function StudentPage() {
   const { isSchoolSet } = studentInfoStore((state) => state)
-
   return (
     <StudentPageContainer>
-      <Title>
-        <TitleText>마이페이지</TitleText>
-        <NotifyIcon src={bellIcon} />
-      </Title>
+      <HeaderTitle title={'마이페이지'} $icon="notification" />
       <Content>
-        <StudentPageCardTop />
+        <MyPageCardTop />
         {isSchoolSet ? <DiscountInfo /> : null}
-        <StudentPageCardAccount />
+        <MyPageCardAccount />
       </Content>
     </StudentPageContainer>
   )

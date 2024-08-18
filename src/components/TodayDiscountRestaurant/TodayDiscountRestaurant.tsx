@@ -10,80 +10,69 @@ import {
   Dash,
   DiscountedPrice,
   Price,
+  EmptyContainer,
+  EmptyAlert,
+  Comment,
+  Btn,
 } from './TodayDiscountRestaurant.style'
+import shop from '@assets/TodayDiscountRestaurantPage/shop.svg'
+import { useEffect } from 'react'
+import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
+import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
+import { useNavigate } from 'react-router-dom'
 
 export default function TodayDiscountRestaurant() {
-  const dummy = [
-    {
-      id: 1,
-      discountType: 'SKT 할인',
-      restaurantName: '스타벅스',
-      menu: [
-        {
-          id: 1,
-          dishName: '바닐라 빈 푸딩 블렌디드 위드 에스프레소',
-          discountedPrice: 8300,
-          price: 9000,
-        },
-        {
-          id: 2,
-          dishName: '퍼플 드링크 위드 망고 용과 소다',
-          discountedPrice: 7300,
-          price: 8000,
-        },
-      ],
-    },
+  const navigator = useNavigate()
+  const discountRestaurantList = useTodayDiscountStore(
+    (state) => state.discounts,
+  )
+  useEffect(() => {
+    const request = async () => {
+      try {
+        const res = await getTodayDiscountRestaurants()
+        if (res) {
+          console.log('오늘의 할인 식당:', res)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    request()
+  }, [])
 
-    {
-      id: 3,
-      discountType: '가게 특별 할인',
-      restaurantName: '샐러디',
-      menu: [
-        {
-          id: 1,
-          dishName: '콥 샐러드',
-          discountedPrice: 7200,
-          price: 8900,
-        },
-        {
-          id: 2,
-          dishName: '탄단지 샐러드',
-          discountedPrice: 7200,
-          price: 8900,
-        },
-      ],
-    },
-  ]
   return (
     <RestaurantList>
-      {dummy.map((restaurant) => (
-        <Restaurant key={restaurant.id}>
-          <DiscountType>{restaurant.discountType}</DiscountType>
-          <RestaurantName>{restaurant.restaurantName}</RestaurantName>
-          <GoToRestaurantBtn>
-            바로 가기
-            <span>&gt;</span>
-          </GoToRestaurantBtn>
-          <MenuList>
-            <Menu>
-              <Dish>{restaurant.menu[0].dishName}</Dish>
-              <Dash />
-              <DiscountedPrice>
-                {restaurant.menu[0].discountedPrice}
-              </DiscountedPrice>
-              <Price>{restaurant.menu[0].price}</Price>
-            </Menu>
-            <Menu>
-              <Dish>{restaurant.menu[1].dishName}</Dish>
-              <Dash />
-              <DiscountedPrice>
-                {restaurant.menu[1].discountedPrice}
-              </DiscountedPrice>
-              <Price>{restaurant.menu[1].price}</Price>
-            </Menu>
-          </MenuList>
-        </Restaurant>
-      ))}
+      {discountRestaurantList.length > 0 ? (
+        discountRestaurantList.map((restaurant) => (
+          <Restaurant key={restaurant.discountId}>
+            <DiscountType>{restaurant.discountTitle}</DiscountType>
+            <RestaurantName>{restaurant.storeName}</RestaurantName>
+            <GoToRestaurantBtn
+              onClick={() => navigator(`/shopdetail/${restaurant.storeId}`)}
+            >
+              바로 가기
+              <span>&gt;</span>
+            </GoToRestaurantBtn>
+            <MenuList>
+              {restaurant.getOnSaleStoreMenuDataDtoList.map((menu) => (
+                <Menu>
+                  <Dish>{menu.menuName}</Dish>
+                  <Dash />
+                  <DiscountedPrice>{menu.discountPrice}</DiscountedPrice>
+                  <Price>{menu.price}</Price>
+                </Menu>
+              ))}
+            </MenuList>
+          </Restaurant>
+        ))
+      ) : (
+        <EmptyContainer>
+          <img src={shop} width="100px" />
+          <EmptyAlert>할인 중인 식당이 없어요!</EmptyAlert>
+          <Comment>할인을 시작한 가게가 생기면 알림으로 알려드릴게요.</Comment>
+          <Btn>할인 가게 알림 켜기</Btn>
+        </EmptyContainer>
+      )}
     </RestaurantList>
   )
 }

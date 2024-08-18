@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 import {
   PageContainer,
-  Header,
-  BackButton,
   SubTitle,
-  Title,
   EditOptions,
   OptionButton,
   NextButton,
 } from '@pages/StoreInfoEditPage/StoreInfoEditPage.style'
 import { Option } from 'src/types/ButtonOpionTypes'
 import { useNavigate } from 'react-router-dom'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function StoreInfoEditPage() {
   const navigate = useNavigate()
@@ -37,10 +35,11 @@ export default function StoreInfoEditPage() {
 
   return (
     <PageContainer>
-      <Header>
-        <BackButton onClick={() => navigate('/manager')}>&lt;</BackButton>
-        <Title>가게 정보 수정</Title>
-      </Header>
+      <HeaderTitle
+        title="가게 정보 수정"
+        $icon="back"
+        onClick={() => navigate('/manager')}
+      />
       <SubTitle>
         {/* 고서현 사장님 부분은 로그인 정보 받아와서 이름으로 랜더링 해주기 */}
         고서현 사장님! <br />
