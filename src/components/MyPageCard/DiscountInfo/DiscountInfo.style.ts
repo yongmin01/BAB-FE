@@ -16,7 +16,7 @@ export const DiscountItem = styled.div`
 `
 
 export const Text = styled.div<{ color: string }>`
-  width: 45%; // 임의 지정 수정 필요할듯
+  width: 46%; // 임의 지정 수정 필요할듯
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;

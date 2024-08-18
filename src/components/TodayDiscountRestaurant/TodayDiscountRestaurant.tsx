@@ -10,7 +10,12 @@ import {
   Dash,
   DiscountedPrice,
   Price,
+  EmptyContainer,
+  EmptyAlert,
+  Comment,
+  Btn,
 } from './TodayDiscountRestaurant.style'
+import shop from '@assets/TodayDiscountRestaurantPage/shop.svg'
 import { useEffect } from 'react'
 import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
 import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
@@ -32,7 +37,7 @@ export default function TodayDiscountRestaurant() {
         console.log(error)
       }
     }
-    request()
+    // request()
   }, [])
 
   return (
@@ -61,7 +66,12 @@ export default function TodayDiscountRestaurant() {
           </Restaurant>
         ))
       ) : (
-        <div>없음</div>
+        <EmptyContainer>
+          <img src={shop} width="100px" />
+          <EmptyAlert>할인 중인 식당이 없어요!</EmptyAlert>
+          <Comment>할인을 시작한 가게가 생기면 알림으로 알려드릴게요.</Comment>
+          <Btn>할인 가게 알림 켜기</Btn>
+        </EmptyContainer>
       )}
     </RestaurantList>
   )
