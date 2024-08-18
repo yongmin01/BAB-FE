@@ -1,10 +1,24 @@
+
+import { LoginStore } from '@stores/loginStore'
 import { StyledCard } from '../MyPageCard.style'
 import { CardTitle } from '../MyPageCard.style'
 import { StyledAccount, Text, Btn } from './MyPageCardAccount.style'
 import { studentInfoStore } from '@stores/studentInfoStore'
 
+import { useNavigate } from 'react-router-dom'
+
 export default function MyPageCardAccount() {
   const { id } = studentInfoStore((state) => state)
+  const { setIsLogined, setToken, setMembertype } = LoginStore((state) => state)
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    setIsLogined(false)
+    setToken('')
+    setMembertype('')
+    alert('로그아웃되었습니다!')
+    navigate('/')
+  }
 
   return (
     <StyledCard $paddingtop="24px" $paddingbottom="21px">
@@ -23,7 +37,7 @@ export default function MyPageCardAccount() {
         }}
       />
       <StyledAccount>
-        <Btn>로그아웃</Btn>
+        <Btn onClick={handleLogout}>로그아웃</Btn>
       </StyledAccount>
     </StyledCard>
   )
