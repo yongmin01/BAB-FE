@@ -26,6 +26,7 @@ import UploadSuccess from './UploadSuccess/UploadSuccess'
 import EditThirdRegisterStoreInfo from '@pages/ThirdRegisterStoreInfo/EditThirdRegisterStoreInfo'
 import EditFirstRegisterStoreInfo from '@pages/FirstRegisterStoreInfo/EditFirstRegisterStoreInfo'
 import EditSecondRegisterStoreInfo from '@pages/SecondRegisterStoreInfo/EditSecondRegisterStoreInfo'
+import EditSuccess from '@pages/RegisterSuccess/EditSuccess'
 
 export default function AppContent() {
   const location = useLocation()
@@ -93,6 +94,7 @@ export default function AppContent() {
           element={<UploadSuccess retry={() => {}} />}
         />
         <Route path="/managerUpload" element={<BusinessDocUpload />} />
+        <Route path="/editsuccess" element={<EditSuccess />} />
       </Routes>
       {showFooter && <Footer />}
     </>
