@@ -15,8 +15,8 @@ import {
 } from '@components/MyPageCard/MyPageCardTop/MyPageCardTop.style'
 import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
 import { ManagerPageContainer } from './ManagerPage.style'
-import axios from 'axios'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
+import { getOwnerMypage } from '@apis/getOwnerMypage'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
@@ -25,18 +25,10 @@ export default function ManagerPage() {
 
   const fetchOwnerData = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/v1/users/owner/mypage`,
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_APP_API_TOKEN}`,
-          },
-        },
-      )
+      const response = await getOwnerMypage()
 
-      if (response.data.isSuccess) {
-        const { ownerId, ownerNickname, storeId, storeName } =
-          response.data.result
+      if (response.isSuccess) {
+        const { ownerId, ownerNickname, storeId, storeName } = response.result
 
         updateFromApi({
           ownerId,
@@ -45,10 +37,7 @@ export default function ManagerPage() {
           storeName,
         })
       } else {
-        console.error(
-          'Failed to fetch owner mypage data:',
-          response.data.message,
-        )
+        console.error('Failed to fetch owner mypage data:', response.message)
       }
     } catch (error) {
       console.error('사장님 마이페이지 오류', error)
