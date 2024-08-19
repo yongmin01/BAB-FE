@@ -32,6 +32,8 @@ import { useErrorInput } from '@hooks/useErrorInput'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import { postOperatingHours } from '@apis/postOperatingHours'
 import storeInfoStore from '@stores/storeInfoStore'
+import useOperatingHoursStore from '@stores/operatingHoursStore'
+
 const token = import.meta.env.VITE_APP_API_TOKEN
 
 const days = ['월', '화', '수', '목', '금', '토', '일']
@@ -65,6 +67,10 @@ export default function SecondRegisterStoreInfo() {
     Array(days.length).fill(false),
   )
 
+  const setOperatingHoursPayload = useOperatingHoursStore(
+    (state) => state.setOperatingHoursPayload,
+  )
+
   const handleNext = async () => {
     if (!checkedDays.includes(true)) {
       error.setError('운영 시간을 작성해 주세요.')
@@ -90,16 +96,13 @@ export default function SecondRegisterStoreInfo() {
           }
           return null
         })
-        .filter(Boolean)
+        .filter((item): item is OperatingHour => item !== null)
 
       try {
-        const response = await postOperatingHours(
-          storeId,
-          payload as OperatingHour[],
-          token,
-        )
+        const response = await postOperatingHours(storeId, payload, token)
 
         if (response.isSuccess) {
+          setOperatingHoursPayload(payload) // Store the payload for later use
           navigate('/thirdRegisterStoreInfo')
         } else {
           console.error(response.message)

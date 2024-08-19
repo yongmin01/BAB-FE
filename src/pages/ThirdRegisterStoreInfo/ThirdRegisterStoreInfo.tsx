@@ -91,7 +91,7 @@ export default function ThirdRegisterStoreInfo() {
           console.log('성공')
           alert('성공')
 
-          // navigate('/manager') // 다음 페이지로 이동
+          navigate('/storeInfo-edit') // 다음 페이지로 이동
         } else {
           console.error('실패', response.message)
         }

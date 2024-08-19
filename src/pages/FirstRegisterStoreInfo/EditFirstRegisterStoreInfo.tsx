@@ -1,4 +1,3 @@
-import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
 import {
   StyledScrollableContent,
   StyledButton,
@@ -13,82 +12,84 @@ import {
   StyledUploadBox,
   StyledUploadImg,
   StyledUploadText,
-  StyledErrorMessage,
   StyledInputContainer,
 } from './FirstRegisterStoreInfo.style'
 import UploadImg from '@assets/RegisterStoreInfo/upload.svg'
 import nav from '@assets/RegisterStoreInfo/firststep.svg'
 import { useNavigate } from 'react-router-dom'
-import { ChangeEvent, useRef, useState } from 'react'
-import { useErrorInput } from '@hooks/useErrorInput'
+import { ChangeEvent, useRef, useState, useEffect } from 'react'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
 import { useStoreName } from '@stores/storeInfoStore'
-import { postStoreRegister } from '@apis/postStoreRegister'
 import { StoreUniversitySearch } from '@components/StoreUniversitySearch/StoreUniversitySearch'
 import storeInfoStore from '@stores/storeInfoStore'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { patchStore } from '@apis/patchStore'
+import { useErrorInput } from '@hooks/useErrorInput'
 
 export default function EditFirstRegisterStoreInfo() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const { selectedImage, handleUpload } = useImageLoad()
+  const storeInfo = storeInfoStore(
+    (state) => state.storeInfos[state.storeInfos.length - 1],
+  )
+  const storeId = storeInfo?.id
+
   const { storeName, saveStoreName } = useStoreName()
 
-  const storeLink = useErrorInput('')
-  const school = useErrorInput('')
-  const [address, setAddress] = useState('')
-  const [roadAddress, setRoadAddress] = useState('')
-  const [latitude, setLatitude] = useState(0)
-  const [longitude, setLongitude] = useState(0)
+  const [address, setAddress] = useState(storeInfo?.address || '')
+  const [roadAddress, setRoadAddress] = useState(storeInfo?.streetAddress || '')
+  const [latitude, setLatitude] = useState(storeInfo?.lat || 0)
+  const [longitude, setLongitude] = useState(storeInfo?.lng || 0)
+  const [storeLink, setStoreLink] = useState(storeInfo?.storeLink || '')
+  const school = useErrorInput(storeInfo?.university || '')
+
+  useEffect(() => {
+    if (storeInfo) {
+      saveStoreName(storeInfo.name)
+    }
+  }, [storeInfo, saveStoreName])
+
   const token = import.meta.env.VITE_APP_API_TOKEN
-  // const [storeName, setStoreName] = useState('')
-  const addStoreInfo = storeInfoStore((state) => state.addStoreInfo)
+  const setStoreInfo = storeInfoStore((state) => state.setStoreInfo)
 
   const handleNext = async () => {
-    const isStoreLinkValid = storeLink.validate('링크를 입력해 주세요.')
-    const isSchoolValid = school.validate('학교를 선택해 주세요.')
+    const formData = {
+      name: storeName,
+      address,
+      streetAddress: roadAddress,
+      longitude,
+      latitude,
+      storeLink,
+      university: school.value,
+      registration: '등록 정보',
+    }
 
-    if (isStoreLinkValid && isSchoolValid) {
-      const formData = {
+    try {
+      await patchStore(storeId!, formData, token)
+
+      setStoreInfo({
+        id: storeId!,
         name: storeName,
-        address,
-        streetAddress: roadAddress,
-        longitude,
-        latitude,
-        storeLink: storeLink.value,
+        lat: latitude,
+        lng: longitude,
+        storeType: storeInfo?.storeType || '',
+        storeLink: storeLink,
+        isStoreRegistered: true,
+        image: selectedImage?.thumbnail || '',
         university: school.value,
-        registration: '이건뭐에요',
-      }
-      try {
-        let bannerFiles: File[] | undefined
-        if (fileInputRef.current && fileInputRef.current.files) {
-          bannerFiles = Array.from(fileInputRef.current.files)
-        }
+        businessHours: storeInfo?.businessHours || [],
+        breakTime: storeInfo?.breakTime || [],
+        menu: storeInfo?.menu || [],
+        address: address,
+        streetAddress: roadAddress,
+      })
 
-        const response = await postStoreRegister(formData, token, bannerFiles)
-
-        const { id, name } = response.result
-
-        addStoreInfo({
-          id,
-          name,
-          lat: latitude,
-          lng: longitude,
-          storeType: '',
-          storeLink: storeLink.value,
-          isStoreRegistered: true,
-          image: selectedImage?.thumbnail || '',
-          university: school.value,
-          businessHours: [],
-          breakTime: [],
-          menu: [],
-        })
-        navigate('/secondRegisterStoreInfo')
-      } catch (error) {
-        alert('가게 등록 중 오류가 발생했습니다. 다시 시도해 주세요.')
-      }
+      navigate('/registerstoresuccess')
+    } catch (error) {
+      alert('가게 정보 수정 중 오류가 발생했습니다. 다시 시도해 주세요.')
     }
   }
 
@@ -98,7 +99,7 @@ export default function EditFirstRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <HeaderTitle title="가게 정보 등록" $icon="back" onClick={handleBack} />
+      <HeaderTitle title="가게 정보 수정" $icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>
@@ -112,7 +113,7 @@ export default function EditFirstRegisterStoreInfo() {
           <StyledLabel>가게 이름</StyledLabel>
           <StyledFormInput
             type="text"
-            placeholder="밥이득 김치찌개"
+            placeholder="가게 이름을 입력하세요."
             value={storeName}
             onChange={(e) => saveStoreName(e.target.value)}
           />
@@ -126,19 +127,12 @@ export default function EditFirstRegisterStoreInfo() {
           />
           <StyledInputContainer>
             <StyledLabel>가게 링크</StyledLabel>
-            {storeLink.error && (
-              <StyledErrorMessage>
-                <img src={errorIcon} alt="Error icon" />
-                {storeLink.error}
-              </StyledErrorMessage>
-            )}
           </StyledInputContainer>
           <StyledFormInput
             type="text"
             placeholder="링크를 입력해 주세요."
-            value={storeLink.value}
-            onChange={storeLink.onChange}
-            className={storeLink.error ? 'invalid' : ''}
+            value={storeLink}
+            onChange={(e) => setStoreLink(e.target.value)}
           />
           <StyledSection>
             <StyledLabel>가게 배너 사진 등록</StyledLabel>

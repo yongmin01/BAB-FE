@@ -19,7 +19,6 @@ interface BusinessHours {
 }
 
 export interface MenuItem {
-  //할인된 가격 생각도 해야될듯
   menuId: number
   image: string
   name: string
@@ -41,6 +40,8 @@ export interface StoreInfo {
   businessHours: BusinessHours[]
   breakTime: BusinessHours[]
   menu: MenuItem[]
+  address: string // 주소 추가
+  streetAddress: string // 도로명 주소 추가
 }
 
 interface StoreInfoState {
@@ -69,6 +70,7 @@ interface StoreInfoState {
 
 const storeInfoStore = create<StoreInfoState>((set) => ({
   storeInfos: [
+    /*
     {
       id: 1,
       name: '금산양꼬치 본점',
@@ -106,6 +108,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
         },
       ],
     },
+    */
   ], // 초기값을 설정
   isStoreRegistered: false,
   setStoreInfo: (info) =>
@@ -132,6 +135,8 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           businessHours: [],
           breakTime: [],
           menu: [],
+          address: '', // 기본값 추가
+          streetAddress: '', // 기본값 추가
         },
       ],
     })),

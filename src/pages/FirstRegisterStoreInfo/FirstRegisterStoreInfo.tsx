@@ -84,6 +84,8 @@ export default function FirstRegisterStoreInfo() {
           businessHours: [],
           breakTime: [],
           menu: [],
+          address: address,
+          streetAddress: roadAddress,
         })
         navigate('/secondRegisterStoreInfo')
       } catch (error) {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import nav from '@assets/RegisterStoreInfo/secondstep.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
@@ -30,40 +30,78 @@ import {
 import { BreakTime } from '@components/BreakTime/BreakTime'
 import { useErrorInput } from '@hooks/useErrorInput'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
-import { postOperatingHours } from '@apis/postOperatingHours'
-import storeInfoStore from '@stores/storeInfoStore'
+import { patchOperatingHours } from '@apis/patchOperatingHours'
+import useOperatingHoursStore from '@stores/operatingHoursStore'
+import storeInfoStore from '@stores/storeInfoStore' // Importing storeInfoStore
+
 const token = import.meta.env.VITE_APP_API_TOKEN
 
 const days = ['월', '화', '수', '목', '금', '토', '일']
 const serverDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
 export default function EditSecondRegisterStoreInfo() {
+  const navigate = useNavigate()
+  const { operatingHoursPayload, setOperatingHoursPayload } =
+    useOperatingHoursStore()
+
+  // Get storeId from storeInfoStore
   const storeInfo = storeInfoStore(
     (state) => state.storeInfos[state.storeInfos.length - 1],
   )
   const storeId = storeInfo?.id
-  const navigate = useNavigate()
-  const [breakTimes, setBreakTimes] = useState<BreakTimeType[]>([
-    {
-      start: '09:00',
-      end: '22:00',
-      selectedDays: Array(days.length).fill(false),
-    },
-  ])
 
-  const [operatingHours, setOperatingHours] = useState<OperatingHour[]>(
-    days.map((day) => ({
-      day,
-      openTime: '09:00',
-      closeTime: '22:00',
-      breakTime: {},
-    })),
-  )
-
-  const error = useErrorInput('')
+  const [breakTimes, setBreakTimes] = useState<BreakTimeType[]>([])
+  const [operatingHours, setOperatingHours] = useState<OperatingHour[]>([])
   const [checkedDays, setCheckedDays] = useState<boolean[]>(
     Array(days.length).fill(false),
   )
+
+  const error = useErrorInput('')
+
+  useEffect(() => {
+    if (operatingHoursPayload.length > 0) {
+      const initialOperatingHours = operatingHoursPayload.map(
+        (hour: OperatingHour) => ({
+          day: hour.day,
+          openTime: hour.openTime.slice(0, 5), // Removing seconds
+          closeTime: hour.closeTime.slice(0, 5), // Removing seconds
+          breakTime: hour.breakTime,
+        }),
+      )
+
+      const initialCheckedDays = serverDays.map((day) =>
+        operatingHoursPayload.some((hour: OperatingHour) => hour.day === day),
+      )
+
+      const initialBreakTimes = initialOperatingHours
+        .map((hour) => {
+          const selectedDays = serverDays.map(
+            (serverDay) => hour.day === serverDay,
+          )
+
+          return {
+            start: hour.breakTime?.startTime?.slice(0, 5) || '09:00',
+            end: hour.breakTime?.endTime?.slice(0, 5) || '22:00',
+            selectedDays,
+          }
+        })
+        .filter((bt) => bt.start !== '09:00' || bt.end !== '22:00')
+
+      setOperatingHours(initialOperatingHours)
+      setCheckedDays(initialCheckedDays)
+      setBreakTimes(
+        initialBreakTimes.length
+          ? initialBreakTimes
+          : [
+              {
+                start: '09:00',
+                end: '22:00',
+                selectedDays: Array(days.length).fill(false),
+              },
+            ],
+      )
+    }
+  }, [operatingHoursPayload])
 
   const handleNext = async () => {
     if (!checkedDays.includes(true)) {
@@ -93,21 +131,26 @@ export default function EditSecondRegisterStoreInfo() {
         .filter(Boolean)
 
       try {
-        const response = await postOperatingHours(
-          storeId,
-          payload as OperatingHour[],
-          token,
-        )
+        if (storeId) {
+          const response = await patchOperatingHours(
+            storeId,
+            payload as OperatingHour[],
+            token,
+          )
 
-        if (response.isSuccess) {
-          navigate('/thirdRegisterStoreInfo')
+          if (response.isSuccess) {
+            setOperatingHoursPayload(payload as OperatingHour[]) // Save the payload to Zustand store
+            navigate('/registerstoresuccess')
+          } else {
+            console.error(response.message)
+            error.setError(response.message)
+          }
         } else {
-          console.error(response.message)
-          error.setError(response.message)
+          error.setError('Store ID를 찾을 수 없습니다.')
         }
       } catch (e) {
-        console.error('운영시간 등록 실패', e)
-        error.setError('운영 시간 등록에 실패했습니다.')
+        console.error('운영시간 수정 실패', e)
+        error.setError('운영 시간 수정에 실패했습니다.')
       }
     }
   }
@@ -145,7 +188,7 @@ export default function EditSecondRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <HeaderTitle title="가게 정보 등록" $icon="back" onClick={handleBack} />
+      <HeaderTitle title="가게 정보 수정" $icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>
@@ -171,7 +214,7 @@ export default function EditSecondRegisterStoreInfo() {
                 <StyledDayLabel>{day}</StyledDayLabel>
                 <StyledTimeInput
                   type="time"
-                  value={operatingHours[index].openTime}
+                  value={operatingHours[index]?.openTime || '09:00'}
                   onChange={(e) =>
                     handleTimeChange(index, 'openTime', e.target.value)
                   }
@@ -179,7 +222,7 @@ export default function EditSecondRegisterStoreInfo() {
                 <StyledTimeText>부터</StyledTimeText>
                 <StyledTimeInput
                   type="time"
-                  value={operatingHours[index].closeTime}
+                  value={operatingHours[index]?.closeTime || '22:00'}
                   onChange={(e) =>
                     handleTimeChange(index, 'closeTime', e.target.value)
                   }
