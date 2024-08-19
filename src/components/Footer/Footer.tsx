@@ -9,8 +9,10 @@ import noneHomeIcon from '@icons/아이콘_홈.svg'
 import noneListIcon from '@icons/아이콘_할인가게.svg'
 import noneMypageIcon from '@icons/아이콘_마이페이지.svg'
 import { useLocation } from 'react-router-dom'
+import { LoginStore } from '@stores/loginStore'
 
 export default function Footer() {
+  const membertype = LoginStore((state) => state.membertype)
   const location = useLocation()
 
   const icons = {
@@ -22,6 +24,8 @@ export default function Footer() {
       ? mypageIcon
       : noneMypageIcon,
   }
+
+  const mypageLink = membertype === 'manager' ? '/manager' : '/studentPage'
 
   return (
     <FooterContainer>
@@ -42,7 +46,7 @@ export default function Footer() {
         <FooterText>할인 가게 목록</FooterText>
       </FooterLink>
       <FooterLink
-        to="/manager"
+        to={mypageLink}
         className={
           ['/manager', '/studentPage'].includes(location.pathname)
             ? 'active'
