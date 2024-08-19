@@ -9,7 +9,6 @@ import {
   StyledNavImg,
   StyledNavImgWrapper,
   StyledNavText,
-  StyledSearchInput,
   StyledSection,
   StyledUploadBox,
   StyledUploadImg,

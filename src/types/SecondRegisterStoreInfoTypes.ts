@@ -1,6 +1,8 @@
 export type OperatingHour = {
+  day: string
   openTime: string
   closeTime: string
+  breakTime: { startTime: string; endTime: string } | Record<string, never>
 }
 
 export type BreakTimeType = {

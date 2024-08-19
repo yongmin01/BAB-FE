@@ -1,5 +1,24 @@
 import axios from 'axios'
 
-export async function deleteDiscountEvent() {
-  //여기는 브렌치 새로 파서 로직 구현 할 것입니다(진행했던 할인행사 페이지 조회 -> 삭제버튼 눌러 삭제)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+export async function deleteDiscountEvent(storeId: number, discountId: number) {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/v1/stores/${storeId}/menus/discounts/${discountId}`,
+    )
+    if (response.status === 200) {
+      return response.data.result.id
+    } else {
+      console.error(
+        'Failed to delete discount:',
+        response.status,
+        response.data,
+      )
+      return null
+    }
+  } catch (error) {
+    console.error('Error deleting discount:', error)
+    return null
+  }
 }
