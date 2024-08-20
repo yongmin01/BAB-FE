@@ -9,7 +9,7 @@ export const SchoolSearchPageContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
 
-  padding: 58px 0 0;
+  padding: 58px 0 50px;
 
   background-color: #f8f8f8;
   overflow: scroll;

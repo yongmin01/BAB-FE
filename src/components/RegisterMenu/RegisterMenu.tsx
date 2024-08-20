@@ -12,7 +12,6 @@ import {
   StyledUploadBox,
   StyledUploadImg,
 } from './RegisterMenu.style'
-
 import { RegisterMenuProps } from 'src/types/RegisterMenuTypes'
 import { postUploadMenuImage } from '@apis/postUploadMenuImage'
 
