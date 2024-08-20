@@ -1,12 +1,11 @@
 import { useState, useEffect, ReactElement, lazy, Suspense } from 'react'
-import { fetchMarker, EntryMarkers } from '@apis/Store/fetchMarker'
+import { fetchMarker } from '@apis/Store/fetchMarker'
 import { SyncLoader } from 'react-spinners'
 import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
 import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
 import { mapStore } from '@stores/mapStore'
-import storeInfoStore from '@stores/storeInfoStore'
 import { MarkerStoreInfo } from '@stores/tempStore'
 import { Status } from '@googlemaps/react-wrapper'
 
@@ -23,7 +22,6 @@ const AsyncWrapper = lazy(() =>
   })),
 )
 export default function MapRender() {
-  const { storeInfos } = storeInfoStore()
   const { googleMap, setLat, setLng } = mapStore()
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
@@ -117,7 +115,7 @@ export default function MapRender() {
 
   useEffect(() => {
     const getMarkers = async () => {
-      const markers: EntryMarkers[] = await fetchMarker()
+      const markers: MarkerStoreInfo[] = await fetchMarker()
       setEntryMarker(markers)
     }
     getMarkers()

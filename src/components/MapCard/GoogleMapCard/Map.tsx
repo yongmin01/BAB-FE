@@ -3,7 +3,6 @@ import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { mapStore } from '@stores/mapStore'
-import storeInfoStore from '@stores/storeInfoStore'
 import { MarkerStoreInfo } from '@stores/tempStore'
 import { stores } from '@stores/tempStore'
 import greyIcon from '@assets/mapIcon/greyIcon'
@@ -35,6 +34,11 @@ interface SchoolLoc {
   lng: number
 }
 
+interface SendInfo {
+  searchValue: string
+  storeId: string
+}
+
 export default function Map({
   markers,
   addStore,
@@ -50,7 +54,6 @@ export default function Map({
   const ref = useRef<HTMLDivElement>(null)
   const { lat, lng, googleMap, setGoogleMap } = mapStore()
   const [zoom, setZoom] = useState<number | undefined>(16)
-  const { storeInfos, tempAddStoreInfo, addMenu } = storeInfoStore()
   const navigate = useNavigate()
   const schoolLocations: SchoolLoc[] = [
     //한국공학대학교
@@ -112,8 +115,8 @@ export default function Map({
       latitudeAvg += store.latitude as number
       longitudeAvg += store.longitude as number
     })
-    latitudeAvg /= stores.length
-    longitudeAvg /= stores.length
+    latitudeAvg! /= stores.length
+    longitudeAvg! /= stores.length
     schoolLocations.forEach((school) => {
       if (
         latitudeMin > school.lat - latitudeAvg &&
@@ -125,8 +128,8 @@ export default function Map({
         longitudeMin = school.lng - longitudeAvg
       }
     })
-    setLat(location.lat)
-    setLng(location.lng)
+    setLat(location!.lat)
+    setLng(location!.lng)
   }
   //가게검색 기능 싹 다 바꿔야함
   function findPlaces() {
@@ -137,6 +140,7 @@ export default function Map({
       })
     }
     /// 메뉴검색 API 구현 완료 시 사용 ///
+    // 좀 쓰자...
     /*
     if (googleMap) {
       const bounds = googleMap.getBounds()
@@ -194,8 +198,8 @@ export default function Map({
 
   //zoom값에 따라 아이콘 조절기능
   useEffect(() => {
-    let storeinfo: storeInfo
-    if (zoom < 17) {
+    let storeinfo: StoreInfo
+    if (zoom! < 17) {
       markers.forEach((marker) => {
         storeinfo = findIsDiscount(parseInt(marker.id))
         if (storeinfo.check === true) {
@@ -242,8 +246,11 @@ export default function Map({
             content: logo,
           })
           markerView.addListener('click', () => {
+            let sendInfo: SendInfo
+            sendInfo!.searchValue = sendSearchValue
+            sendInfo!.storeId = markerView.id
             navigate(`/shopdetail/${markerView.id}`, {
-              state: sendSearchValue,
+              state: sendInfo!,
             })
           })
           markerView.id = info.storeId.toString()
