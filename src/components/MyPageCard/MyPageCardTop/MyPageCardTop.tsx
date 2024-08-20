@@ -5,8 +5,8 @@ import {
   StyledArrow,
   EditSchool,
 } from './MyPageCardTop.style'
-import { studentInfoStore } from '@stores/studentInfoStore'
-import { schoolInfoStore } from '@stores/schoolInfoStore'
+import { useStudentInfoStore } from '@stores/studentInfoStore'
+import { useSchoolInfoStore } from '@stores/schoolInfoStore'
 
 import StudentIDCardImg from '@assets/StudentPage/studentIDCard.svg'
 import ArrowImg from '@assets/StudentPage/arrow.svg'
@@ -16,8 +16,8 @@ import { useNavigate } from 'react-router-dom'
 
 export default function MyPageCardTop() {
   const navigate = useNavigate()
-  const { studentName, isSchoolSet } = studentInfoStore((state) => state)
-  const { schoolName } = schoolInfoStore((state) => state)
+  const { studentName, isSchoolSet } = useStudentInfoStore((state) => state)
+  const schoolName = useSchoolInfoStore((state) => state.schoolName)
 
   const handleSchoolEdit = () => {
     navigate('/schoolSearch')

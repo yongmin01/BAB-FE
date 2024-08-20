@@ -43,3 +43,16 @@ export const More = styled(Link)`
 
   cursor: pointer;
 `
+
+export const EmptyAlertComment = styled.span`
+  display: inline-block;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+
+  text-align: center;
+
+  color: #767676;
+`

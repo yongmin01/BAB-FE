@@ -1,5 +1,11 @@
 import { StyledCard, CardTitle } from '../MyPageCard.style'
-import { DiscountList, DiscountItem, Text, More } from './DiscountInfo.style'
+import {
+  DiscountList,
+  DiscountItem,
+  Text,
+  More,
+  EmptyAlertComment,
+} from './DiscountInfo.style'
 import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
 import { useEffect } from 'react'
 import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
@@ -33,15 +39,22 @@ export default function DiscountInfo() {
         </More>
       </div>
       <DiscountList>
-        {discountRestaurantList.map((discount) => (
-          <DiscountItem
-            key={discount.storeId}
-            onClick={() => navigator(`shopdetail/${discount.storeId}`)}
-          >
-            <Text color="#000000">{discount.storeName}</Text>
-            <Text color="#767676">{discount.discountTitle}</Text>
-          </DiscountItem>
-        ))}
+        {discountRestaurantList.length === 0 ? (
+          <EmptyAlertComment>
+            오늘은 할인을 진행중인 식당이 없어요
+            {/* 임의로 디자인해서 수정 필요 */}
+          </EmptyAlertComment>
+        ) : (
+          discountRestaurantList.map((discount) => (
+            <DiscountItem
+              key={discount.storeId}
+              onClick={() => navigator(`shopdetail/${discount.storeId}`)}
+            >
+              <Text color="#000000">{discount.storeName}</Text>
+              <Text color="#767676">{discount.discountTitle}</Text>
+            </DiscountItem>
+          ))
+        )}
       </DiscountList>
     </StyledCard>
   )
