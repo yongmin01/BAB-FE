@@ -1,9 +1,11 @@
 import axios from 'axios'
 
-const token = import.meta.env.VITE_KAKAO_LOGIN_TEST_TOKEN
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export const studentUniversityRegister = async (universityId: number) => {
+export const studentUniversityRegister = async (
+  universityId: number,
+  token: string,
+) => {
   try {
     const response = await axios.patch(
       `${API_BASE_URL}/v1/users/student/university`,

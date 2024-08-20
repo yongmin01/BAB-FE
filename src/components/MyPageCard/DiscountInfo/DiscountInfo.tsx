@@ -10,7 +10,10 @@ import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore
 import { useEffect } from 'react'
 import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
 import { useNavigate } from 'react-router-dom'
+import { LoginStore } from '@stores/loginStore'
+
 export default function DiscountInfo() {
+  const { kakao_token } = LoginStore((state) => state)
   const navigator = useNavigate()
   const discountRestaurantList = useTodayDiscountStore((state) =>
     state.discounts.slice(0, 3),
@@ -18,9 +21,9 @@ export default function DiscountInfo() {
   useEffect(() => {
     const request = async () => {
       try {
-        const res = await getTodayDiscountRestaurants()
+        const res = await getTodayDiscountRestaurants(kakao_token)
         if (res) {
-          console.log('Data loaded successfully:', res)
+          console.log('오늘의 할인 식당:', res)
         }
       } catch (error) {
         console.log(error)
@@ -47,7 +50,7 @@ export default function DiscountInfo() {
         ) : (
           discountRestaurantList.map((discount) => (
             <DiscountItem
-              key={discount.storeId}
+              key={discount.discountId}
               onClick={() => navigator(`shopdetail/${discount.storeId}`)}
             >
               <Text color="#000000">{discount.storeName}</Text>

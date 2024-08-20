@@ -29,6 +29,7 @@ import { getUniversities } from '@apis/getUnivetsities'
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { LoginStore } from '@stores/loginStore'
 
 export default function SchoolSearchPage() {
   const [selectedSchool, setSelectedSchool] = useState<SchoolTypes>()
@@ -38,6 +39,8 @@ export default function SchoolSearchPage() {
 
   const [candidateSchool, setCandidateSchool] = useState<SchoolTypes[]>([])
   const [showAlert, setShowAlert] = useState<boolean>(false)
+
+  const { kakao_token } = LoginStore((state) => state)
 
   const navigate = useNavigate()
 
@@ -92,7 +95,10 @@ export default function SchoolSearchPage() {
   const handleSetSchool = async () => {
     if (selectedSchool) {
       try {
-        const res = await studentUniversityRegister(selectedSchool.universityId)
+        const res = await studentUniversityRegister(
+          selectedSchool.universityId,
+          kakao_token,
+        )
         setSchoolName(res.university.universityName)
         setAddress(res.university.universityAddress)
         setIsSchoolSet(true)

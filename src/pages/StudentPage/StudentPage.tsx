@@ -7,7 +7,7 @@ import { useStudentInfoStore } from '@stores/studentInfoStore'
 import { useEffect } from 'react'
 import { getStudentMyPageInfo } from '@apis/getStudentMyPageInfo'
 import { useSchoolInfoStore } from '@stores/schoolInfoStore'
-const token = import.meta.env.VITE_KAKAO_LOGIN_TEST_TOKEN
+import { LoginStore } from '@stores/loginStore'
 
 export default function StudentPage() {
   const {
@@ -18,10 +18,12 @@ export default function StudentPage() {
     setAccountId,
   } = useStudentInfoStore((state) => state)
   const { setSchoolName, setAddress } = useSchoolInfoStore((state) => state)
+  const { kakao_token } = LoginStore((state) => state)
+
   useEffect(() => {
-    const request = async () => {
+    const setStudentInfo = async () => {
       try {
-        const res = await getStudentMyPageInfo(token)
+        const res = await getStudentMyPageInfo(kakao_token)
         if (res) {
           setIsSchoolSet(res.isUniversityExist)
           setStudentName(res.account.name)
@@ -33,7 +35,8 @@ export default function StudentPage() {
         console.log(error)
       }
     }
-    request()
+
+    setStudentInfo()
   }, [])
 
   return (
