@@ -21,6 +21,7 @@ import {
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 import { postAddMenu } from '@apis/postAddMenu'
 import storeInfoStore from '@stores/storeInfoStore'
 
@@ -32,6 +33,8 @@ export default function ThirdRegisterStoreInfo() {
   )
   const storeId = storeInfo?.id
   const [isError, setIsError] = useState<boolean>(false)
+  const { setIsStoreRegistered } = managerRegisterInfoStore()
+
   const navigate = useNavigate()
 
   const handleBack = () => {
@@ -90,8 +93,8 @@ export default function ThirdRegisterStoreInfo() {
         if (response.isSuccess) {
           console.log('성공')
           alert('성공')
-
-          // navigate('/manager') // 다음 페이지로 이동
+          setIsStoreRegistered(true)
+          navigate('/registerstoresuccess')
         } else {
           console.error('실패', response.message)
         }
