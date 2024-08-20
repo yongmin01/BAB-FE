@@ -12,8 +12,9 @@ import {
   StyledUploadBox,
   StyledUploadImg,
 } from './RegisterMenu.style'
-import { postUploadMenuImage } from '@apis/postUploadMenuImage'
+
 import { RegisterMenuProps } from 'src/types/RegisterMenuTypes'
+import { postUploadMenuImage } from '@apis/postUploadMenuImage'
 
 const token = import.meta.env.VITE_APP_API_TOKEN
 
