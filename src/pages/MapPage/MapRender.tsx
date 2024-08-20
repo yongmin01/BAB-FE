@@ -1,4 +1,5 @@
 import { useState, useEffect, ReactElement, lazy, Suspense } from 'react'
+import { fetchMarker, EntryMarkers } from '@apis/Store/fetchMarker'
 import { SyncLoader } from 'react-spinners'
 import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
@@ -6,7 +7,7 @@ import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
 import { mapStore } from '@stores/mapStore'
 import storeInfoStore from '@stores/storeInfoStore'
-import { StoreInfo } from '@stores/tempStore'
+import { MarkerStoreInfo } from '@stores/tempStore'
 import { Status } from '@googlemaps/react-wrapper'
 
 //////////////  최상부 컨테이너  //////////////
@@ -31,10 +32,11 @@ export default function MapRender() {
   const [searchValue, setSearchValue] = useState<string>('')
   const [sendSearchValue, setSendSearchValue] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-  const [tempInfos, setTempInfo] = useState<StoreInfo[]>([])
+  const [tempInfos, setTempInfo] = useState<MarkerStoreInfo[]>([])
+  const [entryMarkers, setEntryMarker] = useState<MarkerStoreInfo[]>([])
 
   // Places 가게 타입 확인 후 id 삽입 함수
-  function addStore(store: StoreInfo): void {
+  function addStore(store: MarkerStoreInfo): void {
     setTempInfo((prev) => [...prev, store])
   }
   function addMarker(marker: google.maps.marker.AdvancedMarkerElement): void {
@@ -62,7 +64,7 @@ export default function MapRender() {
   function findDiscount(id: number): boolean {
     let check = false
     tempInfos.forEach((info) => {
-      if (info.id === id) {
+      if (info.storeId === id) {
         if (info.discountPrice !== 0) {
           check = true
         } else {
@@ -114,6 +116,12 @@ export default function MapRender() {
   }, [searchValue])
 
   useEffect(() => {
+    const getMarkers = async () => {
+      const markers: EntryMarkers[] = await fetchMarker()
+      setEntryMarker(markers)
+    }
+    getMarkers()
+
     const timer = setTimeout(() => {
       setLoading(false)
     }, 1500)
@@ -135,14 +143,12 @@ export default function MapRender() {
               </SpinnerContainer>
             }
           >
-            <AsyncWrapper
-              apiKey="AIzaSyCTuG8TXrNLMXsVUZGcG_G_NKPgvS3CGzQ"
-              render={render}
-            >
+            <AsyncWrapper apiKey={import.meta.env.VITE_API_KEY} render={render}>
               <Map
                 markers={markers}
                 tempInfos={tempInfos}
                 addStore={addStore}
+                entryMarkers={entryMarkers}
                 addMarker={addMarker}
                 clearMarker={clearMarker}
                 searchValue={searchValue}

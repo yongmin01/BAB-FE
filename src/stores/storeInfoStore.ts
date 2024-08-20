@@ -92,7 +92,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           image: 'menu1.png',
           name: '메뉴 1',
           price: 10000,
-          discountPrice: null,
+          discountPrice: 0,
           isDiscounted: false,
         },
         {
@@ -100,7 +100,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
           image: 'menu2.png',
           name: '메뉴 2',
           price: 12000,
-          discountPrice: null,
+          discountPrice: 0,
           isDiscounted: false,
         },
       ],

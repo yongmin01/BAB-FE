@@ -1,11 +1,10 @@
 import '@assets/mapIcon/markerAnimation.css'
-import { fetchMarker } from '@apis/Store/fetchMarker'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { mapStore } from '@stores/mapStore'
 import storeInfoStore from '@stores/storeInfoStore'
-import { StoreInfo } from '@stores/tempStore'
+import { MarkerStoreInfo } from '@stores/tempStore'
 import { stores } from '@stores/tempStore'
 import greyIcon from '@assets/mapIcon/greyIcon'
 import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
@@ -16,15 +15,16 @@ type Props = {
   markers: google.maps.marker.AdvancedMarkerElement[]
   searchValue: string
   sendSearchValue: string
-  tempInfos: StoreInfo[]
-  addStore: (store: StoreInfo) => void
+  tempInfos: MarkerStoreInfo[]
+  addStore: (store: MarkerStoreInfo) => void
+  entryMarkers: MarkerStoreInfo[]
   addMarker: (marker: google.maps.marker.AdvancedMarkerElement) => void
   clearMarker: () => void
   setLat: (value: number) => void
   setLng: (value: number) => void
 }
 
-interface storeInfo {
+interface StoreInfo {
   price: number
   discountPrice: number
   check: boolean
@@ -38,6 +38,7 @@ interface SchoolLoc {
 export default function Map({
   markers,
   addStore,
+  entryMarkers,
   addMarker,
   clearMarker,
   searchValue,
@@ -80,19 +81,19 @@ export default function Map({
   })
 
   //할인 확인 함수 o
-  function findIsDiscount(id: number): storeInfo {
-    let storeinfo: storeInfo
+  function findIsDiscount(id: number): StoreInfo {
+    let storeinfo: StoreInfo
     storeinfo = { check: false, price: 0, discountPrice: 0 }
 
     tempInfos.forEach((info) => {
-      if (info.id === id) {
+      if (info.storeId === id) {
         if (info.discountPrice === 0) {
           storeinfo.check = false
-          storeinfo.price = info.price
+          storeinfo.price = info.menuPrice
           storeinfo.discountPrice = 0
         } else {
           storeinfo.check = true
-          storeinfo.price = info.price
+          storeinfo.price = info.menuPrice
           storeinfo.discountPrice = info.discountPrice
         }
       }
@@ -100,6 +101,7 @@ export default function Map({
     return storeinfo
   }
   //데이터 기준으로 학교 위도 경도 확인
+  //더미데이터가 아닌 값만 있어야 테스트 가능
   function findLocation(): void {
     let location: SchoolLoc
     let latitudeAvg: number
@@ -107,8 +109,8 @@ export default function Map({
     let longitudeAvg: number
     let longitudeMin: number = 100
     stores.forEach((store) => {
-      latitudeAvg += store.lat as number
-      longitudeAvg += store.lng as number
+      latitudeAvg += store.latitude as number
+      longitudeAvg += store.longitude as number
     })
     latitudeAvg /= stores.length
     longitudeAvg /= stores.length
@@ -156,22 +158,25 @@ export default function Map({
       })
     }*/
   }
+
   //지도 초기화 o
   useEffect(() => {
     if (ref.current) {
       const initialMap = new window.google.maps.Map(ref.current, {
         center: { lat, lng },
-        zoom: 17,
+        zoom: 10,
         disableDefaultUI: true,
         mapId: 'eb4ca83b18a77f42',
       })
       setGoogleMap(initialMap)
-      fetchMarker()
+      entryMarkers.forEach((marker) => {
+        addStore(marker)
+      })
       initialMap.addListener('zoom_changed', () => {
         setZoom(initialMap.getZoom())
       })
     }
-  }, [])
+  }, [entryMarkers])
 
   //이전 검색마커 삭제기능 && 검색기능
   useEffect(() => {
@@ -179,7 +184,6 @@ export default function Map({
       console.log('검색 실행')
       if (markers.length !== 0) {
         markers.forEach((marker) => {
-          console.log(marker.id)
           marker.map = null
         })
         clearMarker()
@@ -192,7 +196,6 @@ export default function Map({
   useEffect(() => {
     let storeinfo: storeInfo
     if (zoom < 17) {
-      console.log(zoom)
       markers.forEach((marker) => {
         storeinfo = findIsDiscount(parseInt(marker.id))
         if (storeinfo.check === true) {
@@ -226,13 +229,16 @@ export default function Map({
         tempInfos.forEach((info) => {
           const logo =
             info.discountPrice === 0
-              ? greyIcon(info.price)
-              : yellowIcon(info.price, info.discountPrice)
+              ? greyIcon(info.menuPrice)
+              : yellowIcon(info.menuPrice, info.discountPrice)
           logo.classList.add('drop')
           const markerView = new AdvancedMarkerElement({
             map: googleMap,
-            position: new google.maps.LatLng(info.lat as number, info.lng),
-            title: info.name,
+            position: new google.maps.LatLng(
+              info.latitude as number,
+              info.longitude,
+            ),
+            title: info.storeName,
             content: logo,
           })
           markerView.addListener('click', () => {
@@ -240,7 +246,7 @@ export default function Map({
               state: sendSearchValue,
             })
           })
-          markerView.id = info.id.toString()
+          markerView.id = info.storeId.toString()
           const marker = markerView.content as HTMLElement
           marker.style.opacity = '0'
           marker.addEventListener('animationend', () => {
@@ -250,7 +256,6 @@ export default function Map({
           const time = 1 + Math.random()
           marker.style.setProperty('--delay-time', time + 's')
           intersectionObserver.observe(marker)
-          console.log(marker)
           addMarker(markerView)
         })
       } else {
