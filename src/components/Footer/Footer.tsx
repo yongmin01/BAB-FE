@@ -17,9 +17,7 @@ export default function Footer() {
 
   const icons = {
     home: location.pathname === '/map' ? homeIcon : noneHomeIcon,
-    list: ['/list', '/shopdetail'].includes(location.pathname)
-      ? listIcon
-      : noneListIcon,
+    list: location.pathname === '/list' ? listIcon : noneListIcon,
     mypage: ['/manager', '/studentPage'].includes(location.pathname)
       ? mypageIcon
       : noneMypageIcon,
@@ -38,9 +36,7 @@ export default function Footer() {
       </FooterLink>
       <FooterLink
         to="/list"
-        className={
-          ['/list', '/shopdetail'].includes(location.pathname) ? 'active' : ''
-        }
+        className={location.pathname === '/list' ? 'active' : ''}
       >
         <FooterIcon src={icons.list} alt="할인 가게 목록" />
         <FooterText>할인 가게 목록</FooterText>
