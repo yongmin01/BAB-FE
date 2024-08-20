@@ -19,7 +19,6 @@ export default function DiscountInfo() {
     state.discounts.slice(0, 3),
   )
   useEffect(() => {
-    console.log('test')
     const request = async () => {
       try {
         const res = await getTodayDiscountRestaurants(kakao_token)
