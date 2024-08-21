@@ -33,7 +33,6 @@ export default function AppContent() {
   const showFooter =
     location.pathname === '/manager' ||
     location.pathname === '/studentPage' ||
-    location.pathname === '/shopdetail' ||
     location.pathname === '/list' ||
     location.pathname === '/map'
   return (

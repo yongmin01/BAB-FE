@@ -1,30 +1,30 @@
+import { fetchMenus } from '@apis/Discount/fetchMenu'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import {
+  CheckboxWrapper,
+  CustomDatePickerWrapper,
+  DateDataWrapper,
+  DateInputWrapper,
+  ErrorMessage,
+  EventForm,
+  Label,
+  MenuLabel,
+  MenuRow,
+  MenuTable,
+  MenuTableBody,
+  MenuTableHeader,
+  PageContainer,
+  PriceInput,
+  SpanLabel,
+  SubmitButton,
+} from '@pages/DiscountEventPage/DiscountEventPage/DiscountEventPage.style'
+import discountEventStore from '@stores/discountEventStore'
+import storeInfoStore, { MenuItem } from '@stores/storeInfoStore'
+import { format, parseISO } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { format, parseISO } from 'date-fns'
-import {
-  PageContainer,
-  EventForm,
-  Label,
-  SpanLabel,
-  MenuTable,
-  MenuRow,
-  MenuLabel,
-  PriceInput,
-  SubmitButton,
-  DateDataWrapper,
-  DateInputWrapper,
-  MenuTableHeader,
-  MenuTableBody,
-  CheckboxWrapper,
-  ErrorMessage,
-  CustomDatePickerWrapper,
-} from '@pages/DiscountEventPage/DiscountEventPage/DiscountEventPage.style'
 import { useNavigate } from 'react-router-dom'
-import storeInfoStore, { MenuItem } from '@stores/storeInfoStore'
-import discountEventStore from '@stores/discountEventStore'
-import { fetchMenus } from '@apis/Discount/fetchMenu'
-import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
 export default function DiscountEventPage() {
   const navigate = useNavigate()
@@ -185,6 +185,7 @@ export default function DiscountEventPage() {
   }
 
   const handlePriceChange = (id: number, price: number) => {
+    console.log(`Price for menu ${id}: ${price}`)
     setDiscountPrice(id, price)
     const discount = currentEvent.discounts.find((d) => d.menuId === id)
 
@@ -192,8 +193,6 @@ export default function DiscountEventPage() {
       console.error(`Discount not found for menuId: ${id}`)
       return
     }
-
-    setDiscountChecked(id, price > 0)
 
     const isValidDiscount = price >= 0 && discount.isChecked
 

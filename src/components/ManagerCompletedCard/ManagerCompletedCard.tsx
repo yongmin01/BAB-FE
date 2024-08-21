@@ -16,14 +16,14 @@ import {
 
 export default function ManagerCompletedCard() {
   const { storeInfos } = storeInfoStore()
-  const { managerName } = managerRegisterInfoStore()
   const navigate = useNavigate()
+  const { ownerNickname } = managerRegisterInfoStore()
 
   return (
     <StyledCard $paddingtop="24px" $paddingbottom="20px" $paddingright="19px">
       {storeInfos && storeInfos.length > 0 ? (
         <>
-          <CardSubTitle>{managerName} 사장님의</CardSubTitle>
+          <CardSubTitle>{ownerNickname} 사장님의</CardSubTitle>
           <CardTitle $paddingbottom="13px">{storeInfos[0].name}</CardTitle>
           <CardContent>
             <CardButton onClick={() => navigate('/discount-event')}>
@@ -42,7 +42,7 @@ export default function ManagerCompletedCard() {
         </>
       ) : (
         <>
-          <CardSubtitle>{managerName} 사장님의</CardSubtitle>
+          <CardSubtitle>{ownerNickname} 사장님의</CardSubtitle>
           <CardTitle>등록된 가게가 없습니다.</CardTitle>
         </>
       )}

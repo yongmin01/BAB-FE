@@ -3,17 +3,17 @@ import { CardTitle } from '@components/MyPageCard/MyPageCard.style'
 interface RegistrationPromptProps {
   isRegistered: boolean
   businessData?: ManagerRegisterState[] | null
+  ownerNickname: string
 }
 
 export default function RegistrationPrompt({
   isRegistered,
   businessData,
+  ownerNickname,
 }: RegistrationPromptProps) {
-  const managerName =
-    businessData && businessData.length > 0 ? businessData[0].managerName : ''
   return (
     <>
-      <CardTitle>{managerName} 사장님!</CardTitle>
+      <CardTitle>{ownerNickname} 사장님!</CardTitle>
       {isRegistered && businessData ? (
         <>
           <CardTitle>심사가 완료되었습니다</CardTitle>

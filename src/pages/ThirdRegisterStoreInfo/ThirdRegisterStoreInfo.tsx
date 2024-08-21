@@ -22,6 +22,7 @@ import {
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 import { postAddMenu } from '@apis/postAddMenu'
 import storeInfoStore from '@stores/storeInfoStore'
 import { LoginStore } from '@stores/loginStore'
@@ -33,6 +34,8 @@ export default function ThirdRegisterStoreInfo() {
   )
   const storeId = storeInfo?.id
   const [isError, setIsError] = useState<boolean>(false)
+  const { setIsStoreRegistered } = managerRegisterInfoStore()
+
   const navigate = useNavigate()
 
   const handleBack = () => {
@@ -90,6 +93,7 @@ export default function ThirdRegisterStoreInfo() {
         const response = await postAddMenu(storeId, formattedMenus, kakao_token)
         if (response.isSuccess) {
           navigate('/registerstoresuccess')
+          setIsStoreRegistered(true)
         } else {
           console.error('실패', response.message)
         }

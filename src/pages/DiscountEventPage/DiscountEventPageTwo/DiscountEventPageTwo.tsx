@@ -11,6 +11,7 @@ import {
   CheckboxWrapper,
   SubmitButton,
   DiscountDataWrapper,
+  ErrorMessage,
 } from '@pages/DiscountEventPage/DiscountEventPageTwo/DiscountEventPageTwo.style'
 import { useLocation, useNavigate } from 'react-router-dom'
 import storeInfoStore from '@stores/storeInfoStore'
@@ -27,6 +28,7 @@ export default function DiscountEventPageTwo() {
   const [selectedMessage, setSelectedMessage] = useState<string>(
     currentEvent.discountTitle,
   )
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const location = useLocation()
   const { isUniformPrice } = location.state || {
     isUniformPrice: false,
@@ -60,22 +62,31 @@ export default function DiscountEventPageTwo() {
   const handleSubmit = async () => {
     try {
       const discountInfo = await handleDiscountEventRegister() // 할인 이벤트 API 호출
-      if (discountInfo) {
+      if (discountInfo && discountInfo.isSuccess === true) {
+        const result = discountInfo.result
         addDiscountEventWithId(
-          discountInfo.discountId,
-          discountInfo.storeName,
-          discountInfo.title,
-          discountInfo.startDate,
-          discountInfo.endDate,
-          discountInfo.createDiscountMenuDataDtoList,
+          result.discountId,
+          result.storeName,
+          result.title,
+          result.startDate,
+          result.endDate,
+          result.createDiscountMenuDataDtoList,
         )
-        //할인 성공적으로 추가 됐으면 성공 여부 따져서 알림 API 호출하는 코드 작성
         console.log(discountEventStore.getState().discountEvents)
         navigate('/manager')
+      } else if (
+        discountInfo.isSuccess === false &&
+        discountInfo.code === 'DISCOUNT403'
+      ) {
+        setErrorMessage(discountInfo.message)
+        console.log(discountInfo) //403 코드일경우 콘솔에 잘 찍히는걸로 보아 잘 넘어온거 확인 가능
+      } else {
+        console.log(discountInfo) //여기에 뜨면 403이 아닌거라 여기에 뜨면 절대 안됌
+        //지금 여기로 뜨네
+        setErrorMessage('할인 이벤트 생성에 실패했습니다. 다시 시도해주세요.')
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('할인 이벤트 생성 중 오류가 발생했습니다:', error)
-      alert('할인 이벤트 생성에 실패했습니다. 다시 시도해주세요.')
     }
   }
 
@@ -141,6 +152,7 @@ export default function DiscountEventPageTwo() {
               </MenuTableBody>
             </MenuTable>
           </EventForm>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DiscountDataWrapper>
       </PageContainer>
       <SubmitButton onClick={handleSubmit}>

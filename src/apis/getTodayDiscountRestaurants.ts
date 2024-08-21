@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
-const token = import.meta.env.VITE_KAKAO_LOGIN_TEST_TOKEN
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export const getTodayDiscountRestaurants = async () => {
+export const getTodayDiscountRestaurants = async (token: string) => {
   const setDiscounts = useTodayDiscountStore.getState().setDiscounts
   try {
     const response = await axios.get(`${API_BASE_URL}/v1/stores/discounts`, {

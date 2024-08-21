@@ -9,9 +9,11 @@ import {
 import { Option } from 'src/types/ButtonOpionTypes'
 import { useNavigate } from 'react-router-dom'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 
 export default function StoreInfoEditPage() {
   const navigate = useNavigate()
+  const { ownerNickname } = managerRegisterInfoStore()
 
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
@@ -53,8 +55,7 @@ export default function StoreInfoEditPage() {
         onClick={() => navigate('/manager')}
       />
       <SubTitle>
-        {/* 고서현 사장님 부분은 로그인 정보 받아와서 이름으로 랜더링 해주기 */}
-        고서현 사장님! <br />
+        {ownerNickname} 사장님! <br />
         어떤 정보를 수정할까요?
       </SubTitle>
       <EditOptions>

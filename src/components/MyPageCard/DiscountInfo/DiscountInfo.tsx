@@ -1,10 +1,19 @@
 import { StyledCard, CardTitle } from '../MyPageCard.style'
-import { DiscountList, DiscountItem, Text, More } from './DiscountInfo.style'
+import {
+  DiscountList,
+  DiscountItem,
+  Text,
+  More,
+  EmptyAlertComment,
+} from './DiscountInfo.style'
 import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
 import { useEffect } from 'react'
 import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
 import { useNavigate } from 'react-router-dom'
+import { LoginStore } from '@stores/loginStore'
+
 export default function DiscountInfo() {
+  const { kakao_token } = LoginStore((state) => state)
   const navigator = useNavigate()
   const discountRestaurantList = useTodayDiscountStore((state) =>
     state.discounts.slice(0, 3),
@@ -12,9 +21,9 @@ export default function DiscountInfo() {
   useEffect(() => {
     const request = async () => {
       try {
-        const res = await getTodayDiscountRestaurants()
+        const res = await getTodayDiscountRestaurants(kakao_token)
         if (res) {
-          console.log('Data loaded successfully:', res)
+          console.log('오늘의 할인 식당:', res)
         }
       } catch (error) {
         console.log(error)
@@ -33,15 +42,22 @@ export default function DiscountInfo() {
         </More>
       </div>
       <DiscountList>
-        {discountRestaurantList.map((discount) => (
-          <DiscountItem
-            key={discount.storeId}
-            onClick={() => navigator(`shopdetail/${discount.storeId}`)}
-          >
-            <Text color="#000000">{discount.storeName}</Text>
-            <Text color="#767676">{discount.discountTitle}</Text>
-          </DiscountItem>
-        ))}
+        {discountRestaurantList.length === 0 ? (
+          <EmptyAlertComment>
+            오늘은 할인을 진행중인 식당이 없어요
+            {/* 임의로 디자인해서 수정 필요 */}
+          </EmptyAlertComment>
+        ) : (
+          discountRestaurantList.map((discount) => (
+            <DiscountItem
+              key={discount.discountId}
+              onClick={() => navigator(`shopdetail/${discount.storeId}`)}
+            >
+              <Text color="#000000">{discount.storeName}</Text>
+              <Text color="#767676">{discount.discountTitle}</Text>
+            </DiscountItem>
+          ))
+        )}
       </DiscountList>
     </StyledCard>
   )

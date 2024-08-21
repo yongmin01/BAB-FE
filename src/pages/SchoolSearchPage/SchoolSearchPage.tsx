@@ -21,23 +21,27 @@ import { HiMagnifyingGlass } from 'react-icons/hi2'
 import Button from '@components/Button/Button'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 
-import { studentInfoStore } from '@stores/studentInfoStore'
-import { schoolInfoStore } from '@stores/schoolInfoStore'
 import { SchoolTypes } from 'src/types/SchoolTypes'
 import { studentUniversityRegister } from '@apis/studentUniversityRegister'
+import { useStudentInfoStore } from '@stores/studentInfoStore'
+import { useSchoolInfoStore } from '@stores/schoolInfoStore'
+import { getUniversities } from '@apis/getUnivetsities'
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { LoginStore } from '@stores/loginStore'
 
 export default function SchoolSearchPage() {
   const [selectedSchool, setSelectedSchool] = useState<SchoolTypes>()
   const [searchVal, setSearchVal] = useState<string>('')
-  const { studentName, setIsSchoolSet } = studentInfoStore((state) => state)
-  const { setSchoolName, setAddress } = schoolInfoStore((state) => state)
+  const { studentName, setIsSchoolSet } = useStudentInfoStore((state) => state)
+  const { setSchoolName, setAddress } = useSchoolInfoStore((state) => state)
+
   const [candidateSchool, setCandidateSchool] = useState<SchoolTypes[]>([])
   const [showAlert, setShowAlert] = useState<boolean>(false)
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+  const { kakao_token } = LoginStore((state) => state)
+
   const navigate = useNavigate()
 
   // 학교 검색 결과 관리
@@ -49,12 +53,9 @@ export default function SchoolSearchPage() {
     }
     if (searchVal !== '') {
       try {
-        const response = await axios.get(`${API_BASE_URL}/v1/universities`, {
-          // 솔미님 코드(getUniversities)로 교체 예정
-          params: { universityName: searchVal },
-        })
-        if (response.data.result.length >= 1) {
-          setCandidateSchool(response.data.result)
+        const response = await getUniversities(searchVal)
+        if (response.length >= 1) {
+          setCandidateSchool(response)
         }
       } catch (error) {
         console.log(error)
@@ -94,7 +95,10 @@ export default function SchoolSearchPage() {
   const handleSetSchool = async () => {
     if (selectedSchool) {
       try {
-        const res = await studentUniversityRegister(selectedSchool.universityId)
+        const res = await studentUniversityRegister(
+          selectedSchool.universityId,
+          kakao_token,
+        )
         setSchoolName(res.university.universityName)
         setAddress(res.university.universityAddress)
         setIsSchoolSet(true)
