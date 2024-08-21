@@ -5,7 +5,6 @@ import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
 import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
-import { mapStore } from '@stores/mapStore'
 import { MarkerStoreInfo } from '@stores/tempStore'
 import { Status } from '@googlemaps/react-wrapper'
 
@@ -22,36 +21,18 @@ const AsyncWrapper = lazy(() =>
   })),
 )
 export default function MapRender() {
-  const { googleMap, setLat, setLng } = mapStore()
-  const [markers, setMarkers] = useState<
+  const [googleMap, setGoogleMap] = useState<google.maps.Map>()
+  const [markers, setMarker] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([])
+  const [lat, setLat] = useState<number>(37.496336)
+  const [lng, setLng] = useState<number>(126.95733)
   const [filterCheck, setFilterCheck] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [sendSearchValue, setSendSearchValue] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
   const [entryMarkers, setEntryMarker] = useState<MarkerStoreInfo[]>([])
   const [stores, setStore] = useState<MarkerStoreInfo[]>([])
-
-  function addStore(store: MarkerStoreInfo): void {
-    setStore((prev) => [...prev, store])
-  }
-
-  function clearStore(): void {
-    setStore(() => {
-      return []
-    })
-  }
-
-  function addMarker(marker: google.maps.marker.AdvancedMarkerElement): void {
-    setMarkers((prev) => [...prev, marker])
-  }
-
-  function clearMarker(): void {
-    setMarkers(() => {
-      return []
-    })
-  }
 
   function handleFilterCheck(): void {
     setFilterCheck((prev) => !prev)
@@ -78,36 +59,27 @@ export default function MapRender() {
     })
     return check
   }
-
-  function filterMarker(): void {
-    if (markers.length) {
-      console.log('필터 실행')
-      markers.forEach((marker) => {
-        const check = findDiscount(parseInt(marker.id))
-        if (check === false) {
-          marker.map = null
-        }
-      })
-    }
-  }
-
-  function reRenderMarker(): void {
-    if (markers.length) {
-      console.log('리렌더 실행')
-      markers.forEach((marker) => {
-        const check = findDiscount(parseInt(marker.id))
-        if (check === false) {
-          marker.map = googleMap
-        }
-      })
-    }
-  }
-
   useEffect(() => {
     if (filterCheck === true) {
-      filterMarker()
+      if (markers.length) {
+        console.log('필터 실행')
+        markers.forEach((marker) => {
+          const check = findDiscount(parseInt(marker.id))
+          if (check === false) {
+            marker.map = null
+          }
+        })
+      }
     } else {
-      reRenderMarker()
+      if (markers.length) {
+        console.log('리렌더 실행')
+        markers.forEach((marker) => {
+          const check = findDiscount(parseInt(marker.id))
+          if (check === false) {
+            marker.map = googleMap
+          }
+        })
+      }
     }
   }, [filterCheck])
 
@@ -148,16 +120,18 @@ export default function MapRender() {
           >
             <AsyncWrapper apiKey={import.meta.env.VITE_API_KEY} render={render}>
               <Map
+                googleMap={googleMap}
+                setGoogleMap={setGoogleMap}
                 markers={markers}
                 stores={stores}
-                addStore={addStore}
-                clearStore={clearStore}
+                setStore={setStore}
                 entryMarkers={entryMarkers}
-                addMarker={addMarker}
-                clearMarker={clearMarker}
+                setMarker={setMarker}
                 searchValue={searchValue}
                 sendSearchValue={sendSearchValue}
+                lat={lat}
                 setLat={setLat}
+                lng={lng}
                 setLng={setLng}
               />
               {searchValue === '' ? (

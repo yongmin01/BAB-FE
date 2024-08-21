@@ -3,7 +3,6 @@ import { fetchSearchStore, SearchStore } from '@apis/Marker/fetchSearchStore'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { mapStore } from '@stores/mapStore'
 import { MarkerStoreInfo } from '@stores/tempStore'
 import greyIcon from '@assets/mapIcon/greyIcon'
 import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
@@ -11,16 +10,18 @@ import yellowIcon from '@assets/mapIcon/yellowIcon'
 import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
 
 type Props = {
+  googleMap: google.maps.Map | undefined
+  setGoogleMap: (map: google.maps.Map) => void
   markers: google.maps.marker.AdvancedMarkerElement[]
   entryMarkers: MarkerStoreInfo[]
   stores: MarkerStoreInfo[]
+  setStore: (stores: MarkerStoreInfo[]) => void
   searchValue: string
   sendSearchValue: string
-  addStore: (store: MarkerStoreInfo) => void
-  clearStore: () => void
-  addMarker: (marker: google.maps.marker.AdvancedMarkerElement) => void
-  clearMarker: () => void
+  setMarker: (marker: google.maps.marker.AdvancedMarkerElement[]) => void
+  lat: number
   setLat: (value: number) => void
+  lng: number
   setLng: (value: number) => void
 }
 
@@ -42,20 +43,21 @@ interface SendInfo {
 }
 
 export default function Map({
+  googleMap,
+  setGoogleMap,
   markers,
   entryMarkers,
-  addStore,
-  clearStore,
-  addMarker,
-  clearMarker,
+  setStore,
+  setMarker,
   searchValue,
   sendSearchValue,
   stores,
+  lat,
   setLat,
+  lng,
   setLng,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { lat, lng, googleMap, setGoogleMap } = mapStore()
   const [zoom, setZoom] = useState<number | undefined>(16)
   const navigate = useNavigate()
   const schoolLocations: SchoolLoc[] = [
@@ -89,7 +91,7 @@ export default function Map({
   //할인 확인 함수 o
   function findIsDiscount(id: number): StoreInfo {
     let storeinfo: StoreInfo
-    storeinfo = { check: false, price: 0, discountPrice: 0 }
+    storeinfo! = { check: false, price: 0, discountPrice: 0 }
 
     stores.forEach((info) => {
       if (info.storeId === id) {
@@ -157,36 +159,34 @@ export default function Map({
             filteredMarker.push(store)
           }
         })
-        stores = filteredMarker
+        setStore(filteredMarker)
       }
     }
   }
 
-  function findPlaces(
+  async function findPlaces(
     searchValue: string,
     latitude?: number,
     longitude?: number,
   ) {
-    const getSearchStores = async () => {
-      const searchStores: SearchStore[] = await fetchSearchStore(
-        searchValue,
-        latitude === undefined ? 0 : latitude,
-        longitude === undefined ? 0 : longitude,
-      )
-      console.log(stores)
-      searchStores.forEach((searchStore) => {
-        const tempStore: MarkerStoreInfo = {
-          storeId: searchStore.storeId,
-          storeName: searchStore.storeName,
-          latitude: searchStore.latitude,
-          longitude: searchStore.longitude,
-          menuPrice: searchStore.menuList.price,
-          discountPrice: searchStore.menuList.discountPrice as number,
-        }
-        addStore(tempStore)
-      })
-    }
-    getSearchStores()
+    const searchStores: SearchStore[] = await fetchSearchStore(
+      searchValue,
+      latitude === undefined ? 0 : latitude,
+      longitude === undefined ? 0 : longitude,
+    )
+    const Stores: MarkerStoreInfo[] = []
+    searchStores.forEach((searchStore) => {
+      const tempStore: MarkerStoreInfo = {
+        storeId: searchStore.storeId,
+        storeName: searchStore.storeName,
+        latitude: searchStore.latitude,
+        longitude: searchStore.longitude,
+        menuPrice: searchStore.menuList.price,
+        discountPrice: searchStore.menuList.discountPrice as number,
+      }
+      Stores.push(tempStore)
+    })
+    setStore(Stores)
   }
 
   //지도 초기화 o
@@ -198,10 +198,12 @@ export default function Map({
         disableDefaultUI: true,
         mapId: 'eb4ca83b18a77f42',
       })
+      const Stores: MarkerStoreInfo[] = []
       setGoogleMap(initialMap)
       entryMarkers.forEach((marker) => {
-        addStore(marker)
+        Stores.push(marker)
       })
+      setStore(Stores)
       initialMap.addListener('zoom_changed', () => {
         setZoom(initialMap.getZoom())
       })
@@ -218,15 +220,9 @@ export default function Map({
             marker.map = null
           })
         }
-        clearMarker()
-        clearStore()
-        try {
-          await findPlaces(searchValue, 0, 0)
-          console.log('findPlace 완')
-        } catch (error) {
-          console.log(error)
-        }
-        console.log('필터링 시작')
+        setMarker([])
+        setStore([])
+        await findPlaces(searchValue, 0, 0)
         filterMarker()
         console.log(stores)
       }
@@ -268,6 +264,7 @@ export default function Map({
         const { AdvancedMarkerElement } = (await google.maps.importLibrary(
           'marker',
         )) as google.maps.MarkerLibrary
+        const Markers: google.maps.marker.AdvancedMarkerElement[] = []
         stores.forEach((info) => {
           const logo =
             info.discountPrice === 0
@@ -278,7 +275,7 @@ export default function Map({
             map: googleMap,
             position: new google.maps.LatLng(
               info.latitude as number,
-              info.longitude,
+              info.longitude as number,
             ),
             title: info.storeName,
             content: logo,
@@ -302,8 +299,9 @@ export default function Map({
           const time = 1 + Math.random()
           marker.style.setProperty('--delay-time', time + 's')
           intersectionObserver.observe(marker)
-          addMarker(markerView)
+          Markers.push(markerView)
         })
+        setMarker(Markers)
       } else {
         console.log('없어 ㅋㅋ')
       }
