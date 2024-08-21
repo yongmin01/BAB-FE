@@ -18,6 +18,7 @@ import { ManagerPageContainer } from './ManagerPage.style'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 import { getOwnerMypage } from '@apis/getOwnerMypage'
 import { LoginStore } from '@stores/loginStore'
+import storeInfoStore from '@stores/storeInfoStore'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
@@ -28,7 +29,11 @@ export default function ManagerPage() {
     kakaoEmail: state.kakaoEmail,
   }))
 
-  console.log(kakaoEmail)
+  const { storeInfos } = storeInfoStore()
+  const university =
+    storeInfos.length > 0 ? storeInfos[storeInfos.length - 1].university : null
+
+  console.log(university)
 
   const fetchOwnerData = async () => {
     try {
