@@ -1,8 +1,7 @@
 import axios from 'axios'
 const API = import.meta.env.VITE_API_BASE_URL
-const token = import.meta.env.VITE_APP_API_TOKEN
 
-export const getOwnerMypage = async () => {
+export const getOwnerMypage = async (token: string) => {
   try {
     const response = await axios.get(`${API}/v1/users/owner/mypage`, {
       headers: {
