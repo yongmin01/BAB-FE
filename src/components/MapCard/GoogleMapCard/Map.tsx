@@ -1,10 +1,10 @@
 import '@assets/mapIcon/markerAnimation.css'
+import { fetchSearchStore, SearchStore } from '@apis/Marker/fetchSearchStore'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { mapStore } from '@stores/mapStore'
 import { MarkerStoreInfo } from '@stores/tempStore'
-import { stores } from '@stores/tempStore'
 import greyIcon from '@assets/mapIcon/greyIcon'
 import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
 import yellowIcon from '@assets/mapIcon/yellowIcon'
@@ -12,11 +12,12 @@ import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
 
 type Props = {
   markers: google.maps.marker.AdvancedMarkerElement[]
+  entryMarkers: MarkerStoreInfo[]
+  stores: MarkerStoreInfo[]
   searchValue: string
   sendSearchValue: string
-  tempInfos: MarkerStoreInfo[]
   addStore: (store: MarkerStoreInfo) => void
-  entryMarkers: MarkerStoreInfo[]
+  clearStore: () => void
   addMarker: (marker: google.maps.marker.AdvancedMarkerElement) => void
   clearMarker: () => void
   setLat: (value: number) => void
@@ -37,17 +38,19 @@ interface SchoolLoc {
 interface SendInfo {
   searchValue: string
   storeId: string
+  page: string
 }
 
 export default function Map({
   markers,
-  addStore,
   entryMarkers,
+  addStore,
+  clearStore,
   addMarker,
   clearMarker,
   searchValue,
   sendSearchValue,
-  tempInfos,
+  stores,
   setLat,
   setLng,
 }: Props) {
@@ -88,7 +91,7 @@ export default function Map({
     let storeinfo: StoreInfo
     storeinfo = { check: false, price: 0, discountPrice: 0 }
 
-    tempInfos.forEach((info) => {
+    stores.forEach((info) => {
       if (info.storeId === id) {
         if (info.discountPrice === 0) {
           storeinfo.check = false
@@ -103,6 +106,7 @@ export default function Map({
     })
     return storeinfo
   }
+
   //데이터 기준으로 학교 위도 경도 확인
   //더미데이터가 아닌 값만 있어야 테스트 가능
   function findLocation(): void {
@@ -131,36 +135,58 @@ export default function Map({
     setLat(location!.lat)
     setLng(location!.lng)
   }
-  //가게검색 기능 싹 다 바꿔야함
-  function findPlaces() {
-    ///   임시코드    ///
-    if (searchValue === '음식점') {
-      stores.forEach((store) => {
-        addStore(store)
-      })
-    }
-    /// 메뉴검색 API 구현 완료 시 사용 ///
-    // 좀 쓰자...
-    /*
+  //지도 범위안 가게 필터링함수
+  function filterMarker() {
     if (googleMap) {
       const bounds = googleMap.getBounds()
+      const filteredMarker: MarkerStoreInfo[] = []
       //남서쪽 경도 위도
       const minLat = bounds?.getSouthWest().lat()
       const minLng = bounds?.getSouthWest().lng()
       //북동쪽 경도 위도
       const maxLat = bounds?.getNorthEast().lat()
       const maxLng = bounds?.getNorthEast().lng()
-      stores.forEach((store) => {
-        if (
-          store.lat < maxLat &&
-          store.lng < maxLng &&
-          store.lat > minLat &&
-          store.lng > minLng
-        ) {
-          addStore(store)
+      if (stores.length) {
+        stores.forEach((store) => {
+          if (
+            store.latitude! < maxLat! &&
+            store.latitude! > minLat! &&
+            store.longitude! < maxLng! &&
+            store.longitude! > minLng!
+          ) {
+            filteredMarker.push(store)
+          }
+        })
+        stores = filteredMarker
+      }
+    }
+  }
+
+  function findPlaces(
+    searchValue: string,
+    latitude?: number,
+    longitude?: number,
+  ) {
+    const getSearchStores = async () => {
+      const searchStores: SearchStore[] = await fetchSearchStore(
+        searchValue,
+        latitude === undefined ? 0 : latitude,
+        longitude === undefined ? 0 : longitude,
+      )
+      console.log(stores)
+      searchStores.forEach((searchStore) => {
+        const tempStore: MarkerStoreInfo = {
+          storeId: searchStore.storeId,
+          storeName: searchStore.storeName,
+          latitude: searchStore.latitude,
+          longitude: searchStore.longitude,
+          menuPrice: searchStore.menuList.price,
+          discountPrice: searchStore.menuList.discountPrice as number,
         }
+        addStore(tempStore)
       })
-    }*/
+    }
+    getSearchStores()
   }
 
   //지도 초기화 o
@@ -184,16 +210,28 @@ export default function Map({
 
   //이전 검색마커 삭제기능 && 검색기능
   useEffect(() => {
-    if (searchValue) {
-      console.log('검색 실행')
-      if (markers.length !== 0) {
-        markers.forEach((marker) => {
-          marker.map = null
-        })
+    const Search = async () => {
+      if (searchValue) {
+        console.log('검색 실행')
+        if (markers.length !== 0) {
+          markers.forEach((marker) => {
+            marker.map = null
+          })
+        }
         clearMarker()
+        clearStore()
+        try {
+          await findPlaces(searchValue, 0, 0)
+          console.log('findPlace 완')
+        } catch (error) {
+          console.log(error)
+        }
+        console.log('필터링 시작')
+        filterMarker()
+        console.log(stores)
       }
-      findPlaces()
     }
+    Search()
   }, [searchValue])
 
   //zoom값에 따라 아이콘 조절기능
@@ -226,11 +264,11 @@ export default function Map({
   //마커 삽입기능
   useEffect(() => {
     ;(async () => {
-      if (tempInfos.length) {
+      if (stores.length) {
         const { AdvancedMarkerElement } = (await google.maps.importLibrary(
           'marker',
         )) as google.maps.MarkerLibrary
-        tempInfos.forEach((info) => {
+        stores.forEach((info) => {
           const logo =
             info.discountPrice === 0
               ? greyIcon(info.menuPrice)
@@ -249,6 +287,7 @@ export default function Map({
             let sendInfo: SendInfo
             sendInfo!.searchValue = sendSearchValue
             sendInfo!.storeId = markerView.id
+            sendInfo!.page = 'map'
             navigate(`/shopdetail/${markerView.id}`, {
               state: sendInfo!,
             })
@@ -269,7 +308,7 @@ export default function Map({
         console.log('없어 ㅋㅋ')
       }
     })()
-  }, [tempInfos])
+  }, [stores])
 
   return <MapWrapper ref={ref} id="map" />
 }

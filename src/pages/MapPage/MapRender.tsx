@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactElement, lazy, Suspense } from 'react'
-import { fetchMarker } from '@apis/Store/fetchMarker'
+import { fetchMarker } from '@apis/Marker/fetchMarker'
 import { SyncLoader } from 'react-spinners'
 import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
@@ -30,13 +30,19 @@ export default function MapRender() {
   const [searchValue, setSearchValue] = useState<string>('')
   const [sendSearchValue, setSendSearchValue] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-  const [tempInfos, setTempInfo] = useState<MarkerStoreInfo[]>([])
   const [entryMarkers, setEntryMarker] = useState<MarkerStoreInfo[]>([])
+  const [stores, setStore] = useState<MarkerStoreInfo[]>([])
 
-  // Places 가게 타입 확인 후 id 삽입 함수
   function addStore(store: MarkerStoreInfo): void {
-    setTempInfo((prev) => [...prev, store])
+    setStore((prev) => [...prev, store])
   }
+
+  function clearStore(): void {
+    setStore(() => {
+      return []
+    })
+  }
+
   function addMarker(marker: google.maps.marker.AdvancedMarkerElement): void {
     setMarkers((prev) => [...prev, marker])
   }
@@ -61,7 +67,7 @@ export default function MapRender() {
 
   function findDiscount(id: number): boolean {
     let check = false
-    tempInfos.forEach((info) => {
+    stores.forEach((info) => {
       if (info.storeId === id) {
         if (info.discountPrice !== 0) {
           check = true
@@ -119,7 +125,6 @@ export default function MapRender() {
       setEntryMarker(markers)
     }
     getMarkers()
-
     const timer = setTimeout(() => {
       setLoading(false)
     }, 1500)
@@ -144,8 +149,9 @@ export default function MapRender() {
             <AsyncWrapper apiKey={import.meta.env.VITE_API_KEY} render={render}>
               <Map
                 markers={markers}
-                tempInfos={tempInfos}
+                stores={stores}
                 addStore={addStore}
+                clearStore={clearStore}
                 entryMarkers={entryMarkers}
                 addMarker={addMarker}
                 clearMarker={clearMarker}

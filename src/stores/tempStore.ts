@@ -6,5 +6,3 @@ export interface MarkerStoreInfo {
   menuPrice: number
   discountPrice: number
 }
-
-export const stores: MarkerStoreInfo[] = []
