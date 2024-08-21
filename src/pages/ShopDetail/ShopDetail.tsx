@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import {
   DetailContainer,
@@ -27,13 +27,11 @@ import BackBar from '@components/BackBar/BackBar'
 import { LoginStore } from '@stores/loginStore'
 import shopDetailApi from '@apis/ShopDetail/shopDetailApi'
 
-type Props = {
-  storeId: number
-  searchWord: string
-}
-
-export default function ShopDetail({ storeId, searchWord }: Props) {
-  const navigate = useNavigate()
+export default function ShopDetail() {
+  const location = useLocation()
+  const storeId = location.state.storeId
+  const page = location.state.page
+  const searchValue = location.state.searchVaule
   const [storeInfo, setstoreInfo] = useState([])
   const { kakao_token } = LoginStore((state) => state)
 
@@ -56,9 +54,19 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
     return dateString ? dateString.substring(5) : ''
   }
 
+  const handleBackBar = () => {
+    if (page === 'TodayDiscount') {
+      return '오늘의 할인 식당'
+    } else if (page === 'map') {
+      return searchValue
+    } else {
+      return ''
+    }
+  }
+
   return (
     <DetailContainer>
-      <BackBar storeCategory={'포케'} />
+      <BackBar storeCategory={handleBackBar()} />
       <MenuHeader>
         <BkImg $imgsrc={storeInfo.bannerUrl}>
           <ShopTitle>{storeInfo.storeName}</ShopTitle>

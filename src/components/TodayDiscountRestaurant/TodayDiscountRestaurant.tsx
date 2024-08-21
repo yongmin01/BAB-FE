@@ -50,7 +50,11 @@ export default function TodayDiscountRestaurant() {
             <DiscountType>{restaurant.discountTitle}</DiscountType>
             <RestaurantName>{restaurant.storeName}</RestaurantName>
             <GoToRestaurantBtn
-              onClick={() => navigator(`/shopdetail/${restaurant.storeId}`)}
+              onClick={() =>
+                navigator('/shopdetail/', {
+                  state: { storeId: restaurant.storeId, page: 'TodayDiscount' },
+                })
+              }
             >
               바로 가기
               <span>&gt;</span>
