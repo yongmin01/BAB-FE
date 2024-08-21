@@ -172,7 +172,7 @@ export const StyledErrorMessage = styled.div`
 export const StyledInputContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 95%;
+  width: 100%;
   /* justify-content: space-between; */
 `
 

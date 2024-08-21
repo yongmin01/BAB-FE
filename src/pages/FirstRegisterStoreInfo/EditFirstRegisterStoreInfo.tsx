@@ -19,80 +19,87 @@ import {
 import UploadImg from '@assets/RegisterStoreInfo/upload.svg'
 import nav from '@assets/RegisterStoreInfo/firststep.svg'
 import { useNavigate } from 'react-router-dom'
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useErrorInput } from '@hooks/useErrorInput'
 import { AddressSearch } from '@components/AddressSearch/AddressSearch'
 import useImageLoad from '@hooks/useImageLoad'
-import { useStoreName } from '@stores/storeInfoStore'
-import { postStoreRegister } from '@apis/postStoreRegister'
+import { getStoreInfo } from '@apis/getStoreInfo'
+import { patchStore } from '@apis/patchStore'
 import { StoreUniversitySearch } from '@components/StoreUniversitySearch/StoreUniversitySearch'
-import storeInfoStore from '@stores/storeInfoStore'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import { LoginStore } from '@stores/loginStore'
+import storeInfoStore from '@stores/storeInfoStore'
 
-export default function FirstRegisterStoreInfo() {
-  const { kakao_token } = LoginStore((state) => state)
+export default function EditFirstRegisterStoreInfo() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { selectedImage, handleUpload } = useImageLoad()
-  const { storeName, saveStoreName } = useStoreName()
+  const { selectedImage, handleUpload, setSelectedImage } = useImageLoad()
 
   const storeLink = useErrorInput('')
   const school = useErrorInput('')
+  const [storeName, setStoreName] = useState('')
   const [address, setAddress] = useState('')
   const [roadAddress, setRoadAddress] = useState('')
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
-  // const [storeName, setStoreName] = useState('')
-  const addStoreInfo = storeInfoStore((state) => state.addStoreInfo)
+  const { kakao_token } = LoginStore((state) => state)
+
+  const storeInfo = storeInfoStore(
+    (state) => state.storeInfos[state.storeInfos.length - 1],
+  )
+  const storeId = storeInfo?.id
+
+  useEffect(() => {
+    const fetchStoreInfo = async () => {
+      try {
+        if (storeId) {
+          const storeInfo = await getStoreInfo(Number(storeId))
+          setStoreName(storeInfo.storeName)
+          setAddress(storeInfo.storeAddress)
+          school.setValue(storeInfo.storeUniversity)
+          storeLink.setValue(storeInfo.storeLink)
+
+          if (storeInfo.bannerImageUrl) {
+            setSelectedImage({
+              file: null,
+              thumbnail: storeInfo.bannerImageUrl,
+              type: 'image',
+            })
+          }
+        }
+      } catch (error) {
+        console.error('가게 정보 불러오기 실패', error)
+      }
+    }
+
+    fetchStoreInfo()
+  }, [storeId])
 
   const handleNext = async () => {
     const isStoreLinkValid = storeLink.validate('링크를 입력해 주세요.')
     const isSchoolValid = school.validate('학교를 선택해 주세요.')
-
     if (isStoreLinkValid && isSchoolValid) {
-      const formData = {
+      const storeData = {
         name: storeName,
-        address,
-        streetAddress: roadAddress,
         longitude,
         latitude,
+        address,
+        streetAddress: roadAddress,
         storeLink: storeLink.value,
+        registration: '등록번호',
         university: school.value,
-        registration: '이건뭐에요',
       }
+      console.log(storeData)
+
       try {
-        let bannerFiles: File[] | undefined
-        if (fileInputRef.current && fileInputRef.current.files) {
-          bannerFiles = Array.from(fileInputRef.current.files)
+        if (storeId) {
+          await patchStore(Number(storeId), storeData, kakao_token)
+          console.log('patch 성공')
+          navigate('/editsuccess')
         }
-
-        const response = await postStoreRegister(
-          formData,
-          kakao_token,
-          bannerFiles,
-        )
-
-        const { id, name } = response.result
-
-        addStoreInfo({
-          id,
-          name,
-          lat: latitude,
-          lng: longitude,
-          storeType: '',
-          storeLink: storeLink.value,
-          isStoreRegistered: true,
-          image: selectedImage?.thumbnail || '',
-          university: school.value,
-          businessHours: [],
-          breakTime: [],
-          menu: [],
-        })
-        navigate('/secondRegisterStoreInfo')
       } catch (error) {
-        alert('가게 등록 중 오류가 발생했습니다. 다시 시도해 주세요.')
+        alert('가게 수정 중 오류가 발생했습니다. 다시 시도해 주세요.')
       }
     }
   }
@@ -103,7 +110,7 @@ export default function FirstRegisterStoreInfo() {
 
   return (
     <StyledContainer>
-      <HeaderTitle title="가게 정보 등록" $icon="back" onClick={handleBack} />
+      <HeaderTitle title="가게 정보 수정" $icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>
@@ -119,7 +126,7 @@ export default function FirstRegisterStoreInfo() {
             type="text"
             placeholder="밥이득 김치찌개"
             value={storeName}
-            onChange={(e) => saveStoreName(e.target.value)}
+            onChange={(e) => setStoreName(e.target.value)}
           />
           <StyledLabel>주소 입력</StyledLabel>
           <AddressSearch
@@ -173,7 +180,7 @@ export default function FirstRegisterStoreInfo() {
             />
           </StyledSection>
           <StoreUniversitySearch school={school} containerRef={containerRef} />
-          <StyledButton onClick={handleNext}>다음</StyledButton>
+          <StyledButton onClick={handleNext}>수정하기</StyledButton>
         </StyledFormContainer>
       </StyledScrollableContent>
     </StyledContainer>

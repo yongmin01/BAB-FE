@@ -23,6 +23,10 @@ import RegisterStoreSuccess from '@pages/RegisterSuccess/RegisterStoreSuccess'
 import BusinessDocUpload from '@pages/BusinessDocUpload/BusinessDocUpload'
 import RegisterSuccess from '@pages/RegisterSuccess/RegisterSuccess'
 import UploadSuccess from './UploadSuccess/UploadSuccess'
+import EditThirdRegisterStoreInfo from '@pages/ThirdRegisterStoreInfo/EditThirdRegisterStoreInfo'
+import EditFirstRegisterStoreInfo from '@pages/FirstRegisterStoreInfo/EditFirstRegisterStoreInfo'
+import EditSecondRegisterStoreInfo from '@pages/SecondRegisterStoreInfo/EditSecondRegisterStoreInfo'
+import EditSuccess from '@pages/RegisterSuccess/EditSuccess'
 
 export default function AppContent() {
   const location = useLocation()
@@ -67,6 +71,18 @@ export default function AppContent() {
           element={<ThirdRegisterStoreInfo />}
         />
         <Route
+          path="/editfirstregisterstoreinfo"
+          element={<EditFirstRegisterStoreInfo />}
+        />
+        <Route
+          path="/editsecondregisterstoreinfo"
+          element={<EditSecondRegisterStoreInfo />}
+        />
+        <Route
+          path="/editthirdregisterstoreinfo"
+          element={<EditThirdRegisterStoreInfo />}
+        />
+        <Route
           path="/registerstoresuccess"
           element={<RegisterStoreSuccess />}
         />
@@ -77,6 +93,7 @@ export default function AppContent() {
           element={<UploadSuccess retry={() => {}} />}
         />
         <Route path="/managerUpload" element={<BusinessDocUpload />} />
+        <Route path="/editsuccess" element={<EditSuccess />} />
       </Routes>
       {showFooter && <Footer />}
     </>

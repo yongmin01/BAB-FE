@@ -38,6 +38,10 @@ export const StoreUniversitySearch = React.memo(function StoreUniversitySearch({
   const debouncedSearchTerm = useDebounce(universitySearch, 1000)
 
   useEffect(() => {
+    setUniversitySearch(school.value)
+  }, [school.value])
+
+  useEffect(() => {
     const handleSearch = async () => {
       if (debouncedSearchTerm) {
         try {

@@ -17,14 +17,15 @@ import UploadFail from '@components/UploadFail/UploadFail'
 import Loader from '@components/Loader/Loader'
 import { postCertificates } from '@apis/postCertificates'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { LoginStore } from '@stores/loginStore'
 
 export default function BusinessDocUpload() {
+  const { kakao_token } = LoginStore((state) => state)
   const navigate = useNavigate()
   const { selectedImage, handleImgUpload, openCamera, fileInputRef } =
     useImageUpload()
   const [isLoading, setIsLoading] = useState(false)
   const [isUploadSuccess, setIsUploadSuccess] = useState<boolean | null>(null)
-  const token = import.meta.env.VITE_APP_API_TOKEN
 
   useEffect(() => {
     if (selectedImage) {
@@ -40,7 +41,7 @@ export default function BusinessDocUpload() {
     setIsLoading(true)
 
     try {
-      const response = await postCertificates(selectedImage, token)
+      const response = await postCertificates(selectedImage, kakao_token)
       console.log('성공', response)
       console.log(response.result)
       setIsUploadSuccess(true)

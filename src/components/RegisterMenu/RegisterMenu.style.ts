@@ -25,9 +25,12 @@ export const StyledUploadBox = styled.div`
   overflow: hidden;
 `
 
-export const StyledUploadImg = styled.img<{ $isthumbnail: number }>`
-  ${({ $isthumbnail }) =>
-    $isthumbnail
+export const StyledUploadImg = styled.img<{
+  $isthumbnail: number
+  src: string
+}>`
+  ${({ $isthumbnail, src }) =>
+    $isthumbnail && !src.includes('camera.svg')
       ? css`
           width: 100%;
           height: 100%;

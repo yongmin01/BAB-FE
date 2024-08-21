@@ -18,9 +18,21 @@ export default function StoreInfoEditPage() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
   const options: Option[] = [
-    { label: '기본 정보', type: 'default', route: '/basic-info' },
-    { label: '영업 시간', type: 'default', route: '/business-hours' },
-    { label: '메뉴 등록', type: 'default', route: '/menu-registration' },
+    {
+      label: '기본 정보',
+      type: 'default',
+      route: '/editfirstregisterstoreinfo',
+    },
+    {
+      label: '영업 시간',
+      type: 'default',
+      route: '/editsecondregisterstoreinfo',
+    },
+    {
+      label: '메뉴 수정',
+      type: 'default',
+      route: '/editthirdregisterstoreinfo',
+    },
     { label: '가게 삭제', type: 'destructive', route: '/storeInfo-delete' },
   ]
 

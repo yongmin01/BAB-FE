@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import nav from '@assets/RegisterStoreInfo/thirdstep.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
-import Camera from '@assets/RegisterStoreInfo/camera.svg'
 import {
   StyledButton,
   StyledContainer,
   StyledFormContainer,
   StyledLabel,
-  StyledMenuAddButton,
+  // StyledMenuAddButton,
   StyledMenuTable,
   StyledNavImg,
   StyledNavImgWrapper,
@@ -22,37 +21,52 @@ import {
 import { RegisterMenu } from '@components/RegisterMenu/RegisterMenu'
 import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
-import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
-import { postAddMenu } from '@apis/postAddMenu'
 import storeInfoStore from '@stores/storeInfoStore'
 import { LoginStore } from '@stores/loginStore'
+import { getMenus } from '@apis/getMenus'
+import { patchMenu } from '@apis/patchMenu'
 
-export default function ThirdRegisterStoreInfo() {
+export default function EditThirdRegisterStoreInfo() {
   const { kakao_token } = LoginStore((state) => state)
   const storeInfo = storeInfoStore(
     (state) => state.storeInfos[state.storeInfos.length - 1],
   )
   const storeId = storeInfo?.id
   const [isError, setIsError] = useState<boolean>(false)
-  const { setIsStoreRegistered } = managerRegisterInfoStore()
-
   const navigate = useNavigate()
+
+  const [menus, setMenus] = useState<Menu[]>([])
+
+  useEffect(() => {
+    const fetchMenus = async () => {
+      try {
+        const fetchedMenus = await getMenus(storeId)
+        const formattedMenus = fetchedMenus.map((menu) => ({
+          id: menu.id,
+          name: menu.name,
+          price: menu.price,
+          menuUrl: menu.menuUrl, // API의 menuImageUrl을 menuUrl로 매핑
+          isSignature: menu.isSignature,
+        }))
+        console.log(formattedMenus)
+        setMenus(formattedMenus)
+      } catch (error) {
+        console.error('메뉴 정보 가져오기 실패:', error)
+      }
+    }
+    fetchMenus()
+  }, [storeId])
 
   const handleBack = () => {
     navigate(-1)
   }
 
-  const [menus, setMenus] = useState<Menu[]>([
-    { name: '', price: 0, menuUrl: Camera, isSignature: false },
-    { name: '', price: 0, menuUrl: Camera, isSignature: false },
-  ])
-
-  const handleAddMenu = () => {
-    setMenus([
-      ...menus,
-      { name: '', price: 0, menuUrl: Camera, isSignature: false },
-    ])
-  }
+  // const handleAddMenu = () => {
+  //   setMenus([
+  //     ...menus,
+  //     { id: , name: '', price: 0, menuUrl: '', isSignature: false },
+  //   ])
+  // }
 
   const handleMenuChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -81,39 +95,42 @@ export default function ThirdRegisterStoreInfo() {
     )
 
     if (isFormValid) {
-      setIsError(false)
       try {
-        const formattedMenus = menus.map((menu) => ({
-          ...menu,
-          menuUrl:
-            typeof menu.menuUrl === 'string'
-              ? menu.menuUrl
-              : (menu.menuUrl as { menuImageUrl: string }).menuImageUrl,
-        }))
-        const response = await postAddMenu(storeId, formattedMenus, kakao_token)
-        if (response.isSuccess) {
-          navigate('/registerstoresuccess')
-          setIsStoreRegistered(true)
-        } else {
-          console.error('실패', response.message)
+        for (const menu of menus) {
+          if (menu.id) {
+            await patchMenu(
+              menu.id,
+              {
+                menuName: menu.name,
+                price: menu.price,
+                menuUrl:
+                  typeof menu.menuUrl === 'string'
+                    ? menu.menuUrl
+                    : (menu.menuUrl as { menuImageUrl: string }).menuImageUrl,
+              },
+              kakao_token,
+            )
+          }
         }
+        navigate('/editsuccess')
       } catch (error) {
-        console.error('메뉴 추가 중 오류 발생:', error)
+        console.error('메뉴 수정 중 오류 발생:', error)
       }
     } else {
       setIsError(true)
+      console.log('모든 필드를 채워주세요.')
     }
   }
 
   return (
     <StyledContainer>
-      <HeaderTitle title="가게 정보 등록" $icon="back" onClick={handleBack} />
+      <HeaderTitle title="가게 정보 수정" $icon="back" onClick={handleBack} />
       <StyledNavImgWrapper>
         <StyledNavImg src={nav} />
         <StyledNavText>
           <div>기본 정보</div>
           <div>영업 시간</div>
-          <div>메뉴 등록</div>
+          <div>메뉴 수정</div>
         </StyledNavText>
       </StyledNavImgWrapper>
       <StyledScrollableContent>
@@ -143,11 +160,11 @@ export default function ThirdRegisterStoreInfo() {
                 />
               </div>
             ))}
-            <StyledMenuAddButton onClick={handleAddMenu}>
+            {/* <StyledMenuAddButton onClick={handleAddMenu}>
               메뉴 추가하기
-            </StyledMenuAddButton>
+            </StyledMenuAddButton> */}
           </StyledMenuTable>
-          <StyledButton onClick={handleNext}>완료</StyledButton>
+          <StyledButton onClick={handleNext}>수정하기</StyledButton>
         </StyledFormContainer>
       </StyledScrollableContent>
     </StyledContainer>
