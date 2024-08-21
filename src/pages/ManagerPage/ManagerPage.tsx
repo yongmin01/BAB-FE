@@ -17,15 +17,23 @@ import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
 import { ManagerPageContainer } from './ManagerPage.style'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 import { getOwnerMypage } from '@apis/getOwnerMypage'
+import { LoginStore } from '@stores/loginStore'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
   const { isRegistered, isStoreRegistered, ownerNickname, updateFromApi } =
     managerRegisterInfoStore()
 
+  const { kakaoEmail } = LoginStore((state) => ({
+    kakaoEmail: state.kakaoEmail,
+  }))
+
+  console.log(kakaoEmail)
+
   const fetchOwnerData = async () => {
     try {
       const response = await getOwnerMypage()
+      console.log(response)
 
       if (response.isSuccess) {
         const { ownerId, ownerNickname, storeId, storeName } = response.result
@@ -44,6 +52,10 @@ export default function ManagerPage() {
     }
   }
 
+  useEffect(() => {
+    fetchOwnerData()
+  }, [])
+
   const handleManagerRegisterClick = async () => {
     await fetchOwnerData()
     navigate('/businessdocupload')
@@ -53,10 +65,6 @@ export default function ManagerPage() {
     await fetchOwnerData()
     navigate('/firstregisterstoreinfo')
   }
-
-  useEffect(() => {
-    fetchOwnerData()
-  }, [])
 
   const renderRegisteredContent = () => (
     <>
@@ -104,7 +112,7 @@ export default function ManagerPage() {
             : renderUnregisteredContent()}
         </StyledCard>
       )}
-      <MyPageCardAccount />
+      <MyPageCardAccount accountID={kakaoEmail} />
       {isStoreRegistered && <DiscountModal />}
     </ManagerPageContainer>
   )
