@@ -7,7 +7,9 @@ import { LoginStore } from '@stores/loginStore'
 
 export default function OAuth() {
   const navigate = useNavigate()
-  const { membertype, setIsLogined, setToken } = LoginStore((state) => state)
+  const { membertype, setIsLogined, setToken, setKakaoEmail } = LoginStore(
+    (state) => state,
+  )
   useEffect(() => {
     const handleLogin = async () => {
       const result = await loginApi(membertype)
@@ -15,6 +17,7 @@ export default function OAuth() {
         setToken(result.jwt)
         setIsLogined(true)
         if (membertype === 'manager') {
+          setKakaoEmail(result.kakaoEmail)
           //사장
           if (result.isStoreExist) {
             navigate('/map')
