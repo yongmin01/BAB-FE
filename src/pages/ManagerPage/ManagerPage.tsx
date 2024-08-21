@@ -23,6 +23,7 @@ export default function ManagerPage() {
   const navigate = useNavigate()
   const { isRegistered, isStoreRegistered, ownerNickname, updateFromApi } =
     managerRegisterInfoStore()
+  const { kakao_token } = LoginStore((state) => state)
 
   const { kakaoEmail } = LoginStore((state) => ({
     kakaoEmail: state.kakaoEmail,
@@ -32,7 +33,7 @@ export default function ManagerPage() {
 
   const fetchOwnerData = async () => {
     try {
-      const response = await getOwnerMypage()
+      const response = await getOwnerMypage(kakao_token)
       console.log(response)
 
       if (response.isSuccess) {
