@@ -28,8 +28,10 @@ import { postStoreRegister } from '@apis/postStoreRegister'
 import { StoreUniversitySearch } from '@components/StoreUniversitySearch/StoreUniversitySearch'
 import storeInfoStore from '@stores/storeInfoStore'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { LoginStore } from '@stores/loginStore'
 
 export default function FirstRegisterStoreInfo() {
+  const { kakao_token } = LoginStore((state) => state)
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -42,7 +44,6 @@ export default function FirstRegisterStoreInfo() {
   const [roadAddress, setRoadAddress] = useState('')
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
-  const token = import.meta.env.VITE_APP_API_TOKEN
   // const [storeName, setStoreName] = useState('')
   const addStoreInfo = storeInfoStore((state) => state.addStoreInfo)
 
@@ -67,7 +68,11 @@ export default function FirstRegisterStoreInfo() {
           bannerFiles = Array.from(fileInputRef.current.files)
         }
 
-        const response = await postStoreRegister(formData, token, bannerFiles)
+        const response = await postStoreRegister(
+          formData,
+          kakao_token,
+          bannerFiles,
+        )
 
         const { id, name } = response.result
 

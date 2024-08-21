@@ -23,10 +23,10 @@ import { Menu } from 'src/types/ThirdRegisterStoreInfoTypes'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import { postAddMenu } from '@apis/postAddMenu'
 import storeInfoStore from '@stores/storeInfoStore'
-
-const token = import.meta.env.VITE_APP_API_TOKEN
+import { LoginStore } from '@stores/loginStore'
 
 export default function ThirdRegisterStoreInfo() {
+  const { kakao_token } = LoginStore((state) => state)
   const storeInfo = storeInfoStore(
     (state) => state.storeInfos[state.storeInfos.length - 1],
   )
@@ -86,7 +86,7 @@ export default function ThirdRegisterStoreInfo() {
               ? menu.menuUrl
               : (menu.menuUrl as { menuImageUrl: string }).menuImageUrl,
         }))
-        const response = await postAddMenu(storeId, formattedMenus, token)
+        const response = await postAddMenu(storeId, formattedMenus, kakao_token)
         if (response.isSuccess) {
           console.log('성공')
           alert('성공')

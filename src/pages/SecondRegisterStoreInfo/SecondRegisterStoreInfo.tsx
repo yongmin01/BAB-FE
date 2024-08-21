@@ -32,12 +32,13 @@ import { useErrorInput } from '@hooks/useErrorInput'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import { postOperatingHours } from '@apis/postOperatingHours'
 import storeInfoStore from '@stores/storeInfoStore'
-const token = import.meta.env.VITE_APP_API_TOKEN
+import { LoginStore } from '@stores/loginStore'
 
 const days = ['월', '화', '수', '목', '금', '토', '일']
 const serverDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
 export default function SecondRegisterStoreInfo() {
+  const { kakao_token } = LoginStore((state) => state)
   const storeInfo = storeInfoStore(
     (state) => state.storeInfos[state.storeInfos.length - 1],
   )
@@ -96,7 +97,7 @@ export default function SecondRegisterStoreInfo() {
         const response = await postOperatingHours(
           storeId,
           payload as OperatingHour[],
-          token,
+          kakao_token,
         )
 
         if (response.isSuccess) {

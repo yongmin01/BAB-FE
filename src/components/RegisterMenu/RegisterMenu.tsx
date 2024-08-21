@@ -14,10 +14,11 @@ import {
 } from './RegisterMenu.style'
 import { RegisterMenuProps } from 'src/types/RegisterMenuTypes'
 import { postUploadMenuImage } from '@apis/postUploadMenuImage'
-
-const token = import.meta.env.VITE_APP_API_TOKEN
+import { LoginStore } from '@stores/loginStore'
 
 export function RegisterMenu({ index, menu, onChange }: RegisterMenuProps) {
+  const { kakao_token } = LoginStore((state) => state)
+
   const { selectedImage, handleImgUpload, openCamera, fileInputRef } =
     useImageUpload()
 
@@ -26,7 +27,10 @@ export function RegisterMenu({ index, menu, onChange }: RegisterMenuProps) {
 
     if (event.target.files && event.target.files[0]) {
       try {
-        const imageUrl = await postUploadMenuImage(event.target.files[0], token)
+        const imageUrl = await postUploadMenuImage(
+          event.target.files[0],
+          kakao_token,
+        )
 
         const customEvent = {
           target: {
