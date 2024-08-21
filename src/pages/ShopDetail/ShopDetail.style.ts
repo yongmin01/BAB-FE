@@ -104,7 +104,6 @@ export const CouponInfoBody = styled.div`
 
 export const MenuContainer = styled.div`
   padding-top: 20px;
-  padding-bottom: 70px;
 `
 
 export const Line = styled.div`

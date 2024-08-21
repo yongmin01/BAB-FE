@@ -58,7 +58,7 @@ export default function ShopDetail() {
     if (page === 'TodayDiscount') {
       return '오늘의 할인 식당'
     } else if (page === 'map') {
-      return searchValue
+      return searchValue //map에서 searchValue 넘겨주셔야 작동
     } else {
       return ''
     }
