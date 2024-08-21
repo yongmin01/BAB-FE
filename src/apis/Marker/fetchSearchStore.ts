@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL
+const token = import.meta.env.VITE_KAKAO_TEST_TOKEN
 
 export interface SearchStore {
   storeId: number
@@ -30,8 +31,7 @@ export const fetchSearchStore = async (
     }`,
       {
         headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3MjM5NzY4NzksImV4cCI6MTcyNTE4NjQ3OX0.AV3UHwB_XGiMCttKhs7T-8GaVBGlnUWFE0q3WJ-aLVA',
+          Authorization: `Bearer ${token}`,
         },
       },
     )
