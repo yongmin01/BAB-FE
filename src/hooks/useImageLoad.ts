@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 type UploadImage = {
-  file: File
+  file: File | null
   thumbnail: string
   type: string
 }
@@ -32,5 +32,6 @@ export default function useImageLoad() {
   return {
     selectedImage,
     handleUpload,
+    setSelectedImage,
   }
 }

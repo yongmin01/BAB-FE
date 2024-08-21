@@ -61,9 +61,15 @@ export function RegisterMenu({ index, menu, onChange }: RegisterMenuProps) {
       <StyledMenuRow>
         <StyledUploadBox onClick={openCamera}>
           <StyledUploadImg
-            src={selectedImage ? URL.createObjectURL(selectedImage) : Camera}
+            src={
+              selectedImage
+                ? URL.createObjectURL(selectedImage)
+                : typeof menu.menuUrl === 'string'
+                  ? menu.menuUrl
+                  : Camera
+            }
             alt={selectedImage ? '미리보기' : '업로드 아이콘'}
-            $isthumbnail={selectedImage ? 1 : 0}
+            $isthumbnail={selectedImage ? 1 : menu.menuUrl ? 1 : 0}
           />
         </StyledUploadBox>
         <input

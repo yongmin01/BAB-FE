@@ -48,7 +48,7 @@ export const AddressSearch = ({
   }
 
   const handleComplete = (data: DaumPostcodeData) => {
-    setAddress(data.jibunAddress)
+    setAddress(data.roadAddress)
     setRoadAddress(data.roadAddress)
     setIsModalOpen(false)
     getCoordinates(data.roadAddress)

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import nav from '@assets/RegisterStoreInfo/thirdstep.svg'
 import errorIcon from '@assets/RegisterStoreInfo/warnning.svg'
+import Camera from '@assets/RegisterStoreInfo/camera.svg'
 import {
   StyledButton,
   StyledContainer,
@@ -39,14 +40,14 @@ export default function ThirdRegisterStoreInfo() {
   }
 
   const [menus, setMenus] = useState<Menu[]>([
-    { name: '', price: 0, menuUrl: '', isSignature: false },
-    { name: '', price: 0, menuUrl: '', isSignature: false },
+    { name: '', price: 0, menuUrl: Camera, isSignature: false },
+    { name: '', price: 0, menuUrl: Camera, isSignature: false },
   ])
 
   const handleAddMenu = () => {
     setMenus([
       ...menus,
-      { name: '', price: 0, menuUrl: '', isSignature: false },
+      { name: '', price: 0, menuUrl: Camera, isSignature: false },
     ])
   }
 
@@ -88,10 +89,7 @@ export default function ThirdRegisterStoreInfo() {
         }))
         const response = await postAddMenu(storeId, formattedMenus, kakao_token)
         if (response.isSuccess) {
-          console.log('성공')
-          alert('성공')
-
-          // navigate('/manager') // 다음 페이지로 이동
+          navigate('/registerstoresuccess')
         } else {
           console.error('실패', response.message)
         }
@@ -100,7 +98,6 @@ export default function ThirdRegisterStoreInfo() {
       }
     } else {
       setIsError(true)
-      console.log('모든 필드를 채워주세요.')
     }
   }
 

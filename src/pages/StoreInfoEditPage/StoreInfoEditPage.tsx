@@ -27,7 +27,7 @@ export default function StoreInfoEditPage() {
       route: '/editsecondregisterstoreinfo',
     },
     {
-      label: '메뉴 등록',
+      label: '메뉴 수정',
       type: 'default',
       route: '/editthirdregisterstoreinfo',
     },
