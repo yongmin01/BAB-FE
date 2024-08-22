@@ -6,22 +6,23 @@ import { LoginStore } from '@stores/loginStore'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
-  BkImg,
-  Coupon,
-  CouponImg,
-  CouponInfoBody,
-  CouponInfoContainer,
-  CouponInfoTitle,
   DetailContainer,
-  Event,
+  MenuHeader,
+  BkImg,
+  ShopTitle,
+  ShopInfoContainer,
   EventContainer,
-  Line,
+  Event,
   LinkBtn,
   MenuBody,
-  MenuContainer,
-  MenuHeader,
-  ShopTitle,
   TodayEvent,
+  Coupon,
+  CouponImg,
+  CouponInfoContainer,
+  CouponInfoTitle,
+  CouponInfoBody,
+  MenuContainer,
+  Line,
 } from './ShopDetail.style'
 
 interface StoreDiscountData {
@@ -62,7 +63,7 @@ export default function ShopDetail() {
   const location = useLocation()
   const storeId = location.state.storeId
   const page = location.state.page
-  const searchValue = location.state.searchVaule
+  const searchValue = location.state.searchValue
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null)
   const { kakao_token } = LoginStore((state) => state)
 
@@ -89,6 +90,7 @@ export default function ShopDetail() {
     if (page === 'TodayDiscount') {
       return '오늘의 할인 식당'
     } else if (page === 'map') {
+      console.log('map', searchValue)
       return searchValue //map에서 searchValue 넘겨주셔야 작동
     } else {
       return ''
@@ -103,9 +105,11 @@ export default function ShopDetail() {
       <BackBar storeCategory={handleBackBar()} />
       <MenuHeader>
         <BkImg $imgsrc={storeInfo.bannerUrl}>
-          <ShopTitle>{storeInfo.storeName}</ShopTitle>
+          <ShopInfoContainer onSale={storeInfo.onSale}>
+            <ShopTitle>{storeInfo.storeName}</ShopTitle>
+            {storeInfo.onSale ? <Event> 가게 특별 할인</Event> : null}
+          </ShopInfoContainer>
           <EventContainer>
-            <Event>가게 특별 할인</Event>
             <LinkBtn onClick={() => window.open(storeInfo?.storeLink)}>
               링크 바로가기{` >`}
             </LinkBtn>
@@ -141,6 +145,7 @@ export default function ShopDetail() {
                 fixprice={menu.menuPrice}
                 discountrate={menu.discountRate + '%'}
                 saleprice={menu.menuPrice - menu.discountPrice}
+                onsale={storeInfo.onSale}
               />
             ))}
         </MenuContainer>

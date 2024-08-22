@@ -8,7 +8,7 @@ export const CategoryHeader = styled.div`
   font-size: 19px;
   font-weight: 600;
   align-items: center;
-  padding: 30px 30px 30px 30px;
+  padding: 20px;
   position: fixed;
   top: 0px;
   z-index: 4; /* 다른 요소 위로 보이도록 설정 */

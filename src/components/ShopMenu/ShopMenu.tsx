@@ -16,6 +16,7 @@ interface ShopMenuProps {
   fixprice: number // 정가 타입
   discountrate: string // 할인율 타입
   saleprice: number // 판매가 타입
+  onsale: boolean
 }
 
 export default function ShopMenu({
@@ -24,16 +25,17 @@ export default function ShopMenu({
   fixprice,
   discountrate,
   saleprice,
+  onsale,
 }: ShopMenuProps) {
   return (
     <MenuContainer>
       <MenuImg src={img} />
       <InfoContainer>
         <MenuTitle>{title}</MenuTitle>
-        <MenuFixPrice>{fixprice}</MenuFixPrice>
-        <DiscountContainer>
-          <MenuDiscountRate>{discountrate}</MenuDiscountRate>
-          <MenuSalePrice>{saleprice}</MenuSalePrice>
+        <MenuFixPrice>{onsale ? fixprice : null}</MenuFixPrice>
+        <DiscountContainer onsale={onsale}>
+          <MenuDiscountRate>{onsale ? discountrate : null}</MenuDiscountRate>
+          <MenuSalePrice>{onsale ? saleprice : fixprice}</MenuSalePrice>
         </DiscountContainer>
       </InfoContainer>
     </MenuContainer>
