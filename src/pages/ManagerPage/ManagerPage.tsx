@@ -23,8 +23,6 @@ export default function ManagerPage() {
   const navigate = useNavigate()
   const { isRegistered, isStoreRegistered, ownerNickname, updateFromApi } =
     managerRegisterInfoStore()
-  const { kakao_token } = LoginStore((state) => state)
-
   const { kakao_token, kakaoEmail } = LoginStore((state) => state)
 
   const fetchOwnerData = async () => {
