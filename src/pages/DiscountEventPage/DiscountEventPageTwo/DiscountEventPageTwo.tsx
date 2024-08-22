@@ -155,7 +155,7 @@ export default function DiscountEventPageTwo() {
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DiscountDataWrapper>
       </PageContainer>
-      <SubmitButton onClick={handleSubmit}>할인 등록하기</SubmitButton>
+      <SubmitButton onClick={handleSubmit}>할인행사 등록하기</SubmitButton>
     </>
   )
 }
