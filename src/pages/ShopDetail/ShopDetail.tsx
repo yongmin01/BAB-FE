@@ -6,6 +6,7 @@ import {
   MenuHeader,
   BkImg,
   ShopTitle,
+  ShopInfoContainer,
   EventContainer,
   Event,
   LinkBtn,
@@ -99,9 +100,11 @@ export default function ShopDetail() {
       <BackBar storeCategory={handleBackBar()} />
       <MenuHeader>
         <BkImg $imgsrc={storeInfo.bannerUrl}>
-          <ShopTitle>{storeInfo.storeName}</ShopTitle>
+          <ShopInfoContainer onSale={storeInfo.onSale}>
+            <ShopTitle>{storeInfo.storeName}</ShopTitle>
+            {storeInfo.onSale ? <Event> 가게 특별 할인</Event> : null}
+          </ShopInfoContainer>
           <EventContainer>
-            <Event>가게 특별 할인</Event>
             <LinkBtn onClick={() => window.open(storeInfo?.storeLink)}>
               링크 바로가기{` >`}
             </LinkBtn>
@@ -109,7 +112,7 @@ export default function ShopDetail() {
         </BkImg>
       </MenuHeader>
       <MenuBody>
-        {storeInfo.onSale ? (
+        {!storeInfo.onSale ? (
           <div>
             <TodayEvent>오늘 할인 행사 하는 음식점이에요!</TodayEvent>
             <Coupon>
@@ -137,6 +140,7 @@ export default function ShopDetail() {
                 fixprice={menu.menuPrice}
                 discountrate={menu.discountRate + '%'}
                 saleprice={menu.menuPrice - menu.discountPrice}
+                onsale={storeInfo.onSale}
               />
             ))}
         </MenuContainer>

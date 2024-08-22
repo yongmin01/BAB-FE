@@ -25,6 +25,8 @@ export const BkImg = styled.div<{ $imgsrc: string }>`
   background-size: cover;
   position: relative;
   z-index: 1;
+  display: flex;
+  justify-content: space-between;
 `
 
 export const ShopTitle = styled.div`
@@ -32,17 +34,23 @@ export const ShopTitle = styled.div`
   font-weight: 700;
   color: #ffffff;
   text-align: left;
-  padding: 0px 20px;
+  margin-bottom: 4px;
+`
+
+export const ShopInfoContainer = styled.div<{ onSale: boolean }>`
+  display: flex;
+  flex-direction: column;
+  padding: 0px 23px;
   position: relative;
-  top: 160px;
+  top: ${(props) => (props.onSale ? '157px' : '177px')};
 `
 
 export const EventContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direcion: column;
   padding: 0px 23px;
   position: relative;
-  top: 160px;
+  top: 189px;
 `
 
 export const Event = styled.div`
