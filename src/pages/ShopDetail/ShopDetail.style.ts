@@ -8,7 +8,7 @@ export const DetailContainer = styled.div`
 
 export const MenuHeader = styled.div`
   position: fixed;
-  top: 80px; /* 화면 상단에 고정 */
+  top: 60px; /* 화면 상단에 고정 */
   width: 400px;
   z-index: 2; /* 다른 요소 위로 보이도록 설정 */
   text-align: left;
@@ -65,7 +65,7 @@ export const MenuBody = styled.div`
   border-radius: 15px;
   background-color: #ffffff;
   position: relative;
-  top: 310px;
+  top: 290px;
   margin-top: -10px; /* MenuHeader와 겹치도록 조정 */
   z-index: 3;
 `
