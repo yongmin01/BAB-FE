@@ -1,13 +1,13 @@
-import { useState, useEffect, ReactElement, lazy, Suspense } from 'react'
 import { fetchMarker } from '@apis/Marker/fetchMarker'
-import { SyncLoader } from 'react-spinners'
-import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
-import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
-import { MarkerStoreInfo } from '@stores/tempStore'
-import { LoginStore } from '@stores/loginStore'
+import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import { Status } from '@googlemaps/react-wrapper'
+import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
+import { LoginStore } from '@stores/loginStore'
+import { MarkerStoreInfo } from '@stores/tempStore'
+import { lazy, ReactElement, Suspense, useEffect, useState } from 'react'
+import { SyncLoader } from 'react-spinners'
 
 //////////////  최상부 컨테이너  //////////////
 
