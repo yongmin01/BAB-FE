@@ -64,7 +64,7 @@ export default function ShopDetail() {
   const storeId = location.state.storeId
   const page = location.state.page
   const searchValue = location.state.searchValue
-  const [storeInfo, setstoreInfo] = useState<StoreInfo | null>(null)
+  const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null)
   const { kakao_token } = LoginStore((state) => state)
 
   useEffect(() => {
@@ -90,6 +90,7 @@ export default function ShopDetail() {
     if (page === 'TodayDiscount') {
       return '오늘의 할인 식당'
     } else if (page === 'map') {
+      console.log('map', searchValue)
       return searchValue //map에서 searchValue 넘겨주셔야 작동
     } else {
       return ''
@@ -116,7 +117,7 @@ export default function ShopDetail() {
         </BkImg>
       </MenuHeader>
       <MenuBody>
-        {!storeInfo.onSale ? (
+        {storeInfo.onSale ? (
           <div>
             <TodayEvent>오늘 할인 행사 하는 음식점이에요!</TodayEvent>
             <Coupon>
