@@ -25,11 +25,7 @@ export default function ManagerPage() {
     managerRegisterInfoStore()
   const { kakao_token } = LoginStore((state) => state)
 
-  const { kakaoEmail } = LoginStore((state) => ({
-    kakaoEmail: state.kakaoEmail,
-  }))
-
-  console.log(kakaoEmail)
+  const { kakao_token, kakaoEmail } = LoginStore((state) => state)
 
   const fetchOwnerData = async () => {
     try {
@@ -38,7 +34,6 @@ export default function ManagerPage() {
 
       if (response.isSuccess) {
         const { ownerId, ownerNickname, storeId, storeName } = response.result
-
         updateFromApi({
           ownerId,
           ownerNickname,
