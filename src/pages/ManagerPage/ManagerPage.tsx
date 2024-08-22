@@ -18,31 +18,21 @@ import { ManagerPageContainer } from './ManagerPage.style'
 import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
 import { getOwnerMypage } from '@apis/getOwnerMypage'
 import { LoginStore } from '@stores/loginStore'
-import storeInfoStore from '@stores/storeInfoStore'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
   const { isRegistered, isStoreRegistered, ownerNickname, updateFromApi } =
     managerRegisterInfoStore()
 
-  const { kakaoEmail } = LoginStore((state) => ({
-    kakaoEmail: state.kakaoEmail,
-  }))
-
-  const { storeInfos } = storeInfoStore()
-  const university =
-    storeInfos.length > 0 ? storeInfos[storeInfos.length - 1].university : null
-
-  console.log(university)
+  const { kakao_token, kakaoEmail } = LoginStore((state) => state)
 
   const fetchOwnerData = async () => {
     try {
-      const response = await getOwnerMypage()
+      const response = await getOwnerMypage(kakao_token)
       console.log(response)
 
       if (response.isSuccess) {
         const { ownerId, ownerNickname, storeId, storeName } = response.result
-
         updateFromApi({
           ownerId,
           ownerNickname,
