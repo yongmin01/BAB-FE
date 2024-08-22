@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
 export const AfterSearchBarContainer = styled.div`
-  position: fixed;
+  position: absolute;
   display: flex;
   flex-direction: column;
-  width: 400px;
+  width: 100%;
   height: 40px;
   background-color: white;
   z-index: 1;
@@ -43,27 +43,30 @@ export const AfterSearchBarDiscountWrapper = styled.div`
 `
 
 export const AfterSearchBarDiscountStyle = styled.div`
-  width: 35%;
+  width: 40%;
   cursor: pointer;
 `
 
 export const SearchBarContainer = styled.div`
-  position: fixed;
+  position: absolute;
   flex-direction: column;
   display: flex;
-  width: 400px;
+  width: 100%;
   background-color: none;
   align-items: center;
   z-index: 1;
 `
 
-export const SearchBarWrapper = styled.div`
+export const SearchBarWrapper = styled.div<{ $focus: boolean }>`
   display: flex;
   width: 90%;
   margin-top: 30px;
   box-shadow: 0 0 5px;
+  background: none;
   border-radius: 20px;
   color: grey;
+  transition: scale 300ms;
+  scale: ${(props) => (props.$focus ? '1.05' : '1')};
 `
 
 export const SearchBarInput = styled.input`
@@ -110,6 +113,6 @@ export const SearchBarDiscountWrapper = styled.div`
 `
 
 export const SearchBarDiscountStyle = styled.div`
-  width: 30%;
+  width: 33%;
   cursor: pointer;
 `

@@ -34,7 +34,7 @@ export default function AppContent() {
     location.pathname === '/manager' ||
     location.pathname === '/studentPage' ||
     location.pathname === '/list' ||
-    location.pathname === '/map'
+    location.pathname === '/mapPage'
   return (
     <>
       {/* <StatusBar /> */}
@@ -51,7 +51,7 @@ export default function AppContent() {
         <Route path="/storeInfo-edit" element={<StoreInfoEditPage />} />
         <Route path="/storeInfo-delete" element={<StoreInfoDeletePage />} />
         <Route path="/studentPage" element={<StudentPage />} />
-        <Route path="/map" element={<MapRender />} />
+        <Route path="/mapPage" element={<MapRender />} />
         <Route path="/schoolSearch" element={<SchoolSearchPage />} />
         <Route
           path="/todayDiscountRestaurant"

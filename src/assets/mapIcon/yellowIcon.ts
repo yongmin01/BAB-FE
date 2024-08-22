@@ -2,6 +2,7 @@ import yellowLogo from '@assets/mapIcon/yellow_webp/yellow_2x.webp'
 
 export default function yellowIcon(price: number, discountprice: number) {
   const container = document.createElement('div')
+  container.className = 'container'
   container.style.position = 'relative'
   container.style.display = 'flex'
   container.style.textAlign = 'center'
@@ -14,6 +15,8 @@ export default function yellowIcon(price: number, discountprice: number) {
   img.src = yellowLogo
   img.style.width = '100%'
   img.style.height = '100%'
+  img.style.cursor = 'pointer'
+  img.style.pointerEvents = 'auto'
   container.appendChild(img)
 
   const beforeDiscount = document.createElement('div')

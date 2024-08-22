@@ -24,7 +24,7 @@ export interface MenuItem {
   image: string
   name: string
   price: number
-  discountPrice: number | null // 할인 가격 추가
+  discountPrice: number // 할인 가격 추가
   isDiscounted?: boolean // 추가된 필드
 }
 
@@ -33,7 +33,6 @@ export interface StoreInfo {
   name: string
   lat: number | null | undefined //경도 위도 추가
   lng: number | null | undefined
-  storeType: string // 무슨 종류의 음식을 파는지 확인하기 위해 추가
   storeLink: string
   isStoreRegistered: boolean
   image: string
@@ -68,45 +67,7 @@ interface StoreInfoState {
 }
 
 const storeInfoStore = create<StoreInfoState>((set) => ({
-  storeInfos: [
-    {
-      id: 1,
-      name: '금산양꼬치 본점',
-      lat: 37.5665,
-      lng: 126.978,
-      storeType: '한식',
-      storeLink: 'http://example.com',
-      isStoreRegistered: true,
-      image: 'default_image.png',
-      university: '기본 대학',
-      businessHours: [
-        { day: 'Monday', open: '09:00', close: '18:00', isChecked: true },
-        { day: 'Tuesday', open: '09:00', close: '18:00', isChecked: true },
-      ],
-      breakTime: [
-        { day: 'Monday', open: '12:00', close: '13:00', isChecked: true },
-        { day: 'Tuesday', open: '12:00', close: '13:00', isChecked: true },
-      ],
-      menu: [
-        {
-          menuId: 1,
-          image: 'menu1.png',
-          name: '메뉴 1',
-          price: 10000,
-          discountPrice: null,
-          isDiscounted: false,
-        },
-        {
-          menuId: 2,
-          image: 'menu2.png',
-          name: '메뉴 2',
-          price: 12000,
-          discountPrice: null,
-          isDiscounted: false,
-        },
-      ],
-    },
-  ], // 초기값을 설정
+  storeInfos: [], // 초기값을 설정
   isStoreRegistered: false,
   setStoreInfo: (info) =>
     set((state) => ({
@@ -206,7 +167,7 @@ const storeInfoStore = create<StoreInfoState>((set) => ({
             menuId: store.menu.length + 1,
             image: '',
             price: Math.floor(Math.random() * 7000),
-            discountPrice: null,
+            discountPrice: 0,
             isDiscounted: false,
           })
         }

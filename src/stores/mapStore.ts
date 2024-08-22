@@ -14,6 +14,7 @@ interface MapStore {
 export const mapStore = create<MapStore>((set) => ({
   markers: [],
   googleMap: null,
+  // 학교 설정이 안되있을 경우 숭실대로 위도 경도 설정
   lat: 37.496336,
   lng: 126.95733,
   filterCheck: false,
