@@ -51,7 +51,11 @@ export default function DiscountInfo() {
           discountRestaurantList.map((discount) => (
             <DiscountItem
               key={discount.discountId}
-              onClick={() => navigator(`shopdetail/${discount.storeId}`)}
+              onClick={() =>
+                navigator('/shopdetail/', {
+                  state: { storeId: discount.storeId, page: 'TodayDiscount' },
+                })
+              }
             >
               <Text color="#000000">{discount.storeName}</Text>
               <Text color="#767676">{discount.discountTitle}</Text>
