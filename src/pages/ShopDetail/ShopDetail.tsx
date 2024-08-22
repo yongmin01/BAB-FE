@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import {
   DetailContainer,
@@ -27,14 +27,39 @@ import BackBar from '@components/BackBar/BackBar'
 import { LoginStore } from '@stores/loginStore'
 import shopDetailApi from '@apis/ShopDetail/shopDetailApi'
 
-type Props = {
-  storeId: number
-  searchWord: string
+interface StoreDiscountData {
+  discountId: number
+  title: string
+  startDate: string
+  endDate: string
 }
 
-export default function ShopDetail({ storeId, searchWord }: Props) {
-  const navigate = useNavigate()
-  const [storeInfo, setstoreInfo] = useState([])
+interface StoreMenuData {
+  menuId: number
+  menuName: string
+  menuUrl: string
+  menuPrice: number
+  discountPrice: number
+  discountRate: number
+}
+
+interface StoreInfo {
+  storeId: number
+  storeName: string
+  storeLink: string
+  onSale: boolean
+  signatureMenuId: number
+  bannerUrl: string
+  storeDiscountData: StoreDiscountData
+  storeMenuDataList: StoreMenuData[]
+}
+
+export default function ShopDetail() {
+  const location = useLocation()
+  const storeId = location.state.storeId
+  const page = location.state.page
+  const searchValue = location.state.searchVaule
+  const [storeInfo, setstoreInfo] = useState<StoreInfo | null>(null)
   const { kakao_token } = LoginStore((state) => state)
 
   useEffect(() => {
@@ -51,20 +76,33 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
   }, [storeId, kakao_token])
 
   // 날짜에서 '2024-' 부분을 제거하는 함수
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     // 'YYYY-MM-DD' 형식에서 'MM-DD' 부분만 반환
     return dateString ? dateString.substring(5) : ''
   }
 
+  const handleBackBar = () => {
+    if (page === 'TodayDiscount') {
+      return '오늘의 할인 식당'
+    } else if (page === 'map') {
+      return searchValue //map에서 searchValue 넘겨주셔야 작동
+    } else {
+      return ''
+    }
+  }
+  if (!storeInfo) {
+    return <div>Loading...</div>
+  }
+
   return (
     <DetailContainer>
-      <BackBar storeCategory={'포케'} />
+      <BackBar storeCategory={handleBackBar()} />
       <MenuHeader>
         <BkImg $imgsrc={storeInfo.bannerUrl}>
           <ShopTitle>{storeInfo.storeName}</ShopTitle>
           <EventContainer>
             <Event>가게 특별 할인</Event>
-            <LinkBtn onClick={() => window.open(storeInfo.storeLink)}>
+            <LinkBtn onClick={() => window.open(storeInfo?.storeLink)}>
               링크 바로가기{` >`}
             </LinkBtn>
           </EventContainer>
@@ -93,7 +131,7 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
           {storeInfo.storeMenuDataList &&
             storeInfo.storeMenuDataList.map((menu) => (
               <ShopMenu
-                key={menu.menuid}
+                key={menu.menuId}
                 img={menu.menuUrl}
                 title={menu.menuName}
                 fixprice={menu.menuPrice}
