@@ -1,13 +1,17 @@
-import '@assets/mapIcon/markerAnimation.css'
 import { fetchSearchStore, SearchStore } from '@apis/Marker/fetchSearchStore'
+
+import '@assets/mapIcon/markerAnimation.css'
+
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { MarkerStoreInfo } from '@stores/tempStore'
+
 import greyIcon from '@assets/mapIcon/greyIcon'
 import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
-import yellowIcon from '@assets/mapIcon/yellowIcon'
 import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
+import yellowIcon from '@assets/mapIcon/yellowIcon'
+import { LoginStore } from '@stores/loginStore'
+import { MarkerStoreInfo } from '@stores/tempStore'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Props = {
   googleMap: google.maps.Map | undefined
@@ -60,6 +64,7 @@ export default function Map({
   const ref = useRef<HTMLDivElement>(null)
   const [zoom, setZoom] = useState<number | undefined>(16)
   const navigate = useNavigate()
+  const { kakao_token } = LoginStore((state) => state)
   const schoolLocations: SchoolLoc[] = [
     //한국공학대학교
     {
@@ -175,6 +180,7 @@ export default function Map({
   ): Promise<MarkerStoreInfo[]> {
     let Stores: MarkerStoreInfo[] = []
     const searchStores: SearchStore[] = await fetchSearchStore(
+      kakao_token,
       searchValue,
       latitude === undefined ? 0 : latitude,
       longitude === undefined ? 0 : longitude,
@@ -306,7 +312,7 @@ export default function Map({
               storeId: markerView.id,
               page: 'map',
             }
-            navigate(`/shopdetail/${markerView.id}`, {
+            navigate('/shopdetail', {
               state: sendInfo!,
             })
           })

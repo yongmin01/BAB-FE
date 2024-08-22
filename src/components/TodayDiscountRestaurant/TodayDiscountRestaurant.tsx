@@ -1,26 +1,25 @@
+import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
+import shop from '@assets/TodayDiscountRestaurantPage/shop.svg'
+import { LoginStore } from '@stores/loginStore'
+import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
-  RestaurantList,
-  Restaurant,
-  DiscountType,
-  RestaurantName,
-  GoToRestaurantBtn,
-  MenuList,
-  Menu,
-  Dish,
+  Comment,
   Dash,
   DiscountedPrice,
-  Price,
-  EmptyContainer,
+  DiscountType,
+  Dish,
   EmptyAlert,
-  Comment,
-  Btn,
+  EmptyContainer,
+  GoToRestaurantBtn,
+  Menu,
+  MenuList,
+  Price,
+  Restaurant,
+  RestaurantList,
+  RestaurantName,
 } from './TodayDiscountRestaurant.style'
-import shop from '@assets/TodayDiscountRestaurantPage/shop.svg'
-import { useEffect } from 'react'
-import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
-import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
-import { useNavigate } from 'react-router-dom'
-import { LoginStore } from '@stores/loginStore'
 
 export default function TodayDiscountRestaurant() {
   const navigator = useNavigate()
@@ -78,7 +77,6 @@ export default function TodayDiscountRestaurant() {
           <img src={shop} width="100px" />
           <EmptyAlert>할인 중인 식당이 없어요!</EmptyAlert>
           <Comment>할인을 시작한 가게가 생기면 알림으로 알려드릴게요.</Comment>
-          <Btn>할인 가게 알림 켜기</Btn>
         </EmptyContainer>
       )}
     </RestaurantList>

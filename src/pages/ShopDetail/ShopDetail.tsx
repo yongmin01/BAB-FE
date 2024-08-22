@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import shopDetailApi from '@apis/ShopDetail/shopDetailApi'
+import couponImg from '@assets/icons/coupon.svg'
+import BackBar from '@components/BackBar/BackBar'
+import ShopMenu from '@components/ShopMenu/ShopMenu'
+import { LoginStore } from '@stores/loginStore'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import axios from 'axios'
 import {
   DetailContainer,
   MenuHeader,
@@ -20,13 +24,13 @@ import {
   MenuContainer,
   Line,
 } from './ShopDetail.style'
-import ShopMenu from '@components/ShopMenu/ShopMenu'
-import slowcalyImg from '@assets/ShopDetailPage/slowcalyImg.svg'
-import couponImg from '@assets/icons/coupon.svg'
-import shopmenu1 from '@assets/ShopDetailPage/shopmenu1.svg'
-import BackBar from '@components/BackBar/BackBar'
-import { LoginStore } from '@stores/loginStore'
-import shopDetailApi from '@apis/ShopDetail/shopDetailApi'
+
+interface StoreDiscountData {
+  discountId: number
+  title: string
+  startDate: string
+  endDate: string
+}
 
 interface StoreDiscountData {
   discountId: number
@@ -68,7 +72,7 @@ export default function ShopDetail() {
       const result = await shopDetailApi(storeId, kakao_token)
       console.log('result1', result)
       if (result) {
-        setstoreInfo(result)
+        setStoreInfo(result)
         console.log('result', result)
       }
     }

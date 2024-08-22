@@ -1,12 +1,13 @@
-import { useState, useEffect, ReactElement, lazy, Suspense } from 'react'
 import { fetchMarker } from '@apis/Marker/fetchMarker'
-import { SyncLoader } from 'react-spinners'
-import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
 import Map from '@components/MapCard/GoogleMapCard/Map'
-import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import AfterSearchBar from '@components/MapCard/SearchCard/AfterSearchBar'
-import { MarkerStoreInfo } from '@stores/tempStore'
+import SearchBar from '@components/MapCard/SearchCard/SearchBar'
 import { Status } from '@googlemaps/react-wrapper'
+import { MapContainer, SpinnerContainer } from '@pages/MapPage/MapRender.style'
+import { LoginStore } from '@stores/loginStore'
+import { MarkerStoreInfo } from '@stores/tempStore'
+import { lazy, ReactElement, Suspense, useEffect, useState } from 'react'
+import { SyncLoader } from 'react-spinners'
 
 //////////////  최상부 컨테이너  //////////////
 
@@ -14,6 +15,7 @@ const render = (status: Status): ReactElement => {
   if (status === Status.FAILURE) {
     return <div>에러 발생!!</div>
   }
+  return <></>
 }
 const AsyncWrapper = lazy(() =>
   import('@googlemaps/react-wrapper').then((module) => ({
@@ -21,6 +23,7 @@ const AsyncWrapper = lazy(() =>
   })),
 )
 export default function MapRender() {
+  const { kakao_token } = LoginStore((state) => state)
   const [googleMap, setGoogleMap] = useState<google.maps.Map>()
   const [markers, setMarker] = useState<
     google.maps.marker.AdvancedMarkerElement[]
@@ -93,7 +96,7 @@ export default function MapRender() {
 
   useEffect(() => {
     const getMarkers = async () => {
-      const markers: MarkerStoreInfo[] = await fetchMarker()
+      const markers: MarkerStoreInfo[] = await fetchMarker(kakao_token)
       setEntryMarker(markers)
     }
     getMarkers()

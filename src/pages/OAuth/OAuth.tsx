@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import loginApi from '@apis/Login/loginApi'
+import { LoginStore } from '@stores/loginStore'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import SyncLoader from 'react-spinners/SyncLoader'
 import { LoadContainer } from './OAuth.style'
-import loginApi from '@apis/Login/loginApi'
-import { LoginStore } from '@stores/loginStore'
 
 export default function OAuth() {
   const navigate = useNavigate()
@@ -12,6 +12,7 @@ export default function OAuth() {
   useEffect(() => {
     const handleLogin = async () => {
       const result = await loginApi(membertype)
+      console.log(result)
       if (result) {
         setUser(result.kakaoNickname)
         setToken(result.jwt)
