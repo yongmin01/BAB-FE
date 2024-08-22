@@ -24,9 +24,11 @@ import {
   TodayEvent,
 } from './ShopDetail.style'
 
-type Props = {
-  storeId: number
-  searchWord: string
+interface StoreDiscountData {
+  discountId: number
+  title: string
+  startDate: string
+  endDate: string
 }
 
 interface StoreDiscountData {
@@ -83,19 +85,28 @@ export default function ShopDetail() {
     return dateString ? dateString.substring(5) : ''
   }
 
+  const handleBackBar = () => {
+    if (page === 'TodayDiscount') {
+      return '오늘의 할인 식당'
+    } else if (page === 'map') {
+      return searchValue //map에서 searchValue 넘겨주셔야 작동
+    } else {
+      return ''
+    }
+  }
   if (!storeInfo) {
     return <div>Loading...</div>
   }
 
   return (
     <DetailContainer>
-      <BackBar storeCategory={'포케'} />
+      <BackBar storeCategory={handleBackBar()} />
       <MenuHeader>
         <BkImg $imgsrc={storeInfo.bannerUrl}>
           <ShopTitle>{storeInfo.storeName}</ShopTitle>
           <EventContainer>
             <Event>가게 특별 할인</Event>
-            <LinkBtn onClick={() => window.open(storeInfo.storeLink)}>
+            <LinkBtn onClick={() => window.open(storeInfo?.storeLink)}>
               링크 바로가기{` >`}
             </LinkBtn>
           </EventContainer>

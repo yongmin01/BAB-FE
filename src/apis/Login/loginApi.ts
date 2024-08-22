@@ -36,10 +36,7 @@ export default async function loginApi(membertype: string) {
       return null
     }
   } catch (error) {
-    if (error.response) {
-      console.error('Server responded with an error:', error.response.data)
-    } else {
-      console.error('Error during OAuth process:', error)
-    }
+    console.error('Error during OAuth process:', error)
+    return null
   }
 }

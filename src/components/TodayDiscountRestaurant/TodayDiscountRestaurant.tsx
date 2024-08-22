@@ -64,7 +64,9 @@ export default function TodayDiscountRestaurant() {
                 <Menu key={menu.menuName}>
                   <Dish>{menu.menuName}</Dish>
                   <Dash />
-                  <DiscountedPrice>{menu.discountPrice}</DiscountedPrice>
+                  <DiscountedPrice>
+                    {menu.price - menu.discountPrice}
+                  </DiscountedPrice>
                   <Price>{menu.price}</Price>
                 </Menu>
               ))}
