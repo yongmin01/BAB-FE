@@ -1,16 +1,16 @@
-import { StyledCard, CardTitle } from '../MyPageCard.style'
-import {
-  DiscountList,
-  DiscountItem,
-  Text,
-  More,
-  EmptyAlertComment,
-} from './DiscountInfo.style'
+import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
+import { LoginStore } from '@stores/loginStore'
 import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
 import { useEffect } from 'react'
-import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
 import { useNavigate } from 'react-router-dom'
-import { LoginStore } from '@stores/loginStore'
+import { CardTitle, StyledCard } from '../MyPageCard.style'
+import {
+  DiscountItem,
+  DiscountList,
+  EmptyAlertComment,
+  More,
+  Text,
+} from './DiscountInfo.style'
 
 export default function DiscountInfo() {
   const { kakao_token } = LoginStore((state) => state)
@@ -51,7 +51,11 @@ export default function DiscountInfo() {
           discountRestaurantList.map((discount) => (
             <DiscountItem
               key={discount.discountId}
-              onClick={() => navigator(`shopdetail/${discount.storeId}`)}
+              onClick={() =>
+                navigator('/shopdetail/', {
+                  state: { storeId: discount.storeId, page: 'TodayDiscount' },
+                })
+              }
             >
               <Text color="#000000">{discount.storeName}</Text>
               <Text color="#767676">{discount.discountTitle}</Text>

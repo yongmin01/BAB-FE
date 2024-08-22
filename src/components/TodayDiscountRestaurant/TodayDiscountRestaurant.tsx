@@ -1,26 +1,26 @@
+import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
+import shop from '@assets/TodayDiscountRestaurantPage/shop.svg'
+import { LoginStore } from '@stores/loginStore'
+import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
-  RestaurantList,
-  Restaurant,
-  DiscountType,
-  RestaurantName,
-  GoToRestaurantBtn,
-  MenuList,
-  Menu,
-  Dish,
+  Btn,
+  Comment,
   Dash,
   DiscountedPrice,
-  Price,
-  EmptyContainer,
+  DiscountType,
+  Dish,
   EmptyAlert,
-  Comment,
-  Btn,
+  EmptyContainer,
+  GoToRestaurantBtn,
+  Menu,
+  MenuList,
+  Price,
+  Restaurant,
+  RestaurantList,
+  RestaurantName,
 } from './TodayDiscountRestaurant.style'
-import shop from '@assets/TodayDiscountRestaurantPage/shop.svg'
-import { useEffect } from 'react'
-import { getTodayDiscountRestaurants } from '@apis/getTodayDiscountRestaurants'
-import { useTodayDiscountStore } from '@stores/todayDiscountRestaurantsInfoStore'
-import { useNavigate } from 'react-router-dom'
-import { LoginStore } from '@stores/loginStore'
 
 export default function TodayDiscountRestaurant() {
   const navigator = useNavigate()
@@ -50,7 +50,11 @@ export default function TodayDiscountRestaurant() {
             <DiscountType>{restaurant.discountTitle}</DiscountType>
             <RestaurantName>{restaurant.storeName}</RestaurantName>
             <GoToRestaurantBtn
-              onClick={() => navigator(`/shopdetail/${restaurant.storeId}`)}
+              onClick={() =>
+                navigator('/shopdetail/', {
+                  state: { storeId: restaurant.storeId, page: 'TodayDiscount' },
+                })
+              }
             >
               바로 가기
               <span>&gt;</span>

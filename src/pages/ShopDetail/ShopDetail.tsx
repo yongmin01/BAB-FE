@@ -1,40 +1,67 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import shopDetailApi from '@apis/ShopDetail/shopDetailApi'
+import couponImg from '@assets/icons/coupon.svg'
+import BackBar from '@components/BackBar/BackBar'
+import ShopMenu from '@components/ShopMenu/ShopMenu'
+import { LoginStore } from '@stores/loginStore'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
-  DetailContainer,
-  MenuHeader,
   BkImg,
-  ShopTitle,
-  EventContainer,
-  Event,
-  LinkBtn,
-  MenuBody,
-  TodayEvent,
   Coupon,
   CouponImg,
+  CouponInfoBody,
   CouponInfoContainer,
   CouponInfoTitle,
-  CouponInfoBody,
-  MenuContainer,
+  DetailContainer,
+  Event,
+  EventContainer,
   Line,
+  LinkBtn,
+  MenuBody,
+  MenuContainer,
+  MenuHeader,
+  ShopTitle,
+  TodayEvent,
 } from './ShopDetail.style'
-import ShopMenu from '@components/ShopMenu/ShopMenu'
-import slowcalyImg from '@assets/ShopDetailPage/slowcalyImg.svg'
-import couponImg from '@assets/icons/coupon.svg'
-import shopmenu1 from '@assets/ShopDetailPage/shopmenu1.svg'
-import BackBar from '@components/BackBar/BackBar'
-import { LoginStore } from '@stores/loginStore'
-import shopDetailApi from '@apis/ShopDetail/shopDetailApi'
 
 type Props = {
   storeId: number
   searchWord: string
 }
 
-export default function ShopDetail({ storeId, searchWord }: Props) {
-  const navigate = useNavigate()
-  const [storeInfo, setstoreInfo] = useState([])
+interface StoreDiscountData {
+  discountId: number
+  title: string
+  startDate: string
+  endDate: string
+}
+
+interface StoreMenuData {
+  menuId: number
+  menuName: string
+  menuUrl: string
+  menuPrice: number
+  discountPrice: number
+  discountRate: number
+}
+
+interface StoreInfo {
+  storeId: number
+  storeName: string
+  storeLink: string
+  onSale: boolean
+  signatureMenuId: number
+  bannerUrl: string
+  storeDiscountData: StoreDiscountData
+  storeMenuDataList: StoreMenuData[]
+}
+
+export default function ShopDetail() {
+  const location = useLocation()
+  const storeId = location.state.storeId
+  const page = location.state.page
+  const searchValue = location.state.searchVaule
+  const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null)
   const { kakao_token } = LoginStore((state) => state)
 
   useEffect(() => {
@@ -42,7 +69,7 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
       const result = await shopDetailApi(storeId, kakao_token)
       console.log('result1', result)
       if (result) {
-        setstoreInfo(result)
+        setStoreInfo(result)
         console.log('result', result)
       }
     }
@@ -51,9 +78,13 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
   }, [storeId, kakao_token])
 
   // 날짜에서 '2024-' 부분을 제거하는 함수
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     // 'YYYY-MM-DD' 형식에서 'MM-DD' 부분만 반환
     return dateString ? dateString.substring(5) : ''
+  }
+
+  if (!storeInfo) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -93,7 +124,7 @@ export default function ShopDetail({ storeId, searchWord }: Props) {
           {storeInfo.storeMenuDataList &&
             storeInfo.storeMenuDataList.map((menu) => (
               <ShopMenu
-                key={menu.menuid}
+                key={menu.menuId}
                 img={menu.menuUrl}
                 title={menu.menuName}
                 fixprice={menu.menuPrice}

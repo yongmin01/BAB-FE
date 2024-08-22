@@ -1,5 +1,5 @@
-import { create } from 'zustand'
 import { produce } from 'immer'
+import { create } from 'zustand'
 
 interface StoreName {
   storeName: string
@@ -68,45 +68,7 @@ interface StoreInfoState {
 }
 
 const storeInfoStore = create<StoreInfoState>((set) => ({
-  storeInfos: [
-    {
-      id: 1,
-      name: '금산양꼬치 본점',
-      lat: 37.5665,
-      lng: 126.978,
-      storeType: '한식',
-      storeLink: 'http://example.com',
-      isStoreRegistered: true,
-      image: 'default_image.png',
-      university: '기본 대학',
-      businessHours: [
-        { day: 'Monday', open: '09:00', close: '18:00', isChecked: true },
-        { day: 'Tuesday', open: '09:00', close: '18:00', isChecked: true },
-      ],
-      breakTime: [
-        { day: 'Monday', open: '12:00', close: '13:00', isChecked: true },
-        { day: 'Tuesday', open: '12:00', close: '13:00', isChecked: true },
-      ],
-      menu: [
-        {
-          menuId: 1,
-          image: 'menu1.png',
-          name: '메뉴 1',
-          price: 10000,
-          discountPrice: null,
-          isDiscounted: false,
-        },
-        {
-          menuId: 2,
-          image: 'menu2.png',
-          name: '메뉴 2',
-          price: 12000,
-          discountPrice: null,
-          isDiscounted: false,
-        },
-      ],
-    },
-  ], // 초기값을 설정
+  storeInfos: [], // 초기값을 설정
   isStoreRegistered: false,
   setStoreInfo: (info) =>
     set((state) => ({
