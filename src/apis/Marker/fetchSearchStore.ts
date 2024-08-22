@@ -1,7 +1,6 @@
 import axios from 'axios'
-
+import { LoginStore } from '@stores/loginStore'
 const baseUrl = import.meta.env.VITE_API_BASE_URL
-const token = import.meta.env.VITE_KAKAO_TEST_TOKEN
 
 export interface SearchStore {
   storeId: number
@@ -21,6 +20,7 @@ export const fetchSearchStore = async (
   latitude?: number,
   longitude?: number,
 ) => {
+  const { kakao_token } = LoginStore((state) => state)
   try {
     const res = await axios.get(
       `${baseUrl}/v1/stores/menus/search?keyword=${encodeURIComponent(keyword)}&
@@ -31,7 +31,7 @@ export const fetchSearchStore = async (
     }`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${kakao_token}`,
         },
       },
     )
