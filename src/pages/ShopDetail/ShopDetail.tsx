@@ -58,7 +58,7 @@ export default function ShopDetail() {
   const location = useLocation()
   const storeId = location.state.storeId
   const page = location.state.page
-  const searchValue = location.state.searchVaule
+  const searchValue = location.state.searchValue
   const [storeInfo, setstoreInfo] = useState<StoreInfo | null>(null)
   const { kakao_token } = LoginStore((state) => state)
 
