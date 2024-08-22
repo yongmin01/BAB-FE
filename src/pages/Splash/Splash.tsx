@@ -15,7 +15,7 @@ export default function Splash() {
       return () => clearTimeout(timer)
     } else if (isLogined == true) {
       //로그인되어 있으면 홈으로 이동
-      navigate('/map')
+      navigate('/mapPage')
     }
   }, [isLogined])
 
