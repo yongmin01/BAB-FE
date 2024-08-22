@@ -1,13 +1,13 @@
-import '@assets/mapIcon/markerAnimation.css'
 import { fetchSearchStore, SearchStore } from '@apis/Marker/fetchSearchStore'
+import greyIcon from '@assets/mapIcon/greyIcon'
+import '@assets/mapIcon/markerAnimation.css'
+import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
+import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
+import yellowIcon from '@assets/mapIcon/yellowIcon'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
+import { MarkerStoreInfo } from '@stores/tempStore'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MarkerStoreInfo } from '@stores/tempStore'
-import greyIcon from '@assets/mapIcon/greyIcon'
-import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
-import yellowIcon from '@assets/mapIcon/yellowIcon'
-import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
 
 type Props = {
   googleMap: google.maps.Map | undefined

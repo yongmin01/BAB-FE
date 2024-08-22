@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import {
-  PageContainer,
-  EventForm,
-  Label,
-  Textarea,
-  MenuTable,
-  MenuTableBody,
-  MenuRow,
-  MenuLabel,
-  CheckboxWrapper,
-  SubmitButton,
-  DiscountDataWrapper,
-  ErrorMessage,
-} from '@pages/DiscountEventPage/DiscountEventPageTwo/DiscountEventPageTwo.style'
-import { useLocation, useNavigate } from 'react-router-dom'
-import storeInfoStore from '@stores/storeInfoStore'
-import discountEventStore from '@stores/discountEventStore'
 import { handleDiscountEventRegister } from '@apis/Discount/discountEventRegister'
 import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import {
+  CheckboxWrapper,
+  DiscountDataWrapper,
+  ErrorMessage,
+  EventForm,
+  Label,
+  MenuLabel,
+  MenuRow,
+  MenuTable,
+  MenuTableBody,
+  PageContainer,
+  SubmitButton,
+  Textarea,
+} from '@pages/DiscountEventPage/DiscountEventPageTwo/DiscountEventPageTwo.style'
+import discountEventStore from '@stores/discountEventStore'
+import storeInfoStore from '@stores/storeInfoStore'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function DiscountEventPageTwo() {
   const navigate = useNavigate()
@@ -155,9 +155,7 @@ export default function DiscountEventPageTwo() {
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </DiscountDataWrapper>
       </PageContainer>
-      <SubmitButton onClick={handleSubmit}>
-        근처 학생들에게 알림 보내기
-      </SubmitButton>
+      <SubmitButton onClick={handleSubmit}>할인 등록하기</SubmitButton>
     </>
   )
 }

@@ -1,29 +1,28 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import RegistrationPrompt from '@components/RegistrationPrompt'
-import ManagerCompletedCard from '@components/ManagerCompletedCard/ManagerCompletedCard'
-import MyPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
-import DiscountModal from '@components/Modal/DiscountModal'
-import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import { getOwnerMypage } from '@apis/getOwnerMypage'
 import icon from '@assets/managerMypage/등록증 아이콘.svg'
 import menuIcon from '@assets/managerMypage/메뉴아이콘.svg'
 import ArrowImg from '@assets/StudentPage/arrow.svg'
+import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
+import ManagerCompletedCard from '@components/ManagerCompletedCard/ManagerCompletedCard'
+import DiscountModal from '@components/Modal/DiscountModal'
+import MyPageCardAccount from '@components/MyPageCard/Account/MyPageCardAccount'
+import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
 import {
-  ImgBtnContainer,
   Btn,
+  ImgBtnContainer,
   StyledArrow,
 } from '@components/MyPageCard/MyPageCardTop/MyPageCardTop.style'
-import { StyledCard } from '@components/MyPageCard/MyPageCard.style'
-import { ManagerPageContainer } from './ManagerPage.style'
-import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
-import { getOwnerMypage } from '@apis/getOwnerMypage'
+import RegistrationPrompt from '@components/RegistrationPrompt'
 import { LoginStore } from '@stores/loginStore'
+import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ManagerPageContainer } from './ManagerPage.style'
 
 export default function ManagerPage() {
   const navigate = useNavigate()
   const { isRegistered, isStoreRegistered, ownerNickname, updateFromApi } =
     managerRegisterInfoStore()
-  const { kakao_token } = LoginStore((state) => state)
 
   const { kakao_token, kakaoEmail } = LoginStore((state) => state)
 
