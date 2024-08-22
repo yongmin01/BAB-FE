@@ -309,7 +309,7 @@ export default function Map({
               storeId: markerView.id,
               page: 'map',
             }
-            navigate(`/shopdetail/${markerView.id}`, {
+            navigate('/shopdetail', {
               state: sendInfo!,
             })
           })
