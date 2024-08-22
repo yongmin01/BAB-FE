@@ -150,7 +150,7 @@ export const CandidateSchoolBox = styled.div`
   background-color: #ffffff;
   margin-top: 10px;
   padding: 0 8px;
-  overflow: scroll;
+  overflow-y: auto;
 `
 export const CandidateSchool = styled.div`
   font-style: normal;

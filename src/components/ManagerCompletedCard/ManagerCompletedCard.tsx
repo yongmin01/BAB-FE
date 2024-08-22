@@ -6,7 +6,7 @@ import {
   EditButton,
   ArrowIcon,
 } from './ManagerCompletedCard.style'
-import managerRegisterInfoStore from '@stores/managerRegisterInfoStore'
+import { LoginStore } from '@stores/loginStore'
 import { useNavigate } from 'react-router-dom'
 import {
   StyledCard,
@@ -15,15 +15,15 @@ import {
 } from '@components/MyPageCard/MyPageCard.style'
 
 export default function ManagerCompletedCard() {
+  const user = LoginStore((state) => state.user)
   const { storeInfos } = storeInfoStore()
   const navigate = useNavigate()
-  const { ownerNickname } = managerRegisterInfoStore()
 
   return (
     <StyledCard $paddingtop="24px" $paddingbottom="20px" $paddingright="19px">
       {storeInfos && storeInfos.length > 0 ? (
         <>
-          <CardSubTitle>{ownerNickname} 사장님의</CardSubTitle>
+          <CardSubTitle>{user} 사장님의</CardSubTitle>
           <CardTitle $paddingbottom="13px">{storeInfos[0].name}</CardTitle>
           <CardContent>
             <CardButton onClick={() => navigate('/discount-event')}>
@@ -42,7 +42,7 @@ export default function ManagerCompletedCard() {
         </>
       ) : (
         <>
-          <CardSubtitle>{ownerNickname} 사장님의</CardSubtitle>
+          <CardSubtitle>{user} 사장님의</CardSubtitle>
           <CardTitle>등록된 가게가 없습니다.</CardTitle>
         </>
       )}
