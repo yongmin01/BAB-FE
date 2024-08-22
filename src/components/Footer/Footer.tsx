@@ -16,7 +16,7 @@ export default function Footer() {
   const location = useLocation()
 
   const icons = {
-    home: location.pathname === '/map' ? homeIcon : noneHomeIcon,
+    home: location.pathname === '/mapPage' ? homeIcon : noneHomeIcon,
     list: location.pathname === '/list' ? listIcon : noneListIcon,
     mypage: ['/manager', '/studentPage'].includes(location.pathname)
       ? mypageIcon
@@ -28,18 +28,18 @@ export default function Footer() {
   return (
     <FooterContainer>
       <FooterLink
-        to="/map"
-        className={location.pathname === '/map' ? 'active' : ''}
-      >
-        <FooterIcon src={icons.home} alt="홈화면" />
-        <FooterText>홈화면</FooterText>
-      </FooterLink>
-      <FooterLink
         to="/list"
         className={location.pathname === '/list' ? 'active' : ''}
       >
         <FooterIcon src={icons.list} alt="할인 가게 목록" />
         <FooterText>할인 가게 목록</FooterText>
+      </FooterLink>
+      <FooterLink
+        to="/mapPage"
+        className={location.pathname === '/mapPage' ? 'active' : ''}
+      >
+        <FooterIcon src={icons.home} alt="홈화면" />
+        <FooterText>홈화면</FooterText>
       </FooterLink>
       <FooterLink
         to={mypageLink}
