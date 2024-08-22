@@ -1,75 +1,226 @@
+import '@assets/mapIcon/markerAnimation.css'
+import { fetchSearchStore, SearchStore } from '@apis/Marker/fetchSearchStore'
 import { MapWrapper } from '@components/MapCard/GoogleMapCard/Map.style'
 import { useEffect, useRef, useState } from 'react'
-import { mapStore } from '@stores/mapStore'
-import storeInfoStore from '@stores/storeInfoStore'
+import { useNavigate } from 'react-router-dom'
+import { MarkerStoreInfo } from '@stores/tempStore'
 import greyIcon from '@assets/mapIcon/greyIcon'
 import smallGreyIcon from '@assets/mapIcon/smallGreyIcon'
 import yellowIcon from '@assets/mapIcon/yellowIcon'
 import smallYellowIcon from '@assets/mapIcon/smallYellowIcon'
 
 type Props = {
+  googleMap: google.maps.Map | undefined
+  setGoogleMap: (map: google.maps.Map) => void
   markers: google.maps.marker.AdvancedMarkerElement[]
+  entryMarkers: MarkerStoreInfo[]
+  stores: MarkerStoreInfo[]
+  setStore: (stores: MarkerStoreInfo[]) => void
   searchValue: string
-  addMarker: (marker: google.maps.marker.AdvancedMarkerElement) => void
-  clearMarker: () => void
+  sendSearchValue: string
+  setMarker: (marker: google.maps.marker.AdvancedMarkerElement[]) => void
+  lat: number
+  setLat: (value: number) => void
+  lng: number
+  setLng: (value: number) => void
 }
 
-interface storeInfo {
+interface StoreInfo {
   price: number
-  discountPrice: number | null
+  discountPrice: number
   check: boolean
 }
 
+interface SchoolLoc {
+  lat: number
+  lng: number
+}
+
+interface SendInfo {
+  searchValue: string
+  storeId: string
+  page: string
+}
+
 export default function Map({
+  googleMap,
+  setGoogleMap,
   markers,
-  addMarker,
-  clearMarker,
+  entryMarkers,
+  setStore,
+  setMarker,
   searchValue,
+  sendSearchValue,
+  stores,
+  lat,
+  setLat,
+  lng,
+  setLng,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { lat, lng, googleMap, setGoogleMap } = mapStore()
   const [zoom, setZoom] = useState<number | undefined>(16)
-  const { storeInfos, tempAddStoreInfo, addMenu } = storeInfoStore()
+  const navigate = useNavigate()
+  const schoolLocations: SchoolLoc[] = [
+    //한국공학대학교
+    {
+      lat: 37.340189,
+      lng: 126.733596,
+    },
+    //인하대학교
+    {
+      lat: 37.450022,
+      lng: 126.653488,
+    },
+    //숭실대학교
+    {
+      lat: 37.496336,
+      lng: 126.95733,
+    },
+  ]
 
-  //가게 중복입력 방지함수
-  function findRestaurant(id: number): boolean {
-    let check = false
-    storeInfos.forEach((info) => {
-      if (info.id === id) {
-        check = true
-        return
+  //마커 감시변수
+  const intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('drop')
+        intersectionObserver.unobserve(entry.target)
       }
     })
-    return check
-  }
+  })
 
   //할인 확인 함수 o
-  function findIsDiscount(id: number): storeInfo {
-    let storeinfo: storeInfo
-    storeinfo = { check: false, price: 0, discountPrice: null }
+  function findIsDiscount(id: number): StoreInfo {
+    let storeinfo: StoreInfo
+    storeinfo! = { check: false, price: 0, discountPrice: 0 }
 
-    storeInfos.forEach((info) => {
-      if (info.id === id) {
-        if (info.menu[0].isDiscounted === false) {
+    stores.forEach((info) => {
+      if (info.storeId === id) {
+        if (info.discountPrice === 0) {
           storeinfo.check = false
-          storeinfo.price = info.menu[0].price
-          storeinfo.discountPrice = null
+          storeinfo.price = info.menuPrice
+          storeinfo.discountPrice = 0
         } else {
           storeinfo.check = true
-          storeinfo.price = info.menu[0].price
-          storeinfo.discountPrice = info.menu[0].discountPrice
+          storeinfo.price = info.menuPrice
+          storeinfo.discountPrice = info.discountPrice
         }
       }
     })
     return storeinfo
   }
 
+  //데이터 기준으로 학교 위도 경도 확인
+  //더미데이터가 아닌 값만 있어야 테스트 가능
+  function findLocation() {
+    if (lat === 37.496336 && lng === 126.95733 && stores.length > 0) {
+      let location: SchoolLoc = { lat: 0, lng: 0 }
+      let latitudeAvg: number = 0
+      let latitudeMin: number = Infinity
+      let longitudeAvg: number = 0
+      let longitudeMin: number = Infinity
+
+      entryMarkers.forEach((store) => {
+        latitudeAvg += store.latitude as number
+        longitudeAvg += store.longitude as number
+      })
+      latitudeAvg /= stores.length
+      longitudeAvg /= stores.length
+      schoolLocations.forEach((school) => {
+        const latDifference = Math.abs(school.lat - latitudeAvg)
+        const lngDifference = Math.abs(school.lng - longitudeAvg)
+
+        if (latDifference < latitudeMin && lngDifference < longitudeMin) {
+          location.lat = school.lat
+          location.lng = school.lng
+          latitudeMin = latDifference
+          longitudeMin = lngDifference
+        }
+      })
+      setLat(location.lat)
+      setLng(location.lng)
+    }
+  }
+
+  //지도 범위안 가게 필터링함수
+  function filterMarker(Stores: MarkerStoreInfo[]): MarkerStoreInfo[] {
+    const filteredMarker: MarkerStoreInfo[] = []
+    if (googleMap) {
+      const bounds = googleMap.getBounds()
+      //남서쪽 경도 위도
+      const minLat = bounds?.getSouthWest().lat()
+      const minLng = bounds?.getSouthWest().lng()
+      //북동쪽 경도 위도
+      const maxLat = bounds?.getNorthEast().lat()
+      const maxLng = bounds?.getNorthEast().lng()
+      if (Stores.length) {
+        Stores.forEach((store) => {
+          if (
+            store.latitude! < maxLat! &&
+            store.latitude! > minLat! &&
+            store.longitude! < maxLng! &&
+            store.longitude! > minLng!
+          ) {
+            filteredMarker.push(store)
+          }
+        })
+      }
+    }
+    return filteredMarker
+  }
+
+  async function findPlaces(
+    searchValue: string,
+    latitude?: number,
+    longitude?: number,
+  ): Promise<MarkerStoreInfo[]> {
+    let Stores: MarkerStoreInfo[] = []
+    const searchStores: SearchStore[] = await fetchSearchStore(
+      searchValue,
+      latitude === undefined ? 0 : latitude,
+      longitude === undefined ? 0 : longitude,
+    )
+    console.log(searchStores)
+    searchStores.forEach((searchStore) => {
+      const tempStore: MarkerStoreInfo = {
+        storeId: searchStore.storeId,
+        storeName: searchStore.storeName,
+        latitude: searchStore.latitude,
+        longitude: searchStore.longitude,
+        menuPrice: searchStore.menuList[0].price,
+        discountPrice:
+          searchStore.menuList[0].discountPrice === null
+            ? 0
+            : searchStore.menuList[0].discountPrice,
+      }
+      Stores.push(tempStore)
+    })
+    Stores = filterMarker(Stores)
+    return Stores
+  }
+
+  useEffect(() => {
+    if (stores.length > 0) {
+      findLocation()
+    }
+  }, [stores])
+
+  useEffect(() => {
+    if (googleMap) {
+      googleMap.setCenter({ lat: lat, lng: lng })
+    }
+  }, [lat, lng])
+
   //지도 초기화 o
   useEffect(() => {
     if (ref.current) {
+      const Stores: MarkerStoreInfo[] = []
+      entryMarkers.forEach((marker) => {
+        Stores.push(marker)
+      })
+      setStore(Stores)
       const initialMap = new window.google.maps.Map(ref.current, {
         center: { lat, lng },
-        zoom: 17,
+        zoom: 15,
         disableDefaultUI: true,
         mapId: 'eb4ca83b18a77f42',
       })
@@ -78,28 +229,31 @@ export default function Map({
         setZoom(initialMap.getZoom())
       })
     }
-  }, [])
+  }, [entryMarkers])
 
   //이전 검색마커 삭제기능 && 검색기능
   useEffect(() => {
-    if (searchValue) {
-      console.log('검색 실행')
-      if (markers.length !== 0) {
-        console.log('마커 수 : ' + markers.length)
-        markers.forEach((marker) => {
-          marker.map = null
-        })
-        clearMarker()
+    const updateStoresAndMarkers = async () => {
+      if (searchValue) {
+        console.log('검색 실행')
+        if (markers.length !== 0) {
+          markers.forEach((marker) => {
+            marker.map = null
+          })
+        }
+        setMarker([])
+        const Stores = await findPlaces(searchValue, lat, lng)
+        setStore(Stores)
       }
-      findPlaces()
     }
+
+    updateStoresAndMarkers()
   }, [searchValue])
 
   //zoom값에 따라 아이콘 조절기능
   useEffect(() => {
-    let storeinfo: storeInfo
-    if (zoom < 17) {
-      console.log(zoom)
+    let storeinfo: StoreInfo
+    if (zoom! < 15) {
       markers.forEach((marker) => {
         storeinfo = findIsDiscount(parseInt(marker.id))
         if (storeinfo.check === true) {
@@ -126,66 +280,54 @@ export default function Map({
   //마커 삽입기능
   useEffect(() => {
     ;(async () => {
-      if (storeInfos.length) {
+      if (stores.length) {
         const { AdvancedMarkerElement } = (await google.maps.importLibrary(
           'marker',
         )) as google.maps.MarkerLibrary
-        storeInfos.forEach((info) => {
+        const Markers: google.maps.marker.AdvancedMarkerElement[] = []
+        stores.forEach((info) => {
           const logo =
-            info.menu[0].discountPrice === null
-              ? greyIcon(info.menu[0].price)
-              : yellowIcon(info.menu[0].price, info.menu[0].discountPrice)
+            info.discountPrice === 0
+              ? greyIcon(info.menuPrice)
+              : yellowIcon(info.menuPrice, info.discountPrice)
+          logo.classList.add('drop')
           const markerView = new AdvancedMarkerElement({
             map: googleMap,
-            position: new google.maps.LatLng(info.lat as number, info.lng),
-            title: info.name,
+            position: new google.maps.LatLng(
+              info.latitude as number,
+              info.longitude as number,
+            ),
+            title: info.storeName,
             content: logo,
           })
-          markerView.id = info.id.toString()
-          addMarker(markerView)
+          markerView.addListener('click', () => {
+            const sendInfo: SendInfo = {
+              searchValue: sendSearchValue,
+              storeId: markerView.id,
+              page: 'map',
+            }
+            navigate(`/shopdetail/${markerView.id}`, {
+              state: sendInfo!,
+            })
+          })
+          markerView.id = info.storeId.toString()
+          const marker = markerView.content as HTMLElement
+          marker.style.opacity = '0'
+          marker.addEventListener('animationend', () => {
+            marker.classList.remove('drop')
+            marker.style.opacity = '1'
+          })
+          const time = 0.5 + Math.random()
+          marker.style.setProperty('--delay-time', time + 's')
+          intersectionObserver.observe(marker)
+          Markers.push(markerView)
         })
+        setMarker(Markers)
       } else {
         console.log('없어 ㅋㅋ')
       }
     })()
-  }, [storeInfos])
-
-  //가게검색 기능
-  async function findPlaces() {
-    const { Place } = (await google.maps.importLibrary(
-      'places',
-    )) as google.maps.PlacesLibrary
-
-    const request = {
-      textQuery: searchValue,
-      fields: ['displayName', 'location', 'businessStatus'],
-      includedType: 'restaurant',
-      maxResultCount: 10,
-      region: 'kr',
-      language: 'ko',
-      locationRestriction: googleMap.getBounds(),
-      useStrictTypeFiltering: false,
-    }
-
-    const { places } = await Place.searchByText(request)
-    if (places.length) {
-      places.forEach((place) => {
-        //진짜 가게 정보 삽입기능
-        if (findRestaurant(parseInt(place.id)) === false) {
-          tempAddStoreInfo(
-            parseInt(place.id),
-            place.displayName as string,
-            place.location?.lat(),
-            place.location?.lng(),
-          )
-          addMenu(parseInt(place.id), '햄버거')
-          //setDiscountPrice(place.id)
-        }
-      })
-    } else {
-      console.log('No results')
-    }
-  }
+  }, [stores])
 
   return <MapWrapper ref={ref} id="map" />
 }

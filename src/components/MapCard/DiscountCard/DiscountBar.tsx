@@ -2,7 +2,7 @@ import { DiscountContainer } from '@components/MapCard/DiscountCard/DiscountBar.
 
 export default function DiscountBar() {
   return (
-    <DiscountContainer style={{ backgroundColor: '#e7f0ed' }}>
+    <DiscountContainer style={{ backgroundColor: '#FFEE9C' }}>
       오늘의 할인 메뉴
     </DiscountContainer>
   )

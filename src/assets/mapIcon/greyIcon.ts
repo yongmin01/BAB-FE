@@ -2,6 +2,7 @@ import greyLogo from '@assets/mapIcon/grey_webp/grey_2x.webp'
 
 export default function greyIcon(price: number) {
   const container = document.createElement('div')
+  container.className = 'container'
   container.style.position = 'relative'
   container.style.display = 'inline-block'
   container.style.textAlign = 'center'
@@ -15,6 +16,8 @@ export default function greyIcon(price: number) {
   img.src = greyLogo
   img.style.width = '100%'
   img.style.height = '100%'
+  img.style.cursor = 'pointer'
+  img.style.pointerEvents = 'auto'
   container.appendChild(img)
 
   const Price = document.createElement('div')
@@ -27,6 +30,8 @@ export default function greyIcon(price: number) {
   Price.style.transform = 'translate(-50%, -50%)'
   Price.textContent = `${price}원`
   container.appendChild(Price)
+
+  document.body.appendChild(container)
 
   return container
 }

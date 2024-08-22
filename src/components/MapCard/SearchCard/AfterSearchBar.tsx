@@ -14,18 +14,21 @@ type Props = {
   searchValue: string
   handleFilterCheck: () => void
   handleSearchValue: (value: string) => void
+  handleSendSearchValue: (value: string) => void
 }
 
 export default function AfterSearchBar({
   handleFilterCheck,
   searchValue,
   handleSearchValue,
+  handleSendSearchValue,
 }: Props) {
   return (
     <AfterSearchBarContainer>
       <AfterSearchBarWrapper>
         <AfterSearchBarIconWrapper
           onClick={() => {
+            handleSendSearchValue(searchValue)
             handleSearchValue('')
           }}
         >
