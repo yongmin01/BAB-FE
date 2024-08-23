@@ -90,16 +90,18 @@ export const IconWrapper = styled.div`
 export const ButtonWrapper = styled.div`
   width: 50%;
   height: 50%;
-  padding-bottom: 15px;
+  padding-bottom: 30px;
 `
 export const Button = styled.button`
   width: 100%;
   height: 100%;
   background: yellow;
   box-shadow: 0 0 3px;
+  background: #fdd100;
   border: none;
   border-radius: 15px;
   font-size: 15px;
   font-family: 'SUN-SUITE';
   cursor: pointer;
+  margin-bottom: 15px;
 `
