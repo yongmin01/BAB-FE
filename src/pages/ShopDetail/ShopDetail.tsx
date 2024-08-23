@@ -111,7 +111,8 @@ export default function ShopDetail() {
           </ShopInfoContainer>
           <EventContainer>
             <LinkBtn onClick={() => window.open(storeInfo?.storeLink)}>
-              링크 바로가기{` >`}
+              링크 바로가기
+              <div>&gt;</div>
             </LinkBtn>
           </EventContainer>
         </BkImg>
