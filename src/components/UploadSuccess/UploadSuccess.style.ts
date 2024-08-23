@@ -11,7 +11,6 @@ export const StyledContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin-bottom: 80px;
 `
 
 export const StyledText = styled.p`
