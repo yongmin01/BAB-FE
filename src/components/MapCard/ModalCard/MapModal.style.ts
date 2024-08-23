@@ -54,9 +54,11 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 75%;
-  height: 20%;
-  border-radius: 15px;
+  height: 25%;
+  font-size: 16px;
+  font-family: 'SUN-SUITE';
   background: white;
+  border-radius: 15px;
   animation: ${BounceInBottom} 1.1s both;
 `
 
@@ -66,7 +68,7 @@ export const TopWrapper = styled.div`
   align-items: center;
   width: 90%;
   height: 35%;
-  padding-top: 15px;
+  margin-top: 10px;
   background-color: white;
 `
 
@@ -76,13 +78,13 @@ export const BottomWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 85%;
-  height: 65%;
+  height: 45%;
   padding-bottom: 20px;
   background-color: white;
 `
 export const IconWrapper = styled.div`
   width: 10%;
-  font-size: 25px;
+  font-size: 30px;
   cursor: pointer;
 `
 export const ButtonWrapper = styled.div`
@@ -94,7 +96,10 @@ export const Button = styled.button`
   width: 100%;
   height: 100%;
   background: yellow;
+  box-shadow: 0 0 3px;
   border: none;
   border-radius: 15px;
+  font-size: 15px;
+  font-family: 'SUN-SUITE';
   cursor: pointer;
 `
