@@ -34,6 +34,7 @@ export const MemberButton = styled.button`
   font-weight: 700;
   font-family: inherit;
   background-color: #ffffff;
+  color: #000000;
   cursor: pointer;
   transition: border-color 0.25s;
   &:hover,
