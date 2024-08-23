@@ -105,7 +105,7 @@ export default function ShopDetail() {
       <BackBar storeCategory={handleBackBar()} />
       <MenuHeader>
         <BkImg $imgsrc={storeInfo.bannerUrl}>
-          <ShopInfoContainer onSale={storeInfo.onSale}>
+          <ShopInfoContainer $issale={storeInfo.onSale}>
             <ShopTitle>{storeInfo.storeName}</ShopTitle>
             {storeInfo.onSale ? <Event> 가게 특별 할인</Event> : null}
           </ShopInfoContainer>
@@ -146,7 +146,7 @@ export default function ShopDetail() {
                 fixprice={menu.menuPrice}
                 discountrate={menu.discountRate + '%'}
                 saleprice={menu.menuPrice - menu.discountPrice}
-                onsale={storeInfo.onSale}
+                issale={storeInfo.onSale}
               />
             ))}
         </MenuContainer>
