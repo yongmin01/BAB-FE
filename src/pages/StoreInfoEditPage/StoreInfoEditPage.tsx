@@ -12,8 +12,8 @@ import HeaderTitle from '@components/HeaderTitle/HeaderTitle'
 import { LoginStore } from '@stores/loginStore'
 
 export default function StoreInfoEditPage() {
-  const navigate = useNavigate()
   const user = LoginStore((state) => state.user)
+  const navigate = useNavigate()
 
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
