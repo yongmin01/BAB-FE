@@ -26,6 +26,7 @@ export const MemberButton = styled.button`
   border-style: solid;
   border-radius: 20px;
   border-color: #d7d7d7;
+  color: #000000;
   width: 342px;
   height: 53px;
   padding: 12px;
