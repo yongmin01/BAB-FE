@@ -199,11 +199,13 @@ export default function Map({
     Stores = filterMarker(Stores)
     return Stores
   }
+
   useEffect(() => {
     if (googleMap) {
       googleMap.setCenter({ lat: lat, lng: lng })
     }
-  })
+  }, [lat, lng])
+
   //지도 초기화 o
   useEffect(() => {
     if (ref.current) {
