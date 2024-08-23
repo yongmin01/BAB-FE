@@ -94,7 +94,7 @@ export const Button = styled.button`
   width: 100%;
   height: 100%;
   background: yellow;
-  box-shadow: 0 0 10px;
+  box-shadow: 0 0 5px;
   background: #fdd100;
   border: none;
   border-radius: 15px;
